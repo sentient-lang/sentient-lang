@@ -59,4 +59,40 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("pop", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("top");
+
+      symbolTable.set("bottom", 123);
+      symbolTable.set("top", 456);
+    });
+
+    it("pops a symbol from the stack", function () {
+      subject.pop("foo");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    describe("popping a symbol not in the symbol table", function () {
+      it("adds the symbol to the symbol table", function () {
+        subject.pop("new");
+        expect(symbolTable.get("new")).toEqual(456);
+      });
+    });
+
+    describe("popping a symbol in the symbol table", function () {
+      it("reassigns the symbol to use the literal from the stack", function () {
+        subject.pop("bottom");
+        expect(symbolTable.get("bottom")).toEqual(456);
+      });
+    });
+
+    describe("popping the symbol already at the top of the stack", function () {
+      it("does not change the symbol table", function () {
+        subject.pop("top");
+        expect(symbolTable.get("top")).toEqual(456);
+      });
+    });
+  });
 });
