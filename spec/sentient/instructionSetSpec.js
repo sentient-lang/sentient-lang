@@ -31,12 +31,12 @@ describe("InstructionSet", function () {
 
     describe("when the symbol table contains the symbol", function () {
       beforeEach(function () {
-        symbolTable.set("foo", 1);
+        symbolTable.set("foo", 123);
       });
 
       it("does not change the symbol table", function () {
         subject.push("foo");
-        expect(symbolTable.get("foo")).toEqual(1);
+        expect(symbolTable.get("foo")).toEqual(123);
       });
 
       it("does not write a clause", function () {
@@ -93,6 +93,38 @@ describe("InstructionSet", function () {
         subject.pop("top");
         expect(symbolTable.get("top")).toEqual(456);
       });
+    });
+  });
+
+  describe("not", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("top");
+
+      symbolTable.set("bottom", 123);
+      symbolTable.set("top", 456);
+    });
+
+    it("replaces the symbol on top of the stack", function () {
+      subject.not();
+      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.not();
+      var newSymbol = stack.pop();
+      expect(symbolTable.get(newSymbol)).toEqual(1);
+    });
+
+    it("writes CNF clauses for 'not'", function () {
+      spyOn(codeWriter, "clause");
+      subject.not();
+
+      expect(codeWriter.clause.calls[0].args).toEqual([456, 1]);
+      expect(codeWriter.clause.calls[1].args).toEqual([-456, -1]);
+
+      expect(codeWriter.clause.calls.length).toEqual(2);
     });
   });
 });
