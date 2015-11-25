@@ -233,4 +233,90 @@ describe("InstructionSet", function () {
       expect(codeWriter.clause.calls.length).toEqual(4);
     });
   });
+
+  describe("true", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      symbolTable.set("bottom", 123);
+    });
+
+    it("pushes a special symbol onto the stack", function () {
+      subject.true();
+      expect(stack.pop()).toEqual("$$$_TRUE_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    describe("when the symbol table contains the symbol", function () {
+      beforeEach(function () {
+        symbolTable.set("$$$_TRUE_$$$", 456);
+      });
+
+      it("does not change the symbol table", function () {
+        subject.true();
+        expect(symbolTable.get("$$$_TRUE_$$$")).toEqual(456);
+      });
+
+      it("does not write a clause", function () {
+        spyOn(codeWriter, "clause");
+        subject.true();
+        expect(codeWriter.clause).not.toHaveBeenCalled();
+      });
+    });
+
+    describe("when the symbol table does not contain the symbol", function () {
+      it("adds the symbol to the symbol table", function () {
+        subject.true();
+        expect(symbolTable.get("$$$_TRUE_$$$")).toEqual(1);
+      });
+
+      it("writes a CNF clause for 'true'", function () {
+        spyOn(codeWriter, "clause");
+        subject.true();
+        expect(codeWriter.clause).toHaveBeenCalledWith(1);
+      });
+    });
+  });
+
+  describe("false", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      symbolTable.set("bottom", 123);
+    });
+
+    it("pushes a special symbol onto the stack", function () {
+      subject.false();
+      expect(stack.pop()).toEqual("$$$_FALSE_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    describe("when the symbol table contains the symbol", function () {
+      beforeEach(function () {
+        symbolTable.set("$$$_FALSE_$$$", 456);
+      });
+
+      it("does not change the symbol table", function () {
+        subject.false();
+        expect(symbolTable.get("$$$_FALSE_$$$")).toEqual(456);
+      });
+
+      it("does not write a clause", function () {
+        spyOn(codeWriter, "clause");
+        subject.false();
+        expect(codeWriter.clause).not.toHaveBeenCalled();
+      });
+    });
+
+    describe("when the symbol table does not contain the symbol", function () {
+      it("adds the symbol to the symbol table", function () {
+        subject.false();
+        expect(symbolTable.get("$$$_FALSE_$$$")).toEqual(1);
+      });
+
+      it("writes a CNF clause for 'false'", function () {
+        spyOn(codeWriter, "clause");
+        subject.false();
+        expect(codeWriter.clause).toHaveBeenCalledWith(-1);
+      });
+    });
+  });
 });
