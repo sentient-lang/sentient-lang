@@ -87,10 +87,10 @@ describe("CodeWriter", function () {
       c   "variables": {}                            \n\
       c }                                            \n\
       p cnf 3 4                                      \n\
-      -1 -2 3                                        \n\
-      1 -3                                           \n\
-      2 -3                                           \n\
-      3                                              \n\
+      -1 -2 3 0                                      \n\
+      1 -3 0                                         \n\
+      2 -3 0                                         \n\
+      3 0                                            \n\
     '));
   });
 
@@ -129,12 +129,12 @@ describe("CodeWriter", function () {
       c   }                                          \n\
       c }                                            \n\
       p cnf 3 6                                      \n\
-      1 -1                                           \n\
-      2 -2                                           \n\
-      -1 -2 3                                        \n\
-      1 -3                                           \n\
-      2 -3                                           \n\
-      3                                              \n\
+      1 -1 0                                         \n\
+      2 -2 0                                         \n\
+      -1 -2 3 0                                      \n\
+      1 -3 0                                         \n\
+      2 -3 0                                         \n\
+      3 0                                            \n\
     '));
   });
 });
