@@ -319,4 +319,16 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("variable", function () {
+    beforeEach(function () {
+      symbolTable.set("foo", 123);
+    });
+
+    it("writes the variable with its literal", function () {
+      spyOn(codeWriter, "variable");
+      subject.variable("foo");
+      expect(codeWriter.variable).toHaveBeenCalledWith("foo", 123);
+    });
+  });
 });
