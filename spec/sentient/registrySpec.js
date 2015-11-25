@@ -17,5 +17,8 @@ describe("Registry", function () {
     expect(subject.nextSymbol()).toEqual("$$$_TMP1_$$$");
     expect(subject.nextSymbol()).toEqual("$$$_TMP2_$$$");
     expect(subject.nextSymbol()).toEqual("$$$_TMP3_$$$");
+
+    expect(subject.trueSymbol()).toEqual("$$$_TRUE_$$$");
+    expect(subject.falseSymbol()).toEqual("$$$_FALSE_$$$");
   });
 });
