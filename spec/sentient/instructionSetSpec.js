@@ -121,10 +121,10 @@ describe("InstructionSet", function () {
       spyOn(codeWriter, "clause");
       subject.not();
 
-      expect(codeWriter.clause.calls[0].args).toEqual([456, 1]);
-      expect(codeWriter.clause.calls[1].args).toEqual([-456, -1]);
+      expect(codeWriter.clause.calls.argsFor(0)).toEqual([456, 1]);
+      expect(codeWriter.clause.calls.argsFor(1)).toEqual([-456, -1]);
 
-      expect(codeWriter.clause.calls.length).toEqual(2);
+      expect(codeWriter.clause.calls.count()).toEqual(2);
     });
   });
 
@@ -155,11 +155,11 @@ describe("InstructionSet", function () {
       spyOn(codeWriter, "clause");
       subject.and();
 
-      expect(codeWriter.clause.calls[0].args).toEqual([-456, -789, 1]);
-      expect(codeWriter.clause.calls[1].args).toEqual([456, -1]);
-      expect(codeWriter.clause.calls[2].args).toEqual([789, -1]);
+      expect(codeWriter.clause.calls.argsFor(0)).toEqual([-456, -789, 1]);
+      expect(codeWriter.clause.calls.argsFor(1)).toEqual([456, -1]);
+      expect(codeWriter.clause.calls.argsFor(2)).toEqual([789, -1]);
 
-      expect(codeWriter.clause.calls.length).toEqual(3);
+      expect(codeWriter.clause.calls.count()).toEqual(3);
     });
   });
 
@@ -190,11 +190,11 @@ describe("InstructionSet", function () {
       spyOn(codeWriter, "clause");
       subject.or();
 
-      expect(codeWriter.clause.calls[0].args).toEqual([456, 789, -1]);
-      expect(codeWriter.clause.calls[1].args).toEqual([-456, 1]);
-      expect(codeWriter.clause.calls[2].args).toEqual([-789, 1]);
+      expect(codeWriter.clause.calls.argsFor(0)).toEqual([456, 789, -1]);
+      expect(codeWriter.clause.calls.argsFor(1)).toEqual([-456, 1]);
+      expect(codeWriter.clause.calls.argsFor(2)).toEqual([-789, 1]);
 
-      expect(codeWriter.clause.calls.length).toEqual(3);
+      expect(codeWriter.clause.calls.count()).toEqual(3);
     });
   });
 
@@ -225,12 +225,12 @@ describe("InstructionSet", function () {
       spyOn(codeWriter, "clause");
       subject.equal();
 
-      expect(codeWriter.clause.calls[0].args).toEqual([456, 789, 1]);
-      expect(codeWriter.clause.calls[1].args).toEqual([456, -789, -1]);
-      expect(codeWriter.clause.calls[2].args).toEqual([-456, 789, -1]);
-      expect(codeWriter.clause.calls[3].args).toEqual([-456, -789, 1]);
+      expect(codeWriter.clause.calls.argsFor(0)).toEqual([456, 789, 1]);
+      expect(codeWriter.clause.calls.argsFor(1)).toEqual([456, -789, -1]);
+      expect(codeWriter.clause.calls.argsFor(2)).toEqual([-456, 789, -1]);
+      expect(codeWriter.clause.calls.argsFor(3)).toEqual([-456, -789, 1]);
 
-      expect(codeWriter.clause.calls.length).toEqual(4);
+      expect(codeWriter.clause.calls.count()).toEqual(4);
     });
   });
 
