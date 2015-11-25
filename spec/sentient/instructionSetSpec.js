@@ -241,7 +241,7 @@ describe("InstructionSet", function () {
     });
 
     it("pushes a special symbol onto the stack", function () {
-      subject.true();
+      subject._true();
       expect(stack.pop()).toEqual("$$$_TRUE_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
@@ -252,26 +252,26 @@ describe("InstructionSet", function () {
       });
 
       it("does not change the symbol table", function () {
-        subject.true();
+        subject._true();
         expect(symbolTable.get("$$$_TRUE_$$$")).toEqual(456);
       });
 
       it("does not write a clause", function () {
         spyOn(codeWriter, "clause");
-        subject.true();
+        subject._true();
         expect(codeWriter.clause).not.toHaveBeenCalled();
       });
     });
 
     describe("when the symbol table does not contain the symbol", function () {
       it("adds the symbol to the symbol table", function () {
-        subject.true();
+        subject._true();
         expect(symbolTable.get("$$$_TRUE_$$$")).toEqual(1);
       });
 
       it("writes a CNF clause for 'true'", function () {
         spyOn(codeWriter, "clause");
-        subject.true();
+        subject._true();
         expect(codeWriter.clause).toHaveBeenCalledWith(1);
       });
     });
@@ -284,7 +284,7 @@ describe("InstructionSet", function () {
     });
 
     it("pushes a special symbol onto the stack", function () {
-      subject.false();
+      subject._false();
       expect(stack.pop()).toEqual("$$$_FALSE_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
@@ -295,26 +295,26 @@ describe("InstructionSet", function () {
       });
 
       it("does not change the symbol table", function () {
-        subject.false();
+        subject._false();
         expect(symbolTable.get("$$$_FALSE_$$$")).toEqual(456);
       });
 
       it("does not write a clause", function () {
         spyOn(codeWriter, "clause");
-        subject.false();
+        subject._false();
         expect(codeWriter.clause).not.toHaveBeenCalled();
       });
     });
 
     describe("when the symbol table does not contain the symbol", function () {
       it("adds the symbol to the symbol table", function () {
-        subject.false();
+        subject._false();
         expect(symbolTable.get("$$$_FALSE_$$$")).toEqual(1);
       });
 
       it("writes a CNF clause for 'false'", function () {
         spyOn(codeWriter, "clause");
-        subject.false();
+        subject._false();
         expect(codeWriter.clause).toHaveBeenCalledWith(-1);
       });
     });
