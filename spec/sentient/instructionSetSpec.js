@@ -23,6 +23,28 @@ describe("InstructionSet", function () {
     });
   });
 
+  describe("call", function () {
+    it("calls the method that handles the given instruction", function () {
+      spyOn(subject, "push");
+      subject.call({ type: "push", symbol: "foo" });
+      expect(subject.push).toHaveBeenCalledWith("foo");
+
+      spyOn(subject, "and");
+      subject.call({ type: "and" });
+      expect(subject.and).toHaveBeenCalled();
+
+      spyOn(subject, "variable");
+      subject.call({ type: "variable", symbol: "foo" });
+      expect(subject.variable).toHaveBeenCalledWith("foo");
+    });
+
+    it("throws an error on an unrecognised instruction", function () {
+      expect(function () {
+        subject.call({ type: "unrecognised" });
+      }).toThrow();
+    });
+  });
+
   describe("push", function () {
     it("pushes the symbol onto the stack", function () {
       subject.push("foo");
