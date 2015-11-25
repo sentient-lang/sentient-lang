@@ -162,4 +162,39 @@ describe("InstructionSet", function () {
       expect(codeWriter.clause.calls.length).toEqual(3);
     });
   });
+
+  describe("or", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("a");
+      stack.push("b");
+
+      symbolTable.set("bottom", 123);
+      symbolTable.set("a", 456);
+      symbolTable.set("b", 789);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.or();
+      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.or();
+      var newSymbol = stack.pop();
+      expect(symbolTable.get(newSymbol)).toEqual(1);
+    });
+
+    it("writes CNF clauses for 'or'", function () {
+      spyOn(codeWriter, "clause");
+      subject.or();
+
+      expect(codeWriter.clause.calls[0].args).toEqual([456, 789, -1]);
+      expect(codeWriter.clause.calls[1].args).toEqual([-456, 1]);
+      expect(codeWriter.clause.calls[2].args).toEqual([-789, 1]);
+
+      expect(codeWriter.clause.calls.length).toEqual(3);
+    });
+  });
 });
