@@ -14,7 +14,7 @@ describe("Compiler", function () {
     expect(code).toEqual(SpecHelper.stripWhitespace('\n\
       c Sentient Machine Code, Version 1.0           \n\
       c {                                            \n\
-      c   "variables": {}                            \n\
+      c   "level1Variables": {}                      \n\
       c }                                            \n\
       p cnf 0 0                                      \n\
     '));
@@ -49,7 +49,7 @@ describe("Compiler", function () {
       c   "description": "A simple 3-bit AND gate",  \n\
       c   "author": "Chris Patuzzo",                 \n\
       c   "date": "2015-11-25",                      \n\
-      c   "variables": {                             \n\
+      c   "level1Variables": {                       \n\
       c     "a": 1,                                  \n\
       c     "b": 2,                                  \n\
       c     "c": 3,                                  \n\
@@ -107,7 +107,7 @@ describe("Compiler", function () {
       c   "description": "An example program with lots of instructions", \n\
       c   "author": "Chris Patuzzo",                                     \n\
       c   "date": "2015-11-25",                                          \n\
-      c   "variables": {                                                 \n\
+      c   "level1Variables": {                                           \n\
       c     "a": 1,                                                      \n\
       c     "b": 2,                                                      \n\
       c     "out": 9                                                     \n\

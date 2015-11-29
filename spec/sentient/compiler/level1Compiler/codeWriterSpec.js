@@ -18,7 +18,7 @@ describe("CodeWriter", function () {
     expect(code).toEqual(SpecHelper.stripWhitespace('\n\
       c Sentient Machine Code, Version 1.0           \n\
       c {                                            \n\
-      c   "variables": {}                            \n\
+      c   "level1Variables": {}                      \n\
       c }                                            \n\
       p cnf 0 0                                      \n\
     '));
@@ -33,7 +33,7 @@ describe("CodeWriter", function () {
       c {                                            \n\
       c   "foo": "bar",                              \n\
       c   "baz": 123,                                \n\
-      c   "variables": {}                            \n\
+      c   "level1Variables": {}                      \n\
       c }                                            \n\
       p cnf 0 0                                      \n\
     '));
@@ -47,7 +47,7 @@ describe("CodeWriter", function () {
     expect(code).toEqual(SpecHelper.stripWhitespace('\n\
       c Sentient Machine Code, Version 1.0           \n\
       c {                                            \n\
-      c   "variables": {                             \n\
+      c   "level1Variables": {                       \n\
       c     "foo": 1,                                \n\
       c     "bar": 2                                 \n\
       c   }                                          \n\
@@ -67,7 +67,7 @@ describe("CodeWriter", function () {
       c {                                            \n\
       c   "foo": "bar",                              \n\
       c   "baz": 123,                                \n\
-      c   "variables": {                             \n\
+      c   "level1Variables": {                       \n\
       c     "foo": 1,                                \n\
       c     "bar": 2                                 \n\
       c   }                                          \n\
@@ -86,7 +86,7 @@ describe("CodeWriter", function () {
     expect(code).toEqual(SpecHelper.stripWhitespace('\n\
       c Sentient Machine Code, Version 1.0           \n\
       c {                                            \n\
-      c   "variables": {}                            \n\
+      c   "level1Variables": {}                      \n\
       c }                                            \n\
       p cnf 3 4                                      \n\
       -1 -2 3 0                                      \n\
@@ -124,7 +124,7 @@ describe("CodeWriter", function () {
       c   "title": "Example program",                \n\
       c   "author": "Chris Patuzzo",                 \n\
       c   "date": "2015-11-24",                      \n\
-      c   "variables": {                             \n\
+      c   "level1Variables": {                       \n\
       c     "a": 1,                                  \n\
       c     "b": 2,                                  \n\
       c     "out": 3                                 \n\
