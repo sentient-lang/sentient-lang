@@ -1,6 +1,7 @@
 "use strict";
 
-var describedClass = require("../../lib/sentient/registry");
+var compiler = "../../../../lib/sentient/compiler";
+var describedClass = require(compiler + "/level1Compiler/registry");
 
 describe("Registry", function () {
   var subject;

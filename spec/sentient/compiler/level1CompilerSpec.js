@@ -1,7 +1,9 @@
 "use strict";
 
-var SpecHelper = require("../specHelper");
-var describedClass = require("../../lib/sentient/compiler");
+var compiler = "../../../lib/sentient/compiler";
+
+var SpecHelper = require("../../specHelper");
+var describedClass = require(compiler + "/level1Compiler");
 
 describe("Compiler", function () {
   it("compiles the simplest program", function () {

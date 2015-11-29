@@ -1,6 +1,7 @@
 "use strict";
 
-var describedClass = require("../../lib/sentient/symbolTable");
+var compiler = "../../../../lib/sentient/compiler";
+var describedClass = require(compiler + "/level1Compiler/symbolTable");
 
 describe("SymbolTable", function () {
   var subject;

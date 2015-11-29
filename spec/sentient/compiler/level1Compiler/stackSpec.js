@@ -1,6 +1,7 @@
 "use strict";
 
-var describedClass = require("../../lib/sentient/stack");
+var compiler = "../../../../lib/sentient/compiler";
+var describedClass = require(compiler + "/level1Compiler/stack");
 
 describe("Stack", function () {
   var subject;
