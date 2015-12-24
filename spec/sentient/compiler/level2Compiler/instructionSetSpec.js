@@ -6,19 +6,22 @@ var describedClass = require(compiler + "/level2Compiler/instructionSet");
 var Stack = require(compiler + "/common/stack");
 var SymbolTable = require(compiler + "/level2Compiler/symbolTable");
 var Registry = require(compiler + "/level2Compiler/registry");
+var CodeWriter = require(compiler + "/level2Compiler/codeWriter");
 
 describe("InstructionSet", function () {
-  var subject, stack, symbolTable, registry;
+  var subject, stack, symbolTable, registry, codeWriter;
 
   beforeEach(function () {
     stack = new Stack();
     symbolTable = new SymbolTable();
     registry = new Registry();
+    codeWriter = new CodeWriter();
 
     subject = new describedClass({
       stack: stack,
       symbolTable: symbolTable,
-      registry: registry
+      registry: registry,
+      codeWriter: codeWriter
     });
   });
 
@@ -32,6 +35,21 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type("bar")).toEqual("boolean");
       expect(symbolTable.symbols("bar")).toEqual(["$$$_BOOLEAN2_$$$"]);
+    });
+
+    it("writes instructions to register the boolean's symbol", function () {
+      spyOn(codeWriter, "instruction");
+      subject.boolean("foo");
+
+      expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+        { type: "push", symbol: "$$$_BOOLEAN1_$$$" }
+      ]);
+
+      expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+        { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+      ]);
+
+      expect(codeWriter.instruction.calls.count()).toEqual(2);
     });
 
     describe("when the boolean is already declared", function () {
@@ -64,6 +82,29 @@ describe("InstructionSet", function () {
         "$$$_INTEGER2_BIT0_$$$",
         "$$$_INTEGER2_BIT1_$$$"
       ]);
+    });
+
+    it("writes instructions to register the integer's symbols", function () {
+      spyOn(codeWriter, "instruction");
+      subject.integer("foo", 2);
+
+      expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+        { type: "push", symbol: "$$$_INTEGER1_BIT0_$$$" }
+      ]);
+
+      expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+        { type: "push", symbol: "$$$_INTEGER1_BIT1_$$$" }
+      ]);
+
+      expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
+        { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" }
+      ]);
+
+      expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
+        { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" }
+      ]);
+
+      expect(codeWriter.instruction.calls.count()).toEqual(4);
     });
 
     describe("when the integer is already declared", function () {
