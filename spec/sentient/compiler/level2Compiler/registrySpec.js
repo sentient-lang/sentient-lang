@@ -14,5 +14,11 @@ describe("Registry", function () {
     expect(subject.nextBoolean()).toEqual(["$$$_BOOLEAN1_$$$"]);
     expect(subject.nextBoolean()).toEqual(["$$$_BOOLEAN2_$$$"]);
     expect(subject.nextBoolean()).toEqual(["$$$_BOOLEAN3_$$$"]);
+
+    expect(subject.nextInteger(1)).toEqual(["$$$_INTEGER1_BIT0_$$$"]);
+    expect(subject.nextInteger(2)).toEqual([
+      "$$$_INTEGER2_BIT0_$$$",
+      "$$$_INTEGER2_BIT1_$$$"
+    ]);
   });
 });
