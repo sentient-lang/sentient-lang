@@ -99,4 +99,56 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("pop", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("top");
+
+      symbolTable.set("bottom", "boolean", ["$$$_BOOLEAN1_$$$"]);
+      symbolTable.set("top", "integer", ["$$$_INTEGER1_BIT0_$$$"]);
+    });
+
+    it("pops a symbol from the stack", function () {
+      subject.pop("foo");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    describe("popping a symbol not in the symbol table", function () {
+      it("adds the symbol to the symbol table", function () {
+        subject.pop("foo");
+
+        expect(symbolTable.type("foo")).toEqual("integer");
+        expect(symbolTable.symbols("foo")).toEqual(["$$$_INTEGER1_BIT0_$$$"]);
+      });
+    });
+
+    describe("popping a symbol of the same type", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "integer", [
+          "$$$_INTEGER2_BIT0_$$$",
+          "$$$_INTEGER2_BIT1_$$$"
+        ]);
+      });
+
+      it("reassigns the symbol to the values on the stack", function () {
+        subject.pop("foo");
+
+        expect(symbolTable.type("foo")).toEqual("integer");
+        expect(symbolTable.symbols("foo")).toEqual(["$$$_INTEGER1_BIT0_$$$"]);
+      });
+    });
+
+    describe("popping a symbol of a different type", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "boolean", ["$$$_BOOLEAN2_$$$"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.pop("foo")
+        }).toThrow();
+      });
+    });
+  });
 });
