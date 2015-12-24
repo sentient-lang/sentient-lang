@@ -3,7 +3,7 @@
 var compiler = "../../../../lib/sentient/compiler";
 
 var describedClass = require(compiler + "/level1Compiler/instructionSet");
-var Stack = require(compiler + "/level1Compiler/stack");
+var Stack = require(compiler + "/common/stack");
 var SymbolTable = require(compiler + "/level1Compiler/symbolTable");
 var Registry = require(compiler + "/level1Compiler/registry");
 var CodeWriter = require(compiler + "/level1Compiler/codeWriter");
