@@ -1,8 +1,6 @@
 "use strict";
 
 var compiler = "../../../../lib/sentient/compiler";
-
-var SpecHelper = require("../../../specHelper");
 var describedClass = require(compiler + "/level2Compiler/codeWriter");
 
 describe("CodeWriter", function () {

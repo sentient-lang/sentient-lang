@@ -37,11 +37,11 @@ describe("SymbolTable", function () {
 
   it("throws an error when the symbol is missing", function () {
     expect(function () {
-      subject.type("missing")
+      subject.type("missing");
     }).toThrow();
 
     expect(function () {
-      subject.symbols("missing")
+      subject.symbols("missing");
     }).toThrow();
   });
 });

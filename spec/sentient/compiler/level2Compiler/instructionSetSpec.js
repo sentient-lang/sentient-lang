@@ -27,8 +27,8 @@ describe("InstructionSet", function () {
 
   describe("boolean", function () {
     it("adds the boolean to the symbol table", function () {
-      subject.boolean("foo");
-      subject.boolean("bar");
+      subject._boolean("foo");
+      subject._boolean("bar");
 
       expect(symbolTable.type("foo")).toEqual("boolean");
       expect(symbolTable.symbols("foo")).toEqual(["$$$_BOOLEAN1_$$$"]);
@@ -39,7 +39,7 @@ describe("InstructionSet", function () {
 
     it("writes instructions to register the boolean's symbol", function () {
       spyOn(codeWriter, "instruction");
-      subject.boolean("foo");
+      subject._boolean("foo");
 
       expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
         { type: "push", symbol: "$$$_BOOLEAN1_$$$" }
@@ -59,7 +59,7 @@ describe("InstructionSet", function () {
 
       it("throws an error", function () {
         expect(function () {
-          subject.boolean("foo");
+          subject._boolean("foo");
         }).toThrow();
       });
     });
@@ -67,8 +67,8 @@ describe("InstructionSet", function () {
 
   describe("integer", function () {
     it("adds the integer to the symbol table", function () {
-      subject.integer("foo", 3);
-      subject.integer("bar", 2);
+      subject._integer("foo", 3);
+      subject._integer("bar", 2);
 
       expect(symbolTable.type("foo")).toEqual("integer");
       expect(symbolTable.symbols("foo")).toEqual([
@@ -86,7 +86,7 @@ describe("InstructionSet", function () {
 
     it("writes instructions to register the integer's symbols", function () {
       spyOn(codeWriter, "instruction");
-      subject.integer("foo", 2);
+      subject._integer("foo", 2);
 
       expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
         { type: "push", symbol: "$$$_INTEGER1_BIT0_$$$" }
@@ -114,7 +114,7 @@ describe("InstructionSet", function () {
 
       it("throws an error", function () {
         expect(function () {
-          subject.integer("foo", 3);
+          subject._integer("foo", 3);
         }).toThrow();
       });
     });
@@ -187,7 +187,7 @@ describe("InstructionSet", function () {
 
       it("throws an error", function () {
         expect(function () {
-          subject.pop("foo")
+          subject.pop("foo");
         }).toThrow();
       });
     });
