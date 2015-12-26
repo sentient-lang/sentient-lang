@@ -11,6 +11,10 @@ describe("Registry", function () {
   });
 
   it("behaves as expected", function () {
+    expect(subject.nextSymbol()).toEqual("$$$_TMP1_$$$");
+    expect(subject.nextSymbol()).toEqual("$$$_TMP2_$$$");
+    expect(subject.nextSymbol()).toEqual("$$$_TMP3_$$$");
+
     expect(subject.nextBoolean()).toEqual(["$$$_BOOLEAN1_$$$"]);
     expect(subject.nextBoolean()).toEqual(["$$$_BOOLEAN2_$$$"]);
     expect(subject.nextBoolean()).toEqual(["$$$_BOOLEAN3_$$$"]);

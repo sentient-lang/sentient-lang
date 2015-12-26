@@ -192,4 +192,63 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("constant", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+    });
+
+    it("pushes a symbol onto the stack", function () {
+      subject.constant(true);
+      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the symbol to the symbol table", function () {
+      subject.constant(true);
+
+      expect(symbolTable.type("$$$_TMP1_$$$")).toEqual("boolean");
+      expect(symbolTable.symbols("$$$_TMP1_$$$")).toEqual([
+        "$$$_BOOLEAN1_$$$"
+      ]);
+    });
+
+    describe("true", function () {
+      it("writes instructions to register the symbol", function () {
+        spyOn(codeWriter, "instruction");
+        subject.constant(true);
+
+        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+          { type: "true" }
+        ]);
+
+        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+          { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+        ]);
+
+        expect(codeWriter.instruction.calls.count()).toEqual(2);
+      });
+    });
+
+    describe("false", function () {
+      it("writes instructions to register the symbol", function () {
+        spyOn(codeWriter, "instruction");
+        subject.constant(false);
+
+        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+          { type: "false" }
+        ]);
+
+        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+          { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+        ]);
+
+        expect(codeWriter.instruction.calls.count()).toEqual(2);
+      });
+    });
+
+    describe("integer constants", function () {
+
+    });
+  });
 });
