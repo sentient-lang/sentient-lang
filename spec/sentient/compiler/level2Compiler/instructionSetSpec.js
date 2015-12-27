@@ -247,8 +247,12 @@ describe("InstructionSet", function () {
       });
     });
 
-    describe("integer constants", function () {
-
+    describe("for an unsupported type", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject.constant({});
+        }).toThrow();
+      });
     });
   });
 });
