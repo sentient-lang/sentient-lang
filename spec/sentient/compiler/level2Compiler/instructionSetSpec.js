@@ -247,6 +247,66 @@ describe("InstructionSet", function () {
       });
     });
 
+    describe("positive integers", function () {
+      it("writes instructions to register the symbol", function () {
+        spyOn(codeWriter, "instruction");
+        subject.constant(3);
+
+        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+          { type: "false" }
+        ]);
+        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+          { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" }
+        ]);
+
+        expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
+          { type: "true" }
+        ]);
+        expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
+          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" }
+        ]);
+
+        expect(codeWriter.instruction.calls.argsFor(4)).toEqual([
+          { type: "true" }
+        ]);
+        expect(codeWriter.instruction.calls.argsFor(5)).toEqual([
+          { type: "pop", symbol: "$$$_INTEGER1_BIT2_$$$" }
+        ]);
+
+        expect(codeWriter.instruction.calls.count()).toEqual(6);
+      });
+    });
+
+    describe("negative integers", function () {
+      it("writes instructions to register the symbol", function () {
+        spyOn(codeWriter, "instruction");
+        subject.constant(-3);
+
+        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+          { type: "true" }
+        ]);
+        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+          { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" }
+        ]);
+
+        expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
+          { type: "false" }
+        ]);
+        expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
+          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" }
+        ]);
+
+        expect(codeWriter.instruction.calls.argsFor(4)).toEqual([
+          { type: "true" }
+        ]);
+        expect(codeWriter.instruction.calls.argsFor(5)).toEqual([
+          { type: "pop", symbol: "$$$_INTEGER1_BIT2_$$$" }
+        ]);
+
+        expect(codeWriter.instruction.calls.count()).toEqual(6);
+      });
+    });
+
     describe("for an unsupported type", function () {
       it("throws an error", function () {
         expect(function () {
