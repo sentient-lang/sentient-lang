@@ -15,6 +15,15 @@ var SpecHelper = {
     }
 
     return lines.join("\n");
+  },
+  calls: function (spy) {
+    var calls = [];
+
+    for (var i = 0; i < spy.calls.count(); i += 1) {
+      calls.push(spy.calls.argsFor(i)[0]);
+    };
+
+    return calls;
   }
 };
 

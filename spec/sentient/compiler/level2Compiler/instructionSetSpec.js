@@ -2,6 +2,7 @@
 
 var compiler = "../../../../lib/sentient/compiler";
 
+var SpecHelper = require("../../../specHelper");
 var describedClass = require(compiler + "/level2Compiler/instructionSet");
 var Stack = require(compiler + "/common/stack");
 var SymbolTable = require(compiler + "/level2Compiler/symbolTable");
@@ -41,15 +42,10 @@ describe("InstructionSet", function () {
       spyOn(codeWriter, "instruction");
       subject._boolean("foo");
 
-      expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
-        { type: "push", symbol: "$$$_BOOLEAN1_$$$" }
-      ]);
-
-      expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "$$$_BOOLEAN1_$$$" },
         { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
       ]);
-
-      expect(codeWriter.instruction.calls.count()).toEqual(2);
     });
 
     describe("when the boolean is already declared", function () {
@@ -88,23 +84,12 @@ describe("InstructionSet", function () {
       spyOn(codeWriter, "instruction");
       subject._integer("foo", 2);
 
-      expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
-        { type: "push", symbol: "$$$_INTEGER1_BIT0_$$$" }
-      ]);
-
-      expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
-        { type: "push", symbol: "$$$_INTEGER1_BIT1_$$$" }
-      ]);
-
-      expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
-        { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" }
-      ]);
-
-      expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "$$$_INTEGER1_BIT0_$$$" },
+        { type: "push", symbol: "$$$_INTEGER1_BIT1_$$$" },
+        { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" },
         { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" }
       ]);
-
-      expect(codeWriter.instruction.calls.count()).toEqual(4);
     });
 
     describe("when the integer is already declared", function () {
@@ -218,15 +203,10 @@ describe("InstructionSet", function () {
         spyOn(codeWriter, "instruction");
         subject.constant(true);
 
-        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
-          { type: "true" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "true" },
           { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
         ]);
-
-        expect(codeWriter.instruction.calls.count()).toEqual(2);
       });
     });
 
@@ -235,15 +215,10 @@ describe("InstructionSet", function () {
         spyOn(codeWriter, "instruction");
         subject.constant(false);
 
-        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
-          { type: "false" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "false" },
           { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
         ]);
-
-        expect(codeWriter.instruction.calls.count()).toEqual(2);
       });
     });
 
@@ -252,28 +227,14 @@ describe("InstructionSet", function () {
         spyOn(codeWriter, "instruction");
         subject.constant(3);
 
-        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
-          { type: "false" }
-        ]);
-        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
-          { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
-          { type: "true" }
-        ]);
-        expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
-          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(4)).toEqual([
-          { type: "true" }
-        ]);
-        expect(codeWriter.instruction.calls.argsFor(5)).toEqual([
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "false" },
+          { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" },
+          { type: "true" },
+          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" },
+          { type: "true" },
           { type: "pop", symbol: "$$$_INTEGER1_BIT2_$$$" }
         ]);
-
-        expect(codeWriter.instruction.calls.count()).toEqual(6);
       });
     });
 
@@ -282,28 +243,14 @@ describe("InstructionSet", function () {
         spyOn(codeWriter, "instruction");
         subject.constant(-3);
 
-        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
-          { type: "true" }
-        ]);
-        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
-          { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
-          { type: "false" }
-        ]);
-        expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
-          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(4)).toEqual([
-          { type: "true" }
-        ]);
-        expect(codeWriter.instruction.calls.argsFor(5)).toEqual([
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "true" },
+          { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" },
+          { type: "false" },
+          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" },
+          { type: "true" },
           { type: "pop", symbol: "$$$_INTEGER1_BIT2_$$$" }
         ]);
-
-        expect(codeWriter.instruction.calls.count()).toEqual(6);
       });
     });
 
@@ -346,23 +293,12 @@ describe("InstructionSet", function () {
         spyOn(codeWriter, "instruction");
         subject.equal();
 
-        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
           { type: "push", symbol: "foo"},
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
           { type: "push", symbol: "bar"},
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
           { type: "equal" },
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
           { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
         ]);
-
-        expect(codeWriter.instruction.calls.count()).toEqual(4);
       });
     });
 
@@ -396,39 +332,16 @@ describe("InstructionSet", function () {
           spyOn(codeWriter, "instruction");
           subject.equal();
 
-          expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+          expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
             { type: "push", symbol: "foo"},
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
             { type: "push", symbol: "baz"},
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
             { type: "equal" },
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
             { type: "push", symbol: "bar"},
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(4)).toEqual([
             { type: "push", symbol: "qux"},
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(5)).toEqual([
             { type: "equal" },
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(6)).toEqual([
             { type: "and" },
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(7)).toEqual([
             { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
           ]);
-
-          expect(codeWriter.instruction.calls.count()).toEqual(8);
         });
       });
 
@@ -447,55 +360,20 @@ describe("InstructionSet", function () {
           spyOn(codeWriter, "instruction");
           subject.equal();
 
-          expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
-            { type: "push", symbol: "foo"}
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
-            { type: "push", symbol: "qux"}
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
-            { type: "equal" }
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
-            { type: "push", symbol: "bar"}
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(4)).toEqual([
-            { type: "push", symbol: "qux"}
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(5)).toEqual([
-            { type: "equal" }
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(6)).toEqual([
-            { type: "push", symbol: "baz"}
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(7)).toEqual([
-            { type: "push", symbol: "abc"}
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(8)).toEqual([
-            { type: "equal" }
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(9)).toEqual([
-            { type: "and" }
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(10)).toEqual([
-            { type: "and" }
-          ]);
-
-          expect(codeWriter.instruction.calls.argsFor(11)).toEqual([
+          expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+            { type: "push", symbol: "foo"},
+            { type: "push", symbol: "qux"},
+            { type: "equal" },
+            { type: "push", symbol: "bar"},
+            { type: "push", symbol: "qux"},
+            { type: "equal" },
+            { type: "push", symbol: "baz"},
+            { type: "push", symbol: "abc"},
+            { type: "equal" },
+            { type: "and" },
+            { type: "and" },
             { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
           ]);
-
-          expect(codeWriter.instruction.calls.count()).toEqual(12);
         });
       });
     });
@@ -553,247 +431,100 @@ describe("InstructionSet", function () {
         spyOn(codeWriter, "instruction");
         subject.add();
 
-        // === bit 2 ===
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          // === bit 2 ===
+          // c_in = false
+          { type: "false" },
+          { type: "pop", symbol: "$$$_BOOLEAN1_$$$" },
 
-        // c_in = false
-        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
-          { type: "false" }
-        ]);
+          // l xor r
+          { type: "push", symbol: "bar" },
+          { type: "push", symbol: "qux" },
+          { type: "not" },
+          { type: "equal" },
 
-        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
-          { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
-        ]);
+          // sum = (l xor r) xor c_in
+          { type: "push", symbol: "$$$_BOOLEAN1_$$$" },
+          { type: "not" },
+          { type: "equal" },
+          { type: "pop", symbol: "$$$_INTEGER1_BIT2_$$$" },
 
-        // l xor r
-        expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
-          { type: "push", symbol: "bar" }
-        ]);
+          // l xor r
+          { type: "push", symbol: "bar" },
+          { type: "push", symbol: "qux" },
+          { type: "not" },
+          { type: "equal" },
 
-        expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
-          { type: "push", symbol: "qux" }
-        ]);
+          // (l xor r) and c_in
+          { type: "push", symbol: "$$$_BOOLEAN1_$$$" },
+          { type: "and" },
 
-        expect(codeWriter.instruction.calls.argsFor(4)).toEqual([
-          { type: "not" }
-        ]);
+          // a and b
+          { type: "push", symbol: "bar" },
+          { type: "push", symbol: "qux" },
+          { type: "and" },
 
-        expect(codeWriter.instruction.calls.argsFor(5)).toEqual([
-          { type: "equal" }
-        ]);
+          // carry = (a and b) or ((l xor r) and c_in)
+          { type: "or" },
+          { type: "pop", symbol: "$$$_BOOLEAN2_$$$" },
 
-        // sum = (l xor r) xor c_in
-        expect(codeWriter.instruction.calls.argsFor(6)).toEqual([
-          { type: "push", symbol: "$$$_BOOLEAN1_$$$" }
-        ]);
+          // === bit 1 ===
+          // l xor r
+          { type: "push", symbol: "foo" },
+          { type: "push", symbol: "baz" },
+          { type: "not" },
+          { type: "equal" },
 
-        expect(codeWriter.instruction.calls.argsFor(7)).toEqual([
-          { type: "not" }
-        ]);
+          // sum = (l xor r) xor c_in
+          { type: "push", symbol: "$$$_BOOLEAN2_$$$" },
+          { type: "not" },
+          { type: "equal" },
+          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" },
 
-        expect(codeWriter.instruction.calls.argsFor(8)).toEqual([
-          { type: "equal" }
-        ]);
+          // l xor r
+          { type: "push", symbol: "foo" },
+          { type: "push", symbol: "baz" },
+          { type: "not" },
+          { type: "equal" },
 
-        expect(codeWriter.instruction.calls.argsFor(9)).toEqual([
-          { type: "pop", symbol: "$$$_INTEGER1_BIT2_$$$" }
-        ]);
+          // (l xor r) and c_in
+          { type: "push", symbol: "$$$_BOOLEAN2_$$$" },
+          { type: "and" },
 
-        // l xor r
-        expect(codeWriter.instruction.calls.argsFor(10)).toEqual([
-          { type: "push", symbol: "bar" }
-        ]);
+          // a and b
+          { type: "push", symbol: "foo" },
+          { type: "push", symbol: "baz" },
+          { type: "and" },
 
-        expect(codeWriter.instruction.calls.argsFor(11)).toEqual([
-          { type: "push", symbol: "qux" }
-        ]);
+          // c_in = (a and b) or ((l xor r) and c_in)
+          { type: "or" },
+          { type: "pop", symbol: "$$$_BOOLEAN3_$$$" },
 
-        expect(codeWriter.instruction.calls.argsFor(12)).toEqual([
-          { type: "not" }
-        ]);
+          // === bit 0 ===
+          // a == b
+          { type: "push", symbol: "foo" },
+          { type: "push", symbol: "baz" },
+          { type: "equal" },
 
-        expect(codeWriter.instruction.calls.argsFor(13)).toEqual([
-          { type: "equal" }
-        ]);
+          // (a == b) && c_in
+          { type: "push", symbol: "$$$_BOOLEAN3_$$$" },
+          { type: "and" },
 
-        // (l xor r) and c_in
-        expect(codeWriter.instruction.calls.argsFor(14)).toEqual([
-          { type: "push", symbol: "$$$_BOOLEAN1_$$$" }
-        ]);
+          // a == !b
+          { type: "push", symbol: "foo" },
+          { type: "push", symbol: "baz" },
+          { type: "not" },
+          { type: "equal" },
 
-        expect(codeWriter.instruction.calls.argsFor(15)).toEqual([
-          { type: "and" }
-        ]);
+          // (a == !b) && !c_in
+          { type: "push", symbol: "$$$_BOOLEAN3_$$$" },
+          { type: "not" },
+          { type: "and" },
 
-        // a and b
-        expect(codeWriter.instruction.calls.argsFor(16)).toEqual([
-          { type: "push", symbol: "bar" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(17)).toEqual([
-          { type: "push", symbol: "qux" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(18)).toEqual([
-          { type: "and" }
-        ]);
-
-        // carry = (a and b) or ((l xor r) and c_in)
-        expect(codeWriter.instruction.calls.argsFor(19)).toEqual([
-          { type: "or" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(20)).toEqual([
-          { type: "pop", symbol: "$$$_BOOLEAN2_$$$" }
-        ]);
-
-        // === bit 1 ===
-
-        // l xor r
-        expect(codeWriter.instruction.calls.argsFor(21)).toEqual([
-          { type: "push", symbol: "foo" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(22)).toEqual([
-          { type: "push", symbol: "baz" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(23)).toEqual([
-          { type: "not" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(24)).toEqual([
-          { type: "equal" }
-        ]);
-
-        // sum = (l xor r) xor c_in
-        expect(codeWriter.instruction.calls.argsFor(25)).toEqual([
-          { type: "push", symbol: "$$$_BOOLEAN2_$$$" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(26)).toEqual([
-          { type: "not" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(27)).toEqual([
-          { type: "equal" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(28)).toEqual([
-          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" }
-        ]);
-
-        // l xor r
-        expect(codeWriter.instruction.calls.argsFor(29)).toEqual([
-          { type: "push", symbol: "foo" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(30)).toEqual([
-          { type: "push", symbol: "baz" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(31)).toEqual([
-          { type: "not" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(32)).toEqual([
-          { type: "equal" }
-        ]);
-
-        // (l xor r) and c_in
-        expect(codeWriter.instruction.calls.argsFor(33)).toEqual([
-          { type: "push", symbol: "$$$_BOOLEAN2_$$$" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(34)).toEqual([
-          { type: "and" }
-        ]);
-
-        // a and b
-        expect(codeWriter.instruction.calls.argsFor(35)).toEqual([
-          { type: "push", symbol: "foo" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(36)).toEqual([
-          { type: "push", symbol: "baz" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(37)).toEqual([
-          { type: "and" }
-        ]);
-
-        // c_in = (a and b) or ((l xor r) and c_in)
-        expect(codeWriter.instruction.calls.argsFor(38)).toEqual([
-          { type: "or" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(39)).toEqual([
-          { type: "pop", symbol: "$$$_BOOLEAN3_$$$" }
-        ]);
-
-        // === bit 0 ===
-
-        // a == b
-        expect(codeWriter.instruction.calls.argsFor(40)).toEqual([
-          { type: "push", symbol: "foo" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(41)).toEqual([
-          { type: "push", symbol: "baz" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(42)).toEqual([
-          { type: "equal" }
-        ]);
-
-        // (a == b) && c_in
-        expect(codeWriter.instruction.calls.argsFor(43)).toEqual([
-          { type: "push", symbol: "$$$_BOOLEAN3_$$$" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(44)).toEqual([
-          { type: "and" }
-        ]);
-
-        // a == !b
-        expect(codeWriter.instruction.calls.argsFor(45)).toEqual([
-          { type: "push", symbol: "foo" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(46)).toEqual([
-          { type: "push", symbol: "baz" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(47)).toEqual([
-          { type: "not" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(48)).toEqual([
-          { type: "equal" }
-        ]);
-
-        // (a == !b) && !c_in
-        expect(codeWriter.instruction.calls.argsFor(49)).toEqual([
-          { type: "push", symbol: "$$$_BOOLEAN3_$$$" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(50)).toEqual([
-          { type: "not" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(51)).toEqual([
-          { type: "and" }
-        ]);
-
-        // sum = ((a == b) && c_in) || ((a == !b) && !c_in)
-        expect(codeWriter.instruction.calls.argsFor(52)).toEqual([
-          { type: "or" }
-        ]);
-
-        expect(codeWriter.instruction.calls.argsFor(53)).toEqual([
+          // sum = ((a == b) && c_in) || ((a == !b) && !c_in)
+          { type: "or" },
           { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" }
         ]);
-
-        expect(codeWriter.instruction.calls.count()).toEqual(54);
       });
     });
 
