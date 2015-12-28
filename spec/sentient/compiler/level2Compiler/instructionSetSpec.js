@@ -546,4 +546,29 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("variable", function () {
+    beforeEach(function () {
+      symbolTable.set("foo", "integer", ["a", "b", "c"]);
+    });
+
+    it("writes the variable with its type and symbols", function () {
+      spyOn(codeWriter, "variable");
+      subject.variable("foo");
+      expect(codeWriter.variable).toHaveBeenCalledWith(
+        "foo", "integer", ["a", "b", "c"]
+      );
+    });
+
+    it("writes instructions for 'variable'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.variable("foo");
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "c" }
+      ]);
+    });
+  });
 });
