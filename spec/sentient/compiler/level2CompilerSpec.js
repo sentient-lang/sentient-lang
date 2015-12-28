@@ -31,8 +31,20 @@ describe("Level2Compiler", function () {
       ]
     });
 
-    expect(code).toEqual({
-      TODO: "TODO"
+    expect(code.metadata.title).toEqual("Total 100");
+
+    expect(code.metadata.level2Variables.a).toEqual({
+      type: "integer",
+      symbols: [
+        "$$$_INTEGER1_BIT0_$$$",
+        "$$$_INTEGER1_BIT1_$$$",
+        "$$$_INTEGER1_BIT2_$$$",
+        "$$$_INTEGER1_BIT3_$$$",
+        "$$$_INTEGER1_BIT4_$$$",
+        "$$$_INTEGER1_BIT5_$$$"
+      ]
     });
+
+    expect(code.instructions.length).toEqual(382);
   });
 });
