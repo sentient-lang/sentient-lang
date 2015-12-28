@@ -41,4 +41,18 @@ describe("TwosComplement", function () {
     expect(describedClass.decode([true, false, false, true])).toEqual((-7));
     expect(describedClass.decode([true, false, false, false])).toEqual((-8));
   });
+
+  it("pads twos-complement arrays by duplicating the sign", function () {
+    var padded = describedClass.pad(["foo"], ["a", "b", "c"]);
+    expect(padded.leftSymbols).toEqual(["foo", "foo", "foo"]);
+    expect(padded.rightSymbols).toEqual(["a", "b", "c"]);
+
+    padded = describedClass.pad(["a", "b", "c"], ["foo", "bar"]);
+    expect(padded.leftSymbols).toEqual(["a", "b", "c"]);
+    expect(padded.rightSymbols).toEqual(["foo", "foo", "bar"]);
+
+    padded = describedClass.pad(["a", "b", "c"], ["foo", "bar", "baz"]);
+    expect(padded.leftSymbols).toEqual(["a", "b", "c"]);
+    expect(padded.rightSymbols).toEqual(["foo", "bar", "baz"]);
+  });
 });
