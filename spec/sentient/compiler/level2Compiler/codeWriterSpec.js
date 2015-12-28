@@ -12,7 +12,12 @@ describe("CodeWriter", function () {
 
   it("writes the simplest program", function () {
     var code = subject.write();
-    expect(code).toEqual({ instructions: [] });
+    expect(code).toEqual({
+      metadata: {
+        level2Variables: {}
+      },
+      instructions: []
+    });
   });
 
   it("can write instructions", function () {
@@ -22,10 +27,62 @@ describe("CodeWriter", function () {
     var code = subject.write();
 
     expect(code).toEqual({
+      metadata: {
+        level2Variables: {}
+      },
       instructions: [
         { foo: "bar", baz: 123 },
         { qux: "qux" }
       ]
+    });
+  });
+
+  it("can set the metadata", function () {
+    subject.metadata({ foo: "bar", baz: 123 });
+    var code = subject.write();
+
+    expect(code).toEqual({
+      metadata: {
+        foo: "bar",
+        baz: 123,
+        level2Variables: {}
+      },
+      instructions: []
+    });
+  });
+
+  it("can set the variables", function () {
+    subject.variable("foo", "boolean", ["a"]);
+    subject.variable("bar", "integer", ["b", "c"]);
+    var code = subject.write();
+
+    expect(code).toEqual({
+      metadata: {
+        level2Variables: {
+          foo: { type: "boolean", symbols: ["a"] },
+          bar: { type: "integer", symbols: ["b", "c"] },
+        }
+      },
+      instructions: []
+    });
+  });
+
+  it("can set the variables and the metadata together", function () {
+    subject.variable("foo", "boolean", ["a"]);
+    subject.metadata({ foo: "bar", baz: 123 });
+    subject.variable("bar", "integer", ["b", "c"]);
+    var code = subject.write();
+
+    expect(code).toEqual({
+      metadata: {
+        foo: "bar",
+        baz: 123,
+        level2Variables: {
+          foo: { type: "boolean", symbols: ["a"] },
+          bar: { type: "integer", symbols: ["b", "c"] },
+        }
+      },
+      instructions: []
     });
   });
 });
