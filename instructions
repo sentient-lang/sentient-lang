@@ -1,0 +1,34 @@
+Level 1 Instructions:
+
+[X] push
+[X] pop
+[X] not
+[X] and
+[X] or
+[X] equal
+[X] true
+[X] false
+[X] variable
+
+Level 2 Instructions:
+
+[X] push
+[X] pop
+[ ] not
+[ ] and
+[ ] or
+[X] equal
+[X] constant
+[X] variable
+[X] boolean
+[X] integer
+[X] add
+[ ] subtract
+[ ] multiply
+[ ] divide
+[ ] quotient
+[ ] negate
+[ ] less_than
+[ ] greater_than
+[ ] less_equal
+[ ] greater_equal
