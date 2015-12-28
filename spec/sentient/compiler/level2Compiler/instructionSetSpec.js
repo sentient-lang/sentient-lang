@@ -433,7 +433,70 @@ describe("InstructionSet", function () {
       });
 
       describe("of different widths", function () {
-        // TODO
+        beforeEach(function () {
+          stack.push("bottom");
+          stack.push("a");
+          stack.push("b");
+
+          symbolTable.set("bottom", "anything", ["anything"]);
+          symbolTable.set("a", "integer", ["foo", "bar", "baz"]);
+          symbolTable.set("b", "integer", ["qux", "abc"]);
+        });
+
+        it("pads the smaller width with the leading bit", function () {
+          spyOn(codeWriter, "instruction");
+          subject.equal();
+
+          expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+            { type: "push", symbol: "foo"}
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+            { type: "push", symbol: "qux"}
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
+            { type: "equal" }
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
+            { type: "push", symbol: "bar"}
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(4)).toEqual([
+            { type: "push", symbol: "qux"}
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(5)).toEqual([
+            { type: "equal" }
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(6)).toEqual([
+            { type: "push", symbol: "baz"}
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(7)).toEqual([
+            { type: "push", symbol: "abc"}
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(8)).toEqual([
+            { type: "equal" }
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(9)).toEqual([
+            { type: "and" }
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(10)).toEqual([
+            { type: "and" }
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(11)).toEqual([
+            { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+          ]);
+
+          expect(codeWriter.instruction.calls.count()).toEqual(12);
+        });
       });
     });
 
