@@ -315,4 +315,73 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("equal", function () {
+    describe("for two boolean types", function () {
+      beforeEach(function () {
+        stack.push("bottom");
+        stack.push("a");
+        stack.push("b");
+
+        symbolTable.set("bottom", "anything", ["anything"]);
+        symbolTable.set("a", "boolean", ["foo"]);
+        symbolTable.set("b", "boolean", ["bar"]);
+      });
+
+      it("replaces the top two symbols for one symbol on the stack", function () {
+        subject.equal();
+        expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.equal();
+        var newSymbol = stack.pop();
+
+        expect(symbolTable.type(newSymbol)).toEqual("boolean");
+        expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_BOOLEAN1_$$$"]);
+      });
+
+      it("writes instructions for 'equal'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.equal();
+
+        expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+          { type: "push", symbol: "foo"},
+        ]);
+
+        expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+          { type: "push", symbol: "bar"},
+        ]);
+
+        expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
+          { type: "equal" },
+        ]);
+
+        expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
+          { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+        ]);
+
+        expect(codeWriter.instruction.calls.count()).toEqual(4);
+      });
+    });
+
+    describe("for mismatched types", function () {
+      beforeEach(function () {
+        stack.push("bottom");
+        stack.push("a");
+        stack.push("b");
+
+        symbolTable.set("bottom", "anything", ["anything"]);
+        symbolTable.set("a", "integer", ["foo"]);
+        symbolTable.set("b", "boolean", ["bar"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.equal();
+        }).toThrow();
+      });
+    });
+  });
 });
