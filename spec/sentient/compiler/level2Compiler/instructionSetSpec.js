@@ -297,7 +297,7 @@ describe("InstructionSet", function () {
         symbolTable.set("b", "boolean", ["bar"]);
       });
 
-      it("replaces the top two symbols for one symbol on the stack", function () {
+      it("replaces the top two symbols for one symbol", function () {
         subject.equal();
         expect(stack.pop()).toEqual("$$$_TMP1_$$$");
         expect(stack.pop()).toEqual("bottom");
@@ -336,7 +336,7 @@ describe("InstructionSet", function () {
           symbolTable.set("b", "integer", ["baz", "qux"]);
         });
 
-        it("replaces the top two symbols for one symbol on the stack", function () {
+        it("replaces the top two symbols for one symbol", function () {
           subject.equal();
           expect(stack.pop()).toEqual("$$$_TMP1_$$$");
           expect(stack.pop()).toEqual("bottom");
@@ -431,7 +431,7 @@ describe("InstructionSet", function () {
         symbolTable.set("b", "integer", ["baz", "qux"]);
       });
 
-      it("replaces the top two symbols for one symbol on the stack", function () {
+      it("replaces the top two symbols for one symbol", function () {
         subject.add();
         expect(stack.pop()).toEqual("$$$_TMP1_$$$");
         expect(stack.pop()).toEqual("bottom");

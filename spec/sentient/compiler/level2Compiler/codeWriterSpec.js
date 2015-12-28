@@ -60,7 +60,7 @@ describe("CodeWriter", function () {
       metadata: {
         level2Variables: {
           foo: { type: "boolean", symbols: ["a"] },
-          bar: { type: "integer", symbols: ["b", "c"] },
+          bar: { type: "integer", symbols: ["b", "c"] }
         }
       },
       instructions: []
@@ -79,7 +79,7 @@ describe("CodeWriter", function () {
         baz: 123,
         level2Variables: {
           foo: { type: "boolean", symbols: ["a"] },
-          bar: { type: "integer", symbols: ["b", "c"] },
+          bar: { type: "integer", symbols: ["b", "c"] }
         }
       },
       instructions: []
