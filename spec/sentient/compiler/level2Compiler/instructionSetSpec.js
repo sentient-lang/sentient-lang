@@ -366,6 +366,77 @@ describe("InstructionSet", function () {
       });
     });
 
+    describe("for two integer types", function () {
+      describe("of the same width", function () {
+        beforeEach(function () {
+          stack.push("bottom");
+          stack.push("a");
+          stack.push("b");
+
+          symbolTable.set("bottom", "anything", ["anything"]);
+          symbolTable.set("a", "integer", ["foo", "bar"]);
+          symbolTable.set("b", "integer", ["baz", "qux"]);
+        });
+
+        it("replaces the top two symbols for one symbol on the stack", function () {
+          subject.equal();
+          expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+          expect(stack.pop()).toEqual("bottom");
+        });
+
+        it("adds the new symbol to the symbol table", function () {
+          subject.equal();
+          var newSymbol = stack.pop();
+
+          expect(symbolTable.type(newSymbol)).toEqual("boolean");
+          expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_BOOLEAN1_$$$"]);
+        });
+
+        it("writes instructions for 'equal'", function () {
+          spyOn(codeWriter, "instruction");
+          subject.equal();
+
+          expect(codeWriter.instruction.calls.argsFor(0)).toEqual([
+            { type: "push", symbol: "foo"},
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(1)).toEqual([
+            { type: "push", symbol: "baz"},
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(2)).toEqual([
+            { type: "equal" },
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(3)).toEqual([
+            { type: "push", symbol: "bar"},
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(4)).toEqual([
+            { type: "push", symbol: "qux"},
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(5)).toEqual([
+            { type: "equal" },
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(6)).toEqual([
+            { type: "and" },
+          ]);
+
+          expect(codeWriter.instruction.calls.argsFor(7)).toEqual([
+            { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+          ]);
+
+          expect(codeWriter.instruction.calls.count()).toEqual(8);
+        });
+      });
+
+      describe("of different widths", function () {
+        // TODO
+      });
+    });
+
     describe("for mismatched types", function () {
       beforeEach(function () {
         stack.push("bottom");
