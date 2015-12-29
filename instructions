@@ -14,7 +14,7 @@ Level 2 Instructions:
 
 [X] push
 [X] pop
-[ ] not
+[X] not
 [X] and
 [ ] or
 [X] equal

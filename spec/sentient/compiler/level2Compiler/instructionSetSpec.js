@@ -641,4 +641,49 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("not", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "boolean", ["a"]);
+    });
+
+    it("replaces the top symbol on the stack", function () {
+      subject.not();
+      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.not();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_BOOLEAN1_$$$"]);
+    });
+
+    it("writes instructions for 'not'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.not();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "not" },
+        { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "integer", ["a"]);
+
+        expect(function () {
+          subject.not();
+        }).toThrow();
+      });
+    });
+  });
 });
