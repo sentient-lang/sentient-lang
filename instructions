@@ -16,7 +16,7 @@ Level 2 Instructions:
 [X] pop
 [X] not
 [X] and
-[ ] or
+[X] or
 [X] equal
 [X] constant
 [X] variable

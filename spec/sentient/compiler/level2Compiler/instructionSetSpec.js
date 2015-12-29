@@ -642,6 +642,54 @@ describe("InstructionSet", function () {
     });
   });
 
+  describe("or", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "boolean", ["a"]);
+      symbolTable.set("bar", "boolean", ["b"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.or();
+      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.or();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_BOOLEAN1_$$$"]);
+    });
+
+    it("writes instructions for 'or'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.or();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "or" },
+        { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+      ]);
+    });
+
+    describe("incorrect types", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "integer", ["a"]);
+
+        expect(function () {
+          subject.or();
+        }).toThrow();
+      });
+    });
+  });
+
   describe("not", function () {
     beforeEach(function () {
       stack.push("bottom");
