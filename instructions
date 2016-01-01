@@ -30,5 +30,5 @@ Level 2 Instructions:
 [X] negate
 [X] lessthan
 [X] greaterthan
-[ ] lessequal
-[ ] greaterequal
+[X] lessequal
+[X] greaterequal
