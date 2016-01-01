@@ -12,17 +12,24 @@ var Machine = require("../../../../lib/sentient/machine");
 
 var _ = require("underscore");
 
-describe("Integration: 'boolean'", function () {
-  it("declares a variable of type boolean", function () {
+describe("Integration: 'push'", function () {
+  it("pushes a variable onto the stack", function () {
     var program = Level2Compiler.compile({
       instructions: [
         { type: "integer", symbol: "a", width: 4 },
-        { type: "variable", symbol: "a" }
+        { type: "push", symbol: "a" },
+        { type: "integer", symbol: "b", width: 4 },
+        { type: "push", symbol: "b" },
+        { type: "equal" },
+        { type: "pop", symbol: "out" },
+        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "out" }
       ]
     });
     program = Level1Compiler.compile(program);
 
-    var assignments = Level2Runtime.encode(program, {});
+    var assignments = Level2Runtime.encode(program, { out: true });
     assignments = Level1Runtime.encode(program, assignments);
 
     var result = Machine.run(program, assignments);
@@ -30,14 +37,14 @@ describe("Integration: 'boolean'", function () {
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
 
-    expect(typeof result.a).toEqual("number");
+    expect(result.a).toEqual(result.b);
   });
 
-  it("throws an error if the width is mising", function () {
+  it("throws an error if the variable is not declared", function () {
     expect(function () {
       Level2Compiler.compile({
         instructions: [
-          { type: "integer", symbol: "a" }
+          { type: "push", symbol: "a" }
         ]
       });
     }).toThrow();

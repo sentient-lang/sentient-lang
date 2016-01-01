@@ -23,7 +23,7 @@ describe("Integration: 'boolean'", function () {
     program = Level1Compiler.compile(program);
 
     var assignments = Level2Runtime.encode(program, {});
-    assignments = Level1Runtime.encode(program, {});
+    assignments = Level1Runtime.encode(program, assignments);
 
     var result = Machine.run(program, assignments);
 
