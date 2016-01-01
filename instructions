@@ -26,7 +26,7 @@ Level 2 Instructions:
 [X] integer
 [X] add
 [X] subtract
-[ ] multiply
+[X] multiply
 [ ] divide
 [ ] quotient
 [X] negate

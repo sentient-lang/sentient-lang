@@ -947,6 +947,37 @@ describe("InstructionSet", function () {
     });
   });
 
+  describe("multiply", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["a", "b"]);
+      symbolTable.set("bar", "integer", ["c", "d"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.multiply();
+      expect(stack.pop()).toEqual("$$$_TMP10_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.multiply();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual([
+        "$$$_INTEGER7_BIT1_$$$",
+        "$$$_INTEGER7_BIT2_$$$",
+        "$$$_INTEGER7_BIT3_$$$",
+        "$$$_INTEGER7_BIT4_$$$"
+      ]);
+    });
+  });
+
   describe("duplicate", function () {
     beforeEach(function () {
       stack.push("bottom");
