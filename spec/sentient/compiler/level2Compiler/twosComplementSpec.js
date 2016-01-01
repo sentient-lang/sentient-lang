@@ -54,5 +54,9 @@ describe("TwosComplement", function () {
     padded = describedClass.pad(["a", "b", "c"], ["foo", "bar", "baz"]);
     expect(padded.leftSymbols).toEqual(["a", "b", "c"]);
     expect(padded.rightSymbols).toEqual(["foo", "bar", "baz"]);
+
+    padded = describedClass.pad(["a", "b", "c"], ["foo", "bar"], 5);
+    expect(padded.leftSymbols).toEqual(["a", "a", "a", "b", "c"]);
+    expect(padded.rightSymbols).toEqual(["foo", "foo", "foo", "foo", "bar"]);
   });
 });
