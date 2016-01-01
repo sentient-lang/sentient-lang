@@ -27,7 +27,7 @@ Level 2 Instructions:
 [ ] multiply
 [ ] divide
 [ ] quotient
-[ ] negate
+[X] negate
 [ ] less_than
 [ ] greater_than
 [ ] less_equal

@@ -734,4 +734,72 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("negate", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["a", "b"]);
+    });
+
+    it("replaces the top symbol on the stack", function () {
+      subject.negate();
+      expect(stack.pop()).toEqual("$$$_TMP3_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.negate();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual([
+        "$$$_INTEGER3_BIT0_$$$",
+        "$$$_INTEGER3_BIT1_$$$",
+        "$$$_INTEGER3_BIT2_$$$"
+      ]);
+    });
+
+    it("writes instructions for 'negate'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.negate();
+
+      var calls = SpecHelper.calls(codeWriter.instruction);
+
+      expect(calls.slice(0, 12)).toEqual([
+        // negate bit 0
+        { type: 'push', symbol: 'a' },
+        { type: 'not' },
+        { type: 'pop', symbol: '$$$_INTEGER1_BIT0_$$$' },
+
+        // negate bit 1
+        { type: 'push', symbol: 'b' },
+        { type: 'not' },
+        { type: 'pop', symbol: '$$$_INTEGER1_BIT1_$$$' },
+
+        // self.constant(1)
+        { type: 'false' },
+        { type: 'pop', symbol: '$$$_INTEGER2_BIT0_$$$' },
+        { type: 'true' },
+        { type: 'pop', symbol: '$$$_INTEGER2_BIT1_$$$' },
+
+        // self.add()
+        { type: 'false' },
+        { type: 'pop', symbol: '$$$_BOOLEAN1_$$$' }
+        // ...
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "boolean", ["a"]);
+
+        expect(function () {
+          subject.negate();
+        }).toThrow();
+      });
+    });
+  });
 });
