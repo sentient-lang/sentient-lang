@@ -851,4 +851,32 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("lessthan", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["a", "b"]);
+      symbolTable.set("bar", "integer", ["c", "d"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.lessthan();
+      expect(stack.pop()).toEqual("$$$_TMP5_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.lessthan();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual([
+        "$$$_INTEGER4_BIT0_$$$"
+      ]);
+    });
+  });
 });
