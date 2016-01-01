@@ -24,5 +24,9 @@ describe("Registry", function () {
       "$$$_INTEGER2_BIT0_$$$",
       "$$$_INTEGER2_BIT1_$$$"
     ]);
+
+    expect(function () {
+      subject.nextInteger();
+    }).toThrow();
   });
 });
