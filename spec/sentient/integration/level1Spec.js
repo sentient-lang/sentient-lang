@@ -10,43 +10,49 @@ describe("Level 1 Abstraction", function () {
   beforeEach(function () {
     program = Level1Compiler.compile({
       metadata: {
-        title: "Three-Way AND",
-        description: "A simple 3-bit AND gate",
+        title: "Integration",
+        description: "A program that uses all instructions",
         author: "Chris Patuzzo",
-        date: "2015-11-25"
+        date: "2016-01-01"
       },
       instructions: [
+        { type: "true" },
         { type: "push", symbol: "a" },
+        { type: "and" },
+        { type: "false" },
         { type: "push", symbol: "b" },
-        { type: "push", symbol: "c" },
-        { type: "and" },
-        { type: "and" },
-        { type: "pop", symbol: "out" },
+        { type: "or" },
+        { type: "equal" },
+        { type: "duplicate" },
+        { type: "not" },
+        { type: "swap" },
+        { type: "pop", symbol: "c" },
+        { type: "pop", symbol: "d" },
         { type: "variable", symbol: "a" },
         { type: "variable", symbol: "b" },
         { type: "variable", symbol: "c" },
-        { type: "variable", symbol: "out" }
+        { type: "variable", symbol: "d" }
       ]
     });
   });
 
   it("can find a solution", function () {
-    var assignments = { "out": true };
+    var assignments = { d: true };
     assignments = Level1Runtime.encode(program, assignments);
 
     var result = Machine.run(program, assignments);
     result = Level1Runtime.decode(program, result);
 
     expect(result).toEqual({
-      "a": true,
-      "b": true,
-      "c": true,
-      "out": true
+      a: true,
+      b: false,
+      c: false,
+      d: true
     });
   });
 
   it("returns an empty object if there are no solutions", function () {
-    var assignments = { "b": false, "out": true };
+    var assignments = { c: true, d: true };
     assignments = Level1Runtime.encode(program, assignments);
 
     var result = Machine.run(program, assignments);
