@@ -9,6 +9,8 @@ Level 1 Instructions:
 [X] true
 [X] false
 [X] variable
+[X] duplicate
+[X] swap
 
 Level 2 Instructions:
 
@@ -32,3 +34,5 @@ Level 2 Instructions:
 [X] greaterthan
 [X] lessequal
 [X] greaterequal
+[X] duplicate
+[X] swap

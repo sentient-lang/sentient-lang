@@ -456,96 +456,79 @@ describe("InstructionSet", function () {
         expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
           // === bit 2 ===
           // c_in = false
-          { type: "false" },
-          { type: "pop", symbol: "$$$_BOOLEAN1_$$$" },
+          { type: 'false' },
+          { type: 'pop', symbol: '$$$_BOOLEAN1_$$$' },
 
           // l xor r
-          { type: "push", symbol: "bar" },
-          { type: "push", symbol: "qux" },
-          { type: "not" },
-          { type: "equal" },
+          { type: 'push', symbol: 'bar' },
+          { type: 'push', symbol: 'qux' },
+          { type: 'not' },
+          { type: 'equal' },
+
+          { type: 'duplicate' },
 
           // sum = (l xor r) xor c_in
-          { type: "push", symbol: "$$$_BOOLEAN1_$$$" },
-          { type: "not" },
-          { type: "equal" },
-          { type: "pop", symbol: "$$$_INTEGER1_BIT2_$$$" },
+          { type: 'push', symbol: '$$$_BOOLEAN1_$$$' },
+          { type: 'not' },
+          { type: 'equal' },
+          { type: 'pop', symbol: '$$$_INTEGER1_BIT2_$$$' },
 
-          // l xor r
-          { type: "push", symbol: "bar" },
-          { type: "push", symbol: "qux" },
-          { type: "not" },
-          { type: "equal" },
-
-          // (l xor r) and c_in
-          { type: "push", symbol: "$$$_BOOLEAN1_$$$" },
-          { type: "and" },
-
-          // a and b
-          { type: "push", symbol: "bar" },
-          { type: "push", symbol: "qux" },
-          { type: "and" },
-
-          // carry = (a and b) or ((l xor r) and c_in)
-          { type: "or" },
-          { type: "pop", symbol: "$$$_BOOLEAN2_$$$" },
+          // c_in = (l and r) or (c_in and (l xor r))
+          { type: 'push', symbol: '$$$_BOOLEAN1_$$$' },
+          { type: 'and' },
+          { type: 'push', symbol: 'bar' },
+          { type: 'push', symbol: 'qux' },
+          { type: 'and' },
+          { type: 'or' },
+          { type: 'pop', symbol: '$$$_BOOLEAN2_$$$' },
 
           // === bit 1 ===
           // l xor r
-          { type: "push", symbol: "foo" },
-          { type: "push", symbol: "baz" },
-          { type: "not" },
-          { type: "equal" },
+          { type: 'push', symbol: 'foo' },
+          { type: 'push', symbol: 'baz' },
+          { type: 'not' },
+          { type: 'equal' },
+
+          { type: 'duplicate' },
 
           // sum = (l xor r) xor c_in
-          { type: "push", symbol: "$$$_BOOLEAN2_$$$" },
-          { type: "not" },
-          { type: "equal" },
-          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" },
+          { type: 'push', symbol: '$$$_BOOLEAN2_$$$' },
+          { type: 'not' },
+          { type: 'equal' },
+          { type: 'pop', symbol: '$$$_INTEGER1_BIT1_$$$' },
 
-          // l xor r
-          { type: "push", symbol: "foo" },
-          { type: "push", symbol: "baz" },
-          { type: "not" },
-          { type: "equal" },
+          // c_in = (l and r) or (c_in and (l xor r))
+          { type: 'push', symbol: '$$$_BOOLEAN2_$$$' },
+          { type: 'and' },
+          { type: 'push', symbol: 'foo' },
+          { type: 'push', symbol: 'baz' },
+          { type: 'and' },
+          { type: 'or' },
+          { type: 'pop', symbol: '$$$_BOOLEAN3_$$$' },
 
-          // (l xor r) and c_in
-          { type: "push", symbol: "$$$_BOOLEAN2_$$$" },
-          { type: "and" },
+          // === sign bit ===
+          // l == r
+          { type: 'push', symbol: 'foo' },
+          { type: 'push', symbol: 'baz' },
+          { type: 'equal' },
 
-          // a and b
-          { type: "push", symbol: "foo" },
-          { type: "push", symbol: "baz" },
-          { type: "and" },
+          { type: 'duplicate' },
 
-          // c_in = (a and b) or ((l xor r) and c_in)
-          { type: "or" },
-          { type: "pop", symbol: "$$$_BOOLEAN3_$$$" },
+          // (l == r) && c_in
+          { type: 'push', symbol: '$$$_BOOLEAN3_$$$' },
+          { type: 'and' },
 
-          // === bit 0 ===
-          // a == b
-          { type: "push", symbol: "foo" },
-          { type: "push", symbol: "baz" },
-          { type: "equal" },
+          { type: 'swap' },
 
-          // (a == b) && c_in
-          { type: "push", symbol: "$$$_BOOLEAN3_$$$" },
-          { type: "and" },
+          // (l != r) && !c_in
+          { type: 'not' },
+          { type: 'push', symbol: '$$$_BOOLEAN3_$$$' },
+          { type: 'not' },
+          { type: 'and' },
 
-          // a == !b
-          { type: "push", symbol: "foo" },
-          { type: "push", symbol: "baz" },
-          { type: "not" },
-          { type: "equal" },
-
-          // (a == !b) && !c_in
-          { type: "push", symbol: "$$$_BOOLEAN3_$$$" },
-          { type: "not" },
-          { type: "and" },
-
-          // sum = ((a == b) && c_in) || ((a == !b) && !c_in)
-          { type: "or" },
-          { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" }
+          // sign = ((l == r) and c_in) or (l != r) and !c_in)
+          { type: 'or' },
+          { type: 'pop', symbol: '$$$_INTEGER1_BIT0_$$$' }
         ]);
       });
     });
@@ -838,7 +821,7 @@ describe("InstructionSet", function () {
       subject.subtract();
 
       var calls = SpecHelper.calls(codeWriter.instruction);
-      expect(calls.length).toEqual(137);
+      expect(calls.length).toEqual(120);
     });
 
     describe("incorrect types", function () {

@@ -51,9 +51,9 @@ describe("Level 2 Abstraction", function () {
     result = Level2Runtime.decode(program, result);
 
     expect(result).toEqual({
-      a: -41,
+      a: 120,
       b: 25,
-      c: 116,
+      c: -45,
       out: true
     });
   });

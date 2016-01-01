@@ -45,6 +45,6 @@ describe("Level2Compiler", function () {
       ]
     });
 
-    expect(code.instructions.length).toEqual(382);
+    expect(code.instructions.length).toEqual(341);
   });
 });
