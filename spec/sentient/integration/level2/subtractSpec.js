@@ -12,7 +12,7 @@ var Machine = require("../../../../lib/sentient/machine");
 
 var _ = require("underscore");
 
-describe("Integration: 'add'", function () {
+describe("Integration: 'subtract'", function () {
   it("produces the correct result for a=(-2...8), b=(-8...2)", function () {
     var program = Level2Compiler.compile({
       instructions: [
@@ -20,7 +20,7 @@ describe("Integration: 'add'", function () {
         { type: "integer", symbol: "b", width: 6 },
         { type: "push", symbol: "a" },
         { type: "push", symbol: "b" },
-        { type: "add" },
+        { type: "subtract" },
         { type: "pop", symbol: "sum" },
         { type: "variable", symbol: "a" },
         { type: "variable", symbol: "b" },
@@ -39,7 +39,7 @@ describe("Integration: 'add'", function () {
         result = Level1Runtime.decode(program, result);
         result = Level2Runtime.decode(program, result);
 
-        expect(result.sum).toEqual(result.a + result.b);
+        expect(result.sum).toEqual(result.a - result.b);
       }
     }
   });
@@ -49,7 +49,7 @@ describe("Integration: 'add'", function () {
       Level2Compiler.compile({
         instructions: [
           { type: "constant", value: false },
-          { type: "add" }
+          { type: "subtract" }
         ]
       });
     }).toThrow();
@@ -61,7 +61,7 @@ describe("Integration: 'add'", function () {
         instructions: [
           { type: "constant", value: 5 },
           { type: "constant", value: true },
-          { type: "add" }
+          { type: "subtract" }
         ]
       });
     }).toThrow();
