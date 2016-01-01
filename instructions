@@ -28,7 +28,7 @@ Level 2 Instructions:
 [ ] divide
 [ ] quotient
 [X] negate
-[X] less_than
-[ ] greater_than
-[ ] less_equal
-[ ] greater_equal
+[X] lessthan
+[X] greaterthan
+[ ] lessequal
+[ ] greaterequal
