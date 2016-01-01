@@ -1,0 +1,41 @@
+"use strict";
+
+var compiler = "../../../../lib/sentient/compiler";
+var Level1Compiler = require(compiler + "/level1Compiler");
+
+var runtime = "../../../../lib/sentient/runtime";
+var Level1Runtime = require(runtime + "/level1Runtime");
+
+var Machine = require("../../../../lib/sentient/machine");
+
+var _ = require("underscore");
+
+describe("Integration: 'duplicate'", function () {
+  it("duplicate the symbol on top of the stack", function () {
+    var program = Level1Compiler.compile({
+      instructions: [
+        { type: "true" },
+        { type: "duplicate" },
+        { type: "pop", symbol: "a" },
+        { type: "pop", symbol: "b" },
+        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "b" }
+      ]
+    });
+
+    var assignments = Level1Runtime.encode(program, {});
+    var result = Machine.run(program, assignments);
+    result = Level1Runtime.decode(program, result);
+    expect(result.a).toEqual(result.b);
+  });
+
+  it("throws an error if the stack is empty", function () {
+    expect(function () {
+      Level1Compiler.compile({
+        instructions: [
+          { type: "duplicate" }
+        ]
+      });
+    }).toThrow();
+  });
+});
