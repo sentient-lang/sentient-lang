@@ -10,8 +10,6 @@ var Level2Runtime = require(runtime + "/level2Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-var _ = require("underscore");
-
 describe("Integration: 'greaterthan'", function () {
   it("produces the correct result for a=(-2...8), b=(-8...2)", function () {
     var program = Level2Compiler.compile({

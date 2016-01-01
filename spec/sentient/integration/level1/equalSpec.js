@@ -8,8 +8,6 @@ var Level1Runtime = require(runtime + "/level1Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-var _ = require("underscore");
-
 describe("Integration: 'equal'", function () {
   it("produces the correct result for 'false && false'", function () {
     var program = Level1Compiler.compile({

@@ -10,8 +10,6 @@ var Level2Runtime = require(runtime + "/level2Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-var _ = require("underscore");
-
 describe("Integration: 'constant'", function () {
   it("pushes the constant onto the stack", function () {
     var program = Level2Compiler.compile({
@@ -21,7 +19,7 @@ describe("Integration: 'constant'", function () {
         { type: "constant", value: false },
         { type: "pop", symbol: "b" },
         { type: "variable", symbol: "a" },
-        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "b" }
       ]
     });
     program = Level1Compiler.compile(program);

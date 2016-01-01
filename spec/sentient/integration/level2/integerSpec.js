@@ -10,8 +10,6 @@ var Level2Runtime = require(runtime + "/level2Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-var _ = require("underscore");
-
 describe("Integration: 'boolean'", function () {
   it("declares a variable of type boolean", function () {
     var program = Level2Compiler.compile({

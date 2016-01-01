@@ -8,15 +8,13 @@ var Level1Runtime = require(runtime + "/level1Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-var _ = require("underscore");
-
 describe("Integration: 'pop'", function () {
   it("assigns the value on top of the stack to the variable", function () {
     var program = Level1Compiler.compile({
       instructions: [
         { type: "true" },
         { type: "pop", symbol: "a" },
-        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "a" }
       ]
     });
 
@@ -32,7 +30,7 @@ describe("Integration: 'pop'", function () {
     expect(function () {
       Level1Compiler.compile({
         instructions: [
-          { type: "pop", symbol: "a" },
+          { type: "pop", symbol: "a" }
         ]
       });
     }).toThrow();

@@ -10,8 +10,6 @@ var Level2Runtime = require(runtime + "/level2Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-var _ = require("underscore");
-
 describe("Integration: 'push'", function () {
   it("pushes a variable onto the stack", function () {
     var program = Level2Compiler.compile({

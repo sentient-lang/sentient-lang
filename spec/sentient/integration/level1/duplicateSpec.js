@@ -8,8 +8,6 @@ var Level1Runtime = require(runtime + "/level1Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-var _ = require("underscore");
-
 describe("Integration: 'duplicate'", function () {
   it("duplicate the symbol on top of the stack", function () {
     var program = Level1Compiler.compile({

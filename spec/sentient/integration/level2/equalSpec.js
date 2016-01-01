@@ -10,8 +10,6 @@ var Level2Runtime = require(runtime + "/level2Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-var _ = require("underscore");
-
 describe("Integration: 'equal'", function () {
   it("produces the correct result for 'false && false'", function () {
     var program = Level2Compiler.compile({
@@ -20,7 +18,7 @@ describe("Integration: 'equal'", function () {
         { type: "constant", value: false },
         { type: "equal" },
         { type: "pop", symbol: "a" },
-        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "a" }
       ]
     });
     program = Level1Compiler.compile(program);
@@ -43,7 +41,7 @@ describe("Integration: 'equal'", function () {
         { type: "constant", value: false },
         { type: "equal" },
         { type: "pop", symbol: "a" },
-        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "a" }
       ]
     });
     program = Level1Compiler.compile(program);

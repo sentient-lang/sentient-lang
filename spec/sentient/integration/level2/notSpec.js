@@ -10,8 +10,6 @@ var Level2Runtime = require(runtime + "/level2Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-var _ = require("underscore");
-
 describe("Integration: 'not'", function () {
   it("negates the value on top of the stack", function () {
     var program = Level2Compiler.compile({
@@ -19,7 +17,7 @@ describe("Integration: 'not'", function () {
         { type: "constant", value: true },
         { type: "not" },
         { type: "pop", symbol: "a" },
-        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "a" }
       ]
     });
     program = Level1Compiler.compile(program);
