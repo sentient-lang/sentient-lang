@@ -963,4 +963,35 @@ describe("InstructionSet", function () {
       ]);
     });
   });
+
+  describe("duplicate", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+    });
+
+    it("duplicates the symbol on top of the stack", function () {
+      subject.duplicate();
+
+      expect(stack.pop()).toEqual("foo");
+      expect(stack.pop()).toEqual("foo");
+      expect(stack.pop()).toEqual("bottom");
+    });
+  });
+
+  describe("swap", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+    });
+
+    it("swaps the top two symbols on the stack", function () {
+      subject.swap();
+
+      expect(stack.pop()).toEqual("foo");
+      expect(stack.pop()).toEqual("bar");
+      expect(stack.pop()).toEqual("bottom");
+    });
+  });
 });
