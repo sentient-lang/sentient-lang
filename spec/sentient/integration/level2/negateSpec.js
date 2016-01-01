@@ -12,56 +12,53 @@ var Machine = require("../../../../lib/sentient/machine");
 
 var _ = require("underscore");
 
-describe("Integration: 'add'", function () {
-  it("produces the correct result for a=(-2...8), b=(-8...2)", function () {
+describe("Integration: 'negate'", function () {
+  it("produces the correct result for a=(-2...8)", function () {
     var program = Level2Compiler.compile({
       instructions: [
         { type: "integer", symbol: "a", width: 6 },
-        { type: "integer", symbol: "b", width: 6 },
         { type: "push", symbol: "a" },
-        { type: "push", symbol: "b" },
-        { type: "add" },
-        { type: "pop", symbol: "sum" },
+        { type: "negate" },
+        { type: "pop", symbol: "negated" },
         { type: "variable", symbol: "a" },
-        { type: "variable", symbol: "b" },
-        { type: "variable", symbol: "sum" }
+        { type: "variable", symbol: "negated" }
       ]
     });
     program = Level1Compiler.compile(program);
 
     for (var a = -2; a < 8; a += 1) {
-      for (var b = -8; b < 2; b += 1) {
-        var assignments = Level2Runtime.encode(program, { a: a, b: b });
-        assignments = Level1Runtime.encode(program, assignments);
+      var assignments = Level2Runtime.encode(program, { a: a });
+      assignments = Level1Runtime.encode(program, assignments);
 
-        var result = Machine.run(program, assignments);
+      var result = Machine.run(program, assignments);
 
-        result = Level1Runtime.decode(program, result);
-        result = Level2Runtime.decode(program, result);
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
 
-        expect(result.sum).toEqual(result.a + result.b);
+      if (a === 0) {
+        expect(result.negated).toEqual(0);
+      } else {
+        expect(result.negated).toEqual(-result.a);
       }
     }
   });
 
-  it("throws an error if there are fewer than two integers", function () {
+  it("throws an error if the stack is empty", function () {
     expect(function () {
       Level2Compiler.compile({
         instructions: [
-          { type: "constant", value: 5 },
-          { type: "add" }
+          { type: "negate" }
         ]
       });
     }).toThrow();
   });
 
-  it("throws an error if one of the types is incorrect", function () {
+  it("throws an error if type is not an integer", function () {
     expect(function () {
       Level2Compiler.compile({
         instructions: [
-          { type: "constant", value: 5 },
           { type: "constant", value: true },
-          { type: "add" }
+          { type: "negate" }
         ]
       });
     }).toThrow();

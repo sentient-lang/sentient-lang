@@ -44,11 +44,11 @@ describe("Integration: 'subtract'", function () {
     }
   });
 
-  it("throws an error if there are fewer than two booleans", function () {
+  it("throws an error if there are fewer than two integers", function () {
     expect(function () {
       Level2Compiler.compile({
         instructions: [
-          { type: "constant", value: false },
+          { type: "constant", value: 5 },
           { type: "subtract" }
         ]
       });
