@@ -23,7 +23,7 @@ Level 2 Instructions:
 [X] boolean
 [X] integer
 [X] add
-[ ] subtract
+[X] subtract
 [ ] multiply
 [ ] divide
 [ ] quotient

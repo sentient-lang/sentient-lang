@@ -802,4 +802,53 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("subtract", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["a", "b"]);
+      symbolTable.set("bar", "integer", ["c", "d"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.subtract();
+      expect(stack.pop()).toEqual("$$$_TMP4_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.subtract();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual([
+        "$$$_INTEGER4_BIT0_$$$",
+        "$$$_INTEGER4_BIT1_$$$",
+        "$$$_INTEGER4_BIT2_$$$",
+        "$$$_INTEGER4_BIT3_$$$"
+      ]);
+    });
+
+    it("writes instructions for 'subtract'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.subtract();
+
+      var calls = SpecHelper.calls(codeWriter.instruction);
+      expect(calls.length).toEqual(137);
+    });
+
+    describe("incorrect types", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "boolean", ["a"]);
+
+        expect(function () {
+          subject.subtract();
+        }).toThrow();
+      });
+    });
+  });
 });
