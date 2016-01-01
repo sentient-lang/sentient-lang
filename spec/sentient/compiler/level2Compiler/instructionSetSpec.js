@@ -893,7 +893,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.greaterthan();
-      expect(stack.pop()).toEqual("$$$_TMP7_$$$");
+      expect(stack.pop()).toEqual("$$$_TMP5_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -921,7 +921,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.lessequal();
-      expect(stack.pop()).toEqual("$$$_TMP8_$$$");
+      expect(stack.pop()).toEqual("$$$_TMP6_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
