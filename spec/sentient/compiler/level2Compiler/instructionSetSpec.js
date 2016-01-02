@@ -1036,4 +1036,30 @@ describe("InstructionSet", function () {
       expect(stack.pop()).toEqual("bottom");
     });
   });
+
+  describe("invariant", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+
+      symbolTable.set("foo", "boolean", ["a"]);
+    });
+
+    it("removes the symbol on top of the stack", function () {
+      subject.invariant();
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("writes instructions for 'invariant'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.invariant();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "invariant" }
+      ]);
+
+      expect(codeWriter.instruction.calls.count()).toEqual(2);
+    });
+  });
 });
