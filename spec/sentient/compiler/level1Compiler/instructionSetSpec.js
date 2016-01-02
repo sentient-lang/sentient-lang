@@ -386,4 +386,36 @@ describe("InstructionSet", function () {
       expect(stack.pop()).toEqual("bottom");
     });
   });
+
+  describe("if", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("conditional");
+      stack.push("consequent");
+      stack.push("alternate");
+
+      symbolTable.set("conditional", 123);
+      symbolTable.set("consequent", 456);
+      symbolTable.set("alternate", 789);
+    });
+
+    it("replaces the top three symbols for one symbol on the stack", function () {
+      subject._if();
+      expect(stack.pop()).toEqual("$$$_TMP5_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject._if();
+      var newSymbol = stack.pop();
+      expect(symbolTable.get(newSymbol)).toEqual(5);
+    });
+
+    it("writes CNF clauses for 'if'", function () {
+      spyOn(codeWriter, "clause");
+      subject._if();
+
+      expect(codeWriter.clause.calls.count()).toEqual(11);
+    });
+  });
 });
