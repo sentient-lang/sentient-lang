@@ -28,8 +28,8 @@ describe("Integration: 'if'", function () {
 
     expect(result.out).toEqual(false);
 
-    var assignments = Level1Runtime.encode(program, { conditional: false });
-    var result = Machine.run(program, assignments);
+    assignments = Level1Runtime.encode(program, { conditional: false });
+    result = Machine.run(program, assignments);
     result = Level1Runtime.decode(program, result);
 
     expect(result.out).toEqual(true);

@@ -399,16 +399,16 @@ describe("InstructionSet", function () {
       symbolTable.set("alternate", 789);
     });
 
-    it("replaces the top three symbols for one symbol on the stack", function () {
+    it("replaces the top three symbols for one symbol", function () {
       subject._if();
-      expect(stack.pop()).toEqual("$$$_TMP5_$$$");
+      expect(stack.pop()).toEqual("$$$_TMP4_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
     it("adds the new symbol to the symbol table", function () {
       subject._if();
       var newSymbol = stack.pop();
-      expect(symbolTable.get(newSymbol)).toEqual(5);
+      expect(symbolTable.get(newSymbol)).toEqual(4);
     });
 
     it("writes CNF clauses for 'if'", function () {
