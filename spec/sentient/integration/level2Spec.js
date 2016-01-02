@@ -14,27 +14,96 @@ describe("Level 2 Abstraction", function () {
   beforeEach(function () {
     level1Code = Level2Compiler.compile({
       metadata: {
-        title: "Total 100",
-        description: "Find three numbers that total 100",
+        title: "Pythagorean Triples",
+        description: "                                                         \
+                                                                               \
+          Find two pythagorean triples such that the hypotenuse of the first   \
+          triple is one of the sides of the second.                            \
+                                                                               \
+          - All values must be positive integers greater than 0                \
+          - The length of the larger hypotenuse must be greater than 100       \
+          - Also calculates the ratio of the larger hypotenuse to the smaller  \
+                                                                               \
+        ",
         author: "Chris Patuzzo",
         date: "2015-11-30"
       },
       instructions: [
+        // a^2 + b^2 == c^2
         { type: "integer", symbol: "a", width: 8 },
         { type: "integer", symbol: "b", width: 8 },
         { type: "integer", symbol: "c", width: 8 },
         { type: "push", symbol: "a" },
+        { type: "duplicate" },
+        { type: "multiply" },
         { type: "push", symbol: "b" },
+        { type: "duplicate" },
+        { type: "multiply" },
+        { type: "add" },
         { type: "push", symbol: "c" },
-        { type: "add" },
-        { type: "add" },
-        { type: "constant", value: 100 },
+        { type: "duplicate" },
+        { type: "multiply" },
         { type: "equal" },
-        { type: "pop", symbol: "out" },
+        { type: "invariant" },
+
+        // c^2 + d^2 == e^2
+        { type: "integer", symbol: "d", width: 8 },
+        { type: "integer", symbol: "e", width: 8 },
+        { type: "push", symbol: "c" },
+        { type: "duplicate" },
+        { type: "multiply" },
+        { type: "push", symbol: "d" },
+        { type: "duplicate" },
+        { type: "multiply" },
+        { type: "add" },
+        { type: "push", symbol: "e" },
+        { type: "duplicate" },
+        { type: "multiply" },
+        { type: "equal" },
+        { type: "invariant" },
+
+        // 0 < a, b, c, d, e
+        { type: "constant", value: 0 },
+        { type: "duplicate" },
+        { type: "duplicate" },
+        { type: "duplicate" },
+        { type: "duplicate" },
+        { type: "push", symbol: "a" },
+        { type: "lessthan" },
+        { type: "invariant" },
+        { type: "push", symbol: "b" },
+        { type: "lessthan" },
+        { type: "invariant" },
+        { type: "push", symbol: "c" },
+        { type: "lessthan" },
+        { type: "invariant" },
+        { type: "push", symbol: "d" },
+        { type: "lessthan" },
+        { type: "invariant" },
+        { type: "push", symbol: "e" },
+        { type: "lessthan" },
+        { type: "invariant" },
+
+        // e > 100
+        { type: "push", symbol: "e" },
+        { type: "constant", value: 100 },
+        { type: "greaterthan" },
+        { type: "invariant" },
+
+        // e / c
+        { type: "push", symbol: "e" },
+        { type: "push", symbol: "c" },
+        { type: "divmod" },
+        { type: "pop", symbol: "ratio" },
+        { type: "pop", symbol: "remainder" },
+
         { type: "variable", symbol: "a" },
         { type: "variable", symbol: "b" },
         { type: "variable", symbol: "c" },
-        { type: "variable", symbol: "out" }
+        { type: "variable", symbol: "d" },
+        { type: "variable", symbol: "e" },
+        { type: "variable", symbol: "ratio" },
+        { type: "variable", symbol: "remainder" }
       ]
     });
 
@@ -42,7 +111,7 @@ describe("Level 2 Abstraction", function () {
   });
 
   it("can find a solution", function () {
-    var assignments = { b: 25, out: true };
+    var assignments = { a: 16 };
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
 
@@ -51,30 +120,18 @@ describe("Level 2 Abstraction", function () {
     result = Level2Runtime.decode(program, result);
 
     expect(result).toEqual({
-      a: 120,
-      b: 25,
-      c: -45,
-      out: true
+      a: 16,
+      b: 12,
+      c: 20,
+      d: 99,
+      e: 101,
+      ratio: 5,
+      remainder: 1
     });
   });
 
-  it("works as expected for a number of examples", function () {
-    for (var i = -20; i < 20; i += 1) {
-      var assignments = { a: i, out: true };
-
-      assignments = Level2Runtime.encode(program, assignments);
-      assignments = Level1Runtime.encode(program, assignments);
-
-      var result = Machine.run(program, assignments);
-      result = Level1Runtime.decode(program, result);
-      result = Level2Runtime.decode(program, result);
-
-      expect(result.a + result.b + result.c).toEqual(100);
-    }
-  });
-
   it("returns an empty object if there are no solutions", function () {
-    var assignments = { a: -20, b: -20, out: true };
+    var assignments = { a: 15 };
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
 
