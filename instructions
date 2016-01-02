@@ -30,8 +30,8 @@ Level 2 Instructions:
 [X] subtract
 [X] multiply
 [X] divmod
-[ ] divide
-[ ] modulo
+[X] divide
+[X] modulo
 [X] negate
 [X] lessthan
 [X] greaterthan
