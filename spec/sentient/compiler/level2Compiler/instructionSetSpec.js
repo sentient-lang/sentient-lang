@@ -786,6 +786,34 @@ describe("InstructionSet", function () {
     });
   });
 
+  describe("absolute", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["a", "b"]);
+    });
+
+    it("replaces the top symbol on the stack", function () {
+      subject.absolute();
+      expect(stack.pop()).toEqual("$$$_TMP11_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.absolute();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual([
+        "$$$_INTEGER9_BIT0_$$$",
+        "$$$_INTEGER9_BIT1_$$$",
+        "$$$_INTEGER9_BIT2_$$$"
+      ]);
+    });
+  });
+
   describe("subtract", function () {
     beforeEach(function () {
       stack.push("bottom");

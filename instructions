@@ -11,6 +11,7 @@ Level 1 Instructions:
 [X] variable
 [X] duplicate
 [X] swap
+[X] if
 
 Level 2 Instructions:
 
@@ -36,3 +37,5 @@ Level 2 Instructions:
 [X] greaterequal
 [X] duplicate
 [X] swap
+[X] if
+[X] absolute
