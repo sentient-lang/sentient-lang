@@ -29,7 +29,8 @@ Level 2 Instructions:
 [X] add
 [X] subtract
 [X] multiply
-[ ] quotient
+[X] divmod
+[ ] divide
 [ ] modulo
 [X] negate
 [X] lessthan

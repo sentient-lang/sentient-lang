@@ -1006,6 +1006,44 @@ describe("InstructionSet", function () {
     });
   });
 
+  describe("divmod", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["a", "b"]);
+      symbolTable.set("bar", "integer", ["c", "d"]);
+    });
+
+    it("replaces the top two symbols for two symbols", function () {
+      subject.divmod();
+
+      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_TMP2_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbols to the symbol table", function () {
+      subject.divmod();
+      var quotientSymbol = stack.pop();
+      var moduloSymbol = stack.pop();
+
+      expect(symbolTable.type(quotientSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(quotientSymbol)).toEqual([
+        "$$$_INTEGER1_BIT0_$$$",
+        "$$$_INTEGER1_BIT1_$$$"
+      ]);
+
+      expect(symbolTable.type(moduloSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(moduloSymbol)).toEqual([
+        "$$$_INTEGER2_BIT0_$$$",
+        "$$$_INTEGER2_BIT1_$$$"
+      ]);
+    });
+  });
+
   describe("duplicate", function () {
     beforeEach(function () {
       stack.push("bottom");
