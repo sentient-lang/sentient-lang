@@ -418,4 +418,26 @@ describe("InstructionSet", function () {
       expect(codeWriter.clause.calls.count()).toEqual(11);
     });
   });
+
+  describe("invariant", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+
+      symbolTable.set("foo", 123);
+    });
+
+    it("removes the symbol on top of the stack", function () {
+      subject.invariant();
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("writes CNF clauses for 'invariant'", function () {
+      spyOn(codeWriter, "clause");
+      subject.invariant();
+
+      expect(codeWriter.clause.calls.argsFor(0)).toEqual([123]);
+      expect(codeWriter.clause.calls.count()).toEqual(1);
+    });
+  });
 });
