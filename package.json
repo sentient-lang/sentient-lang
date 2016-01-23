@@ -5,6 +5,6 @@
   },
   "devDependencies": {
     "jasmine": "^2.3.2",
-    "jshint": "^2.8.0"
+    "jshint": "^2.9.1"
   }
 }
