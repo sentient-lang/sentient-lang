@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1500">
+    <title>Subset Sum</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="../../bin/sentient.js"></script>
+    <script src="application.js"></script>
+  </head>
+  <body>
+    <div id="wrap">
+      <h1>Subset Sum</h1>
+
+      <p>Find a subset of N integers that add up to a given total.</p>
+
+      <input type="text" id="a" value="5" onkeyup="app.update()";></input>
+      <input type="text" id="b" value="8" onkeyup="app.update()";></input>
+      <input type="text" id="c" value="4" onkeyup="app.update()";></input>
+      <input type="text" id="d" value="11" onkeyup="app.update()";></input>
+      <input type="text" id="e" value="6" onkeyup="app.update()";></input>
+
+      <div class="total">
+        <span>Total:</span>
+        <input type="text" id="total" value="20" onkeyup="app.update()";></input>
+      </div>
+
+      <p>Change the numbers as you please. Negatives work too.</p>
+
+      <p class="note">
+      Written in
+      <a href="https://github.com/tuzz/sentient.js">sentient-lang</a>
+      by Chris Patuzzo as an exercise for the Public Key Cryptography chapter in
+      The New Turing Omnibus.
+      </p>
+    </div>
+
+    <script>
+      var app = new Application();
+      app.run();
+    </script>
+  </body>
+</html>
