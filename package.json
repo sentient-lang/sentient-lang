@@ -6,6 +6,9 @@
   "devDependencies": {
     "jasmine": "^2.3.2",
     "jshint": "^2.9.1",
-    "browserify": "^13.0.0"
+    "browserify": "^13.0.0",
+    "ws": "^1.0.1",
+    "bufferutil": "^1.2.1",
+    "utf-8-validate": "^1.2.1"
   }
 }
