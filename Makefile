@@ -14,5 +14,10 @@ lint: node_modules
 node_modules:
 	npm install
 
+build:
+	mkdir -p bin
+	browserify lib/sentient.js > bin/sentient.js
+
 clean:
 	rm -rf node_modules
+	rm -rf bin

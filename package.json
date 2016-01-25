@@ -5,6 +5,7 @@
   },
   "devDependencies": {
     "jasmine": "^2.3.2",
-    "jshint": "^2.9.1"
+    "jshint": "^2.9.1",
+    "browserify": "^13.0.0"
   }
 }
