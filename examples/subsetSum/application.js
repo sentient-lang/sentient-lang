@@ -16,14 +16,16 @@ var Application = function () {
   };
 
   self.update = function () {
-    var result = Sentient.run(program, {
-      a: parseInt(aInput.value),
-      b: parseInt(bInput.value),
-      c: parseInt(cInput.value),
-      d: parseInt(dInput.value),
-      e: parseInt(eInput.value),
-      total: parseInt(totalInput.value),
-    });
+    var assignments = {};
+
+    if (aInput.value !== "?") { assignments.a = parseInt(aInput.value); }
+    if (bInput.value !== "?") { assignments.b = parseInt(bInput.value); }
+    if (cInput.value !== "?") { assignments.c = parseInt(cInput.value); }
+    if (dInput.value !== "?") { assignments.d = parseInt(dInput.value); }
+    if (eInput.value !== "?") { assignments.e = parseInt(eInput.value); }
+    if (totalInput.value !== "?") { assignments.total = parseInt(totalInput.value); }
+
+    var result = Sentient.run(program, assignments);
 
     aInput.style.borderColor = "red";
     bInput.style.borderColor = "red";
@@ -31,6 +33,15 @@ var Application = function () {
     dInput.style.borderColor = "red";
     eInput.style.borderColor = "red";
     totalInput.style.borderColor = "red";
+
+    if (result.total) {
+      aInput.value = result.a;
+      bInput.value = result.b;
+      cInput.value = result.c;
+      dInput.value = result.d;
+      eInput.value = result.e;
+      totalInput.value = result.total;
+    }
 
     if (result.a_present) { aInput.style.borderColor = "#0c0"; }
     if (result.b_present) { bInput.style.borderColor = "#0c0"; }
