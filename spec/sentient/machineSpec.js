@@ -52,12 +52,6 @@ describe("Machine", function () {
     expect(result).toEqual({});
   });
 
-  it("throws an error if the program is not well-formed", function () {
-    expect(function () {
-      describedClass.run("p cnf 99 99\n1 0", {});
-    }).toThrow();
-  });
-
   it("throws an error if the header is missing", function () {
     expect(function () {
       describedClass.run("                   \n\

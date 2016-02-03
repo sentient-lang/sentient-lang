@@ -44,8 +44,8 @@ describe("Level 1 Abstraction", function () {
     result = Level1Runtime.decode(program, result);
 
     expect(result).toEqual({
-      a: true,
-      b: false,
+      a: false,
+      b: true,
       c: false,
       d: true
     });
