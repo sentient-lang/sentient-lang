@@ -9,7 +9,7 @@ test: node_modules
 	jasmine
 
 lint: node_modules
-	jshint . --exclude-path .gitignore
+	jshint .
 
 node_modules:
 	npm install
