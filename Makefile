@@ -1,9 +1,9 @@
 PATH  := node_modules/.bin:$(PATH)
 SHELL := /bin/bash
 
-.PHONY: all test lint clean
+.PHONY: all test lint build clean
 
-all: test lint
+all: test lint build
 
 test: node_modules
 	jasmine
