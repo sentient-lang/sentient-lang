@@ -1,3 +1,8 @@
+/* globals document */
+/* jshint maxcomplexity:false */
+
+"use strict";
+
 var Application = function () {
   var self = this;
   var program;
@@ -18,12 +23,15 @@ var Application = function () {
   self.update = function () {
     var assignments = {};
 
-    if (aInput.value !== "?") { assignments.a = parseInt(aInput.value); }
-    if (bInput.value !== "?") { assignments.b = parseInt(bInput.value); }
-    if (cInput.value !== "?") { assignments.c = parseInt(cInput.value); }
-    if (dInput.value !== "?") { assignments.d = parseInt(dInput.value); }
-    if (eInput.value !== "?") { assignments.e = parseInt(eInput.value); }
-    if (totalInput.value !== "?") { assignments.total = parseInt(totalInput.value); }
+    if (aInput.value !== "?") { assignments.a = parseInt(aInput.value, 10); }
+    if (bInput.value !== "?") { assignments.b = parseInt(bInput.value, 10); }
+    if (cInput.value !== "?") { assignments.c = parseInt(cInput.value, 10); }
+    if (dInput.value !== "?") { assignments.d = parseInt(dInput.value, 10); }
+    if (eInput.value !== "?") { assignments.e = parseInt(eInput.value, 10); }
+
+    if (totalInput.value !== "?") {
+      assignments.total = parseInt(totalInput.value, 10);
+    }
 
     var result = Sentient.run(program, assignments);
 
@@ -43,11 +51,11 @@ var Application = function () {
       totalInput.value = result.total;
     }
 
-    if (result.a_present) { aInput.style.borderColor = "#0c0"; }
-    if (result.b_present) { bInput.style.borderColor = "#0c0"; }
-    if (result.c_present) { cInput.style.borderColor = "#0c0"; }
-    if (result.d_present) { dInput.style.borderColor = "#0c0"; }
-    if (result.e_present) { eInput.style.borderColor = "#0c0"; }
+    if (result.aPresent) { aInput.style.borderColor = "#0c0"; }
+    if (result.bPresent) { bInput.style.borderColor = "#0c0"; }
+    if (result.cPresent) { cInput.style.borderColor = "#0c0"; }
+    if (result.dPresent) { dInput.style.borderColor = "#0c0"; }
+    if (result.ePresent) { eInput.style.borderColor = "#0c0"; }
     if (result.total) { totalInput.style.borderColor = "#0c0"; }
   };
 
@@ -55,7 +63,7 @@ var Application = function () {
     var program = {
       "metadata": {
         "title": "Subset Sum",
-        "description": "Find a subset of N integers that add up to a given total",
+        "description": "Find a subset of N integers that add to a given total",
         "author": "Chris Patuzzo",
         "date": "2016-01-25"
       },
@@ -66,35 +74,35 @@ var Application = function () {
         { type: "integer", symbol: "d", width: 20 },
         { type: "integer", symbol: "e", width: 20 },
 
-        { type: "boolean", symbol: "a_present" },
-        { type: "boolean", symbol: "b_present" },
-        { type: "boolean", symbol: "c_present" },
-        { type: "boolean", symbol: "d_present" },
-        { type: "boolean", symbol: "e_present" },
+        { type: "boolean", symbol: "aPresent" },
+        { type: "boolean", symbol: "bPresent" },
+        { type: "boolean", symbol: "cPresent" },
+        { type: "boolean", symbol: "dPresent" },
+        { type: "boolean", symbol: "ePresent" },
 
         { type: "integer", symbol: "total", width: 20 },
 
-        { type: "push", symbol: "a_present" },
+        { type: "push", symbol: "aPresent" },
         { type: "push", symbol: "a" },
         { type: "constant", value: 0 },
         { type: "if" },
 
-        { type: "push", symbol: "b_present" },
+        { type: "push", symbol: "bPresent" },
         { type: "push", symbol: "b" },
         { type: "constant", value: 0 },
         { type: "if" },
 
-        { type: "push", symbol: "c_present" },
+        { type: "push", symbol: "cPresent" },
         { type: "push", symbol: "c" },
         { type: "constant", value: 0 },
         { type: "if" },
 
-        { type: "push", symbol: "d_present" },
+        { type: "push", symbol: "dPresent" },
         { type: "push", symbol: "d" },
         { type: "constant", value: 0 },
         { type: "if" },
 
-        { type: "push", symbol: "e_present" },
+        { type: "push", symbol: "ePresent" },
         { type: "push", symbol: "e" },
         { type: "constant", value: 0 },
         { type: "if" },
@@ -114,11 +122,11 @@ var Application = function () {
         { type: "variable", symbol: "d" },
         { type: "variable", symbol: "e" },
 
-        { type: "variable", symbol: "a_present" },
-        { type: "variable", symbol: "b_present" },
-        { type: "variable", symbol: "c_present" },
-        { type: "variable", symbol: "d_present" },
-        { type: "variable", symbol: "e_present" },
+        { type: "variable", symbol: "aPresent" },
+        { type: "variable", symbol: "bPresent" },
+        { type: "variable", symbol: "cPresent" },
+        { type: "variable", symbol: "dPresent" },
+        { type: "variable", symbol: "ePresent" },
 
         { type: "variable", symbol: "total" }
       ]
@@ -127,3 +135,5 @@ var Application = function () {
     return Sentient.compile(program);
   };
 };
+
+window.Application = Application;

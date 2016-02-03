@@ -1512,10 +1512,10 @@ var MinisatAdapter = function (dimacs) {
       result = result.split(" ");
 
       return _.map(result, function (literal) {
-        return parseInt(literal);
+        return parseInt(literal, 10);
       });
     }
-  }
+  };
 };
 
 MinisatAdapter.solve = function (dimacs) {

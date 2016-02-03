@@ -29,7 +29,7 @@ describe("MinisatAdapter", function () {
 
   it("throws an error if the input is not well-formed", function () {
     expect(function () {
-      describedClass.solve("nonsense")
+      describedClass.solve("nonsense");
     }).toThrow();
   });
 
