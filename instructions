@@ -42,3 +42,39 @@ Level 2 Instructions:
 [X] if
 [X] absolute
 [X] invariant
+
+Level 3 Instructions:
+
+[ ] array
+[ ] hash
+[ ] build
+[ ] fetch
+[ ] keys
+[ ] values
+[ ] size
+[ ] push
+[ ] pop
+[ ] not
+[ ] and
+[ ] or
+[ ] equal
+[ ] constant
+[ ] variable
+[ ] boolean
+[ ] integer
+[ ] add
+[ ] subtract
+[ ] multiply
+[ ] divmod
+[ ] divide
+[ ] modulo
+[ ] negate
+[ ] lessthan
+[ ] greaterthan
+[ ] lessequal
+[ ] greaterequal
+[ ] duplicate
+[ ] swap
+[ ] if
+[ ] absolute
+[ ] invariant
