@@ -131,7 +131,7 @@ describe("InstructionSet", function () {
 
     it("replaces the symbol on top of the stack", function () {
       subject.not();
-      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_L1_TMP1_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -165,7 +165,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.and();
-      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_L1_TMP1_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -200,7 +200,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.or();
-      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_L1_TMP1_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -235,7 +235,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.equal();
-      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_L1_TMP1_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -266,18 +266,18 @@ describe("InstructionSet", function () {
 
     it("pushes a special symbol onto the stack", function () {
       subject._true();
-      expect(stack.pop()).toEqual("$$$_TRUE_$$$");
+      expect(stack.pop()).toEqual("$$$_L1_TRUE_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
     describe("when the symbol table contains the symbol", function () {
       beforeEach(function () {
-        symbolTable.set("$$$_TRUE_$$$", 456);
+        symbolTable.set("$$$_L1_TRUE_$$$", 456);
       });
 
       it("does not change the symbol table", function () {
         subject._true();
-        expect(symbolTable.get("$$$_TRUE_$$$")).toEqual(456);
+        expect(symbolTable.get("$$$_L1_TRUE_$$$")).toEqual(456);
       });
 
       it("does not write a clause", function () {
@@ -290,7 +290,7 @@ describe("InstructionSet", function () {
     describe("when the symbol table does not contain the symbol", function () {
       it("adds the symbol to the symbol table", function () {
         subject._true();
-        expect(symbolTable.get("$$$_TRUE_$$$")).toEqual(1);
+        expect(symbolTable.get("$$$_L1_TRUE_$$$")).toEqual(1);
       });
 
       it("writes a CNF clause for 'true'", function () {
@@ -309,18 +309,18 @@ describe("InstructionSet", function () {
 
     it("pushes a special symbol onto the stack", function () {
       subject._false();
-      expect(stack.pop()).toEqual("$$$_FALSE_$$$");
+      expect(stack.pop()).toEqual("$$$_L1_FALSE_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
     describe("when the symbol table contains the symbol", function () {
       beforeEach(function () {
-        symbolTable.set("$$$_FALSE_$$$", 456);
+        symbolTable.set("$$$_L1_FALSE_$$$", 456);
       });
 
       it("does not change the symbol table", function () {
         subject._false();
-        expect(symbolTable.get("$$$_FALSE_$$$")).toEqual(456);
+        expect(symbolTable.get("$$$_L1_FALSE_$$$")).toEqual(456);
       });
 
       it("does not write a clause", function () {
@@ -333,7 +333,7 @@ describe("InstructionSet", function () {
     describe("when the symbol table does not contain the symbol", function () {
       it("adds the symbol to the symbol table", function () {
         subject._false();
-        expect(symbolTable.get("$$$_FALSE_$$$")).toEqual(1);
+        expect(symbolTable.get("$$$_L1_FALSE_$$$")).toEqual(1);
       });
 
       it("writes a CNF clause for 'false'", function () {
@@ -401,7 +401,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top three symbols for one symbol", function () {
       subject._if();
-      expect(stack.pop()).toEqual("$$$_TMP4_$$$");
+      expect(stack.pop()).toEqual("$$$_L1_TMP4_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 

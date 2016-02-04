@@ -15,11 +15,11 @@ describe("Registry", function () {
     expect(subject.nextLiteral()).toEqual(2);
     expect(subject.nextLiteral()).toEqual(3);
 
-    expect(subject.nextSymbol()).toEqual("$$$_TMP1_$$$");
-    expect(subject.nextSymbol()).toEqual("$$$_TMP2_$$$");
-    expect(subject.nextSymbol()).toEqual("$$$_TMP3_$$$");
+    expect(subject.nextSymbol()).toEqual("$$$_L1_TMP1_$$$");
+    expect(subject.nextSymbol()).toEqual("$$$_L1_TMP2_$$$");
+    expect(subject.nextSymbol()).toEqual("$$$_L1_TMP3_$$$");
 
-    expect(subject.trueSymbol()).toEqual("$$$_TRUE_$$$");
-    expect(subject.falseSymbol()).toEqual("$$$_FALSE_$$$");
+    expect(subject.trueSymbol()).toEqual("$$$_L1_TRUE_$$$");
+    expect(subject.falseSymbol()).toEqual("$$$_L1_FALSE_$$$");
   });
 });

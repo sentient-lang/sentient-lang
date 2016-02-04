@@ -36,12 +36,12 @@ describe("Level2Compiler", function () {
     expect(code.metadata.level2Variables.a).toEqual({
       type: "integer",
       symbols: [
-        "$$$_INTEGER1_BIT0_$$$",
-        "$$$_INTEGER1_BIT1_$$$",
-        "$$$_INTEGER1_BIT2_$$$",
-        "$$$_INTEGER1_BIT3_$$$",
-        "$$$_INTEGER1_BIT4_$$$",
-        "$$$_INTEGER1_BIT5_$$$"
+        "$$$_L2_INTEGER1_BIT0_$$$",
+        "$$$_L2_INTEGER1_BIT1_$$$",
+        "$$$_L2_INTEGER1_BIT2_$$$",
+        "$$$_L2_INTEGER1_BIT3_$$$",
+        "$$$_L2_INTEGER1_BIT4_$$$",
+        "$$$_L2_INTEGER1_BIT5_$$$"
       ]
     });
 

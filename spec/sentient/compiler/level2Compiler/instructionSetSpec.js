@@ -54,10 +54,10 @@ describe("InstructionSet", function () {
       subject._boolean("bar");
 
       expect(symbolTable.type("foo")).toEqual("boolean");
-      expect(symbolTable.symbols("foo")).toEqual(["$$$_BOOLEAN1_$$$"]);
+      expect(symbolTable.symbols("foo")).toEqual(["$$$_L2_BOOLEAN1_$$$"]);
 
       expect(symbolTable.type("bar")).toEqual("boolean");
-      expect(symbolTable.symbols("bar")).toEqual(["$$$_BOOLEAN2_$$$"]);
+      expect(symbolTable.symbols("bar")).toEqual(["$$$_L2_BOOLEAN2_$$$"]);
     });
 
     it("writes instructions to register the boolean's symbol", function () {
@@ -65,8 +65,8 @@ describe("InstructionSet", function () {
       subject._boolean("foo");
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-        { type: "push", symbol: "$$$_BOOLEAN1_$$$" },
-        { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+        { type: "push", symbol: "$$$_L2_BOOLEAN1_$$$" },
+        { type: "pop", symbol: "$$$_L2_BOOLEAN1_$$$" }
       ]);
     });
 
@@ -90,15 +90,15 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type("foo")).toEqual("integer");
       expect(symbolTable.symbols("foo")).toEqual([
-        "$$$_INTEGER1_BIT0_$$$",
-        "$$$_INTEGER1_BIT1_$$$",
-        "$$$_INTEGER1_BIT2_$$$"
+        "$$$_L2_INTEGER1_BIT0_$$$",
+        "$$$_L2_INTEGER1_BIT1_$$$",
+        "$$$_L2_INTEGER1_BIT2_$$$"
       ]);
 
       expect(symbolTable.type("bar")).toEqual("integer");
       expect(symbolTable.symbols("bar")).toEqual([
-        "$$$_INTEGER2_BIT0_$$$",
-        "$$$_INTEGER2_BIT1_$$$"
+        "$$$_L2_INTEGER2_BIT0_$$$",
+        "$$$_L2_INTEGER2_BIT1_$$$"
       ]);
     });
 
@@ -107,10 +107,10 @@ describe("InstructionSet", function () {
       subject._integer("foo", 2);
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-        { type: "push", symbol: "$$$_INTEGER1_BIT0_$$$" },
-        { type: "push", symbol: "$$$_INTEGER1_BIT1_$$$" },
-        { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" },
-        { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" }
+        { type: "push", symbol: "$$$_L2_INTEGER1_BIT0_$$$" },
+        { type: "push", symbol: "$$$_L2_INTEGER1_BIT1_$$$" },
+        { type: "pop", symbol: "$$$_L2_INTEGER1_BIT1_$$$" },
+        { type: "pop", symbol: "$$$_L2_INTEGER1_BIT0_$$$" }
       ]);
     });
 
@@ -153,8 +153,8 @@ describe("InstructionSet", function () {
       stack.push("bottom");
       stack.push("top");
 
-      symbolTable.set("bottom", "boolean", ["$$$_BOOLEAN1_$$$"]);
-      symbolTable.set("top", "integer", ["$$$_INTEGER1_BIT0_$$$"]);
+      symbolTable.set("bottom", "boolean", ["$$$_L2_BOOLEAN1_$$$"]);
+      symbolTable.set("top", "integer", ["$$$_L2_INTEGER1_BIT0_$$$"]);
     });
 
     it("pops a symbol from the stack", function () {
@@ -167,15 +167,15 @@ describe("InstructionSet", function () {
         subject.pop("foo");
 
         expect(symbolTable.type("foo")).toEqual("integer");
-        expect(symbolTable.symbols("foo")).toEqual(["$$$_INTEGER1_BIT0_$$$"]);
+        expect(symbolTable.symbols("foo")).toEqual(["$$$_L2_INTEGER1_BIT0_$$$"]);
       });
     });
 
     describe("popping a symbol of the same type", function () {
       beforeEach(function () {
         symbolTable.set("foo", "integer", [
-          "$$$_INTEGER2_BIT0_$$$",
-          "$$$_INTEGER2_BIT1_$$$"
+          "$$$_L2_INTEGER2_BIT0_$$$",
+          "$$$_L2_INTEGER2_BIT1_$$$"
         ]);
       });
 
@@ -183,13 +183,13 @@ describe("InstructionSet", function () {
         subject.pop("foo");
 
         expect(symbolTable.type("foo")).toEqual("integer");
-        expect(symbolTable.symbols("foo")).toEqual(["$$$_INTEGER1_BIT0_$$$"]);
+        expect(symbolTable.symbols("foo")).toEqual(["$$$_L2_INTEGER1_BIT0_$$$"]);
       });
     });
 
     describe("popping a symbol of a different type", function () {
       beforeEach(function () {
-        symbolTable.set("foo", "boolean", ["$$$_BOOLEAN2_$$$"]);
+        symbolTable.set("foo", "boolean", ["$$$_L2_BOOLEAN2_$$$"]);
       });
 
       it("throws an error", function () {
@@ -207,16 +207,16 @@ describe("InstructionSet", function () {
 
     it("pushes a symbol onto the stack", function () {
       subject.constant(true);
-      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP1_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
     it("adds the symbol to the symbol table", function () {
       subject.constant(true);
 
-      expect(symbolTable.type("$$$_TMP1_$$$")).toEqual("boolean");
-      expect(symbolTable.symbols("$$$_TMP1_$$$")).toEqual([
-        "$$$_BOOLEAN1_$$$"
+      expect(symbolTable.type("$$$_L2_TMP1_$$$")).toEqual("boolean");
+      expect(symbolTable.symbols("$$$_L2_TMP1_$$$")).toEqual([
+        "$$$_L2_BOOLEAN1_$$$"
       ]);
     });
 
@@ -227,7 +227,7 @@ describe("InstructionSet", function () {
 
         expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
           { type: "true" },
-          { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+          { type: "pop", symbol: "$$$_L2_BOOLEAN1_$$$" }
         ]);
       });
     });
@@ -239,7 +239,7 @@ describe("InstructionSet", function () {
 
         expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
           { type: "false" },
-          { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+          { type: "pop", symbol: "$$$_L2_BOOLEAN1_$$$" }
         ]);
       });
     });
@@ -251,11 +251,11 @@ describe("InstructionSet", function () {
 
         expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
           { type: "false" },
-          { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" },
+          { type: "pop", symbol: "$$$_L2_INTEGER1_BIT0_$$$" },
           { type: "true" },
-          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" },
+          { type: "pop", symbol: "$$$_L2_INTEGER1_BIT1_$$$" },
           { type: "true" },
-          { type: "pop", symbol: "$$$_INTEGER1_BIT2_$$$" }
+          { type: "pop", symbol: "$$$_L2_INTEGER1_BIT2_$$$" }
         ]);
       });
     });
@@ -267,11 +267,11 @@ describe("InstructionSet", function () {
 
         expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
           { type: "true" },
-          { type: "pop", symbol: "$$$_INTEGER1_BIT0_$$$" },
+          { type: "pop", symbol: "$$$_L2_INTEGER1_BIT0_$$$" },
           { type: "false" },
-          { type: "pop", symbol: "$$$_INTEGER1_BIT1_$$$" },
+          { type: "pop", symbol: "$$$_L2_INTEGER1_BIT1_$$$" },
           { type: "true" },
-          { type: "pop", symbol: "$$$_INTEGER1_BIT2_$$$" }
+          { type: "pop", symbol: "$$$_L2_INTEGER1_BIT2_$$$" }
         ]);
       });
     });
@@ -299,7 +299,7 @@ describe("InstructionSet", function () {
 
       it("replaces the top two symbols for one symbol", function () {
         subject.equal();
-        expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+        expect(stack.pop()).toEqual("$$$_L2_TMP1_$$$");
         expect(stack.pop()).toEqual("bottom");
       });
 
@@ -308,7 +308,7 @@ describe("InstructionSet", function () {
         var newSymbol = stack.pop();
 
         expect(symbolTable.type(newSymbol)).toEqual("boolean");
-        expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_BOOLEAN1_$$$"]);
+        expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L2_BOOLEAN1_$$$"]);
       });
 
       it("writes instructions for 'equal'", function () {
@@ -319,7 +319,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "foo"},
           { type: "push", symbol: "bar"},
           { type: "equal" },
-          { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+          { type: "pop", symbol: "$$$_L2_BOOLEAN1_$$$" }
         ]);
       });
     });
@@ -338,7 +338,7 @@ describe("InstructionSet", function () {
 
         it("replaces the top two symbols for one symbol", function () {
           subject.equal();
-          expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+          expect(stack.pop()).toEqual("$$$_L2_TMP1_$$$");
           expect(stack.pop()).toEqual("bottom");
         });
 
@@ -347,7 +347,7 @@ describe("InstructionSet", function () {
           var newSymbol = stack.pop();
 
           expect(symbolTable.type(newSymbol)).toEqual("boolean");
-          expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_BOOLEAN1_$$$"]);
+          expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L2_BOOLEAN1_$$$"]);
         });
 
         it("writes instructions for 'equal'", function () {
@@ -362,7 +362,7 @@ describe("InstructionSet", function () {
             { type: "push", symbol: "qux"},
             { type: "equal" },
             { type: "and" },
-            { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+            { type: "pop", symbol: "$$$_L2_BOOLEAN1_$$$" }
           ]);
         });
       });
@@ -394,7 +394,7 @@ describe("InstructionSet", function () {
             { type: "equal" },
             { type: "and" },
             { type: "and" },
-            { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+            { type: "pop", symbol: "$$$_L2_BOOLEAN1_$$$" }
           ]);
         });
       });
@@ -433,7 +433,7 @@ describe("InstructionSet", function () {
 
       it("replaces the top two symbols for one symbol", function () {
         subject.add();
-        expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+        expect(stack.pop()).toEqual("$$$_L2_TMP1_$$$");
         expect(stack.pop()).toEqual("bottom");
       });
 
@@ -443,9 +443,9 @@ describe("InstructionSet", function () {
 
         expect(symbolTable.type(newSymbol)).toEqual("integer");
         expect(symbolTable.symbols(newSymbol)).toEqual([
-          "$$$_INTEGER1_BIT0_$$$",
-          "$$$_INTEGER1_BIT1_$$$",
-          "$$$_INTEGER1_BIT2_$$$"
+          "$$$_L2_INTEGER1_BIT0_$$$",
+          "$$$_L2_INTEGER1_BIT1_$$$",
+          "$$$_L2_INTEGER1_BIT2_$$$"
         ]);
       });
 
@@ -457,7 +457,7 @@ describe("InstructionSet", function () {
           // === bit 2 ===
           // c_in = false
           { type: 'false' },
-          { type: 'pop', symbol: '$$$_BOOLEAN1_$$$' },
+          { type: 'pop', symbol: '$$$_L2_BOOLEAN1_$$$' },
 
           // l xor r
           { type: 'push', symbol: 'bar' },
@@ -468,19 +468,19 @@ describe("InstructionSet", function () {
           { type: 'duplicate' },
 
           // sum = (l xor r) xor c_in
-          { type: 'push', symbol: '$$$_BOOLEAN1_$$$' },
+          { type: 'push', symbol: '$$$_L2_BOOLEAN1_$$$' },
           { type: 'not' },
           { type: 'equal' },
-          { type: 'pop', symbol: '$$$_INTEGER1_BIT2_$$$' },
+          { type: 'pop', symbol: '$$$_L2_INTEGER1_BIT2_$$$' },
 
           // c_in = (l and r) or (c_in and (l xor r))
-          { type: 'push', symbol: '$$$_BOOLEAN1_$$$' },
+          { type: 'push', symbol: '$$$_L2_BOOLEAN1_$$$' },
           { type: 'and' },
           { type: 'push', symbol: 'bar' },
           { type: 'push', symbol: 'qux' },
           { type: 'and' },
           { type: 'or' },
-          { type: 'pop', symbol: '$$$_BOOLEAN2_$$$' },
+          { type: 'pop', symbol: '$$$_L2_BOOLEAN2_$$$' },
 
           // === bit 1 ===
           // l xor r
@@ -492,19 +492,19 @@ describe("InstructionSet", function () {
           { type: 'duplicate' },
 
           // sum = (l xor r) xor c_in
-          { type: 'push', symbol: '$$$_BOOLEAN2_$$$' },
+          { type: 'push', symbol: '$$$_L2_BOOLEAN2_$$$' },
           { type: 'not' },
           { type: 'equal' },
-          { type: 'pop', symbol: '$$$_INTEGER1_BIT1_$$$' },
+          { type: 'pop', symbol: '$$$_L2_INTEGER1_BIT1_$$$' },
 
           // c_in = (l and r) or (c_in and (l xor r))
-          { type: 'push', symbol: '$$$_BOOLEAN2_$$$' },
+          { type: 'push', symbol: '$$$_L2_BOOLEAN2_$$$' },
           { type: 'and' },
           { type: 'push', symbol: 'foo' },
           { type: 'push', symbol: 'baz' },
           { type: 'and' },
           { type: 'or' },
-          { type: 'pop', symbol: '$$$_BOOLEAN3_$$$' },
+          { type: 'pop', symbol: '$$$_L2_BOOLEAN3_$$$' },
 
           // === sign bit ===
           // l == r
@@ -515,20 +515,20 @@ describe("InstructionSet", function () {
           { type: 'duplicate' },
 
           // (l == r) && c_in
-          { type: 'push', symbol: '$$$_BOOLEAN3_$$$' },
+          { type: 'push', symbol: '$$$_L2_BOOLEAN3_$$$' },
           { type: 'and' },
 
           { type: 'swap' },
 
           // (l != r) && !c_in
           { type: 'not' },
-          { type: 'push', symbol: '$$$_BOOLEAN3_$$$' },
+          { type: 'push', symbol: '$$$_L2_BOOLEAN3_$$$' },
           { type: 'not' },
           { type: 'and' },
 
           // sign = ((l == r) and c_in) or (l != r) and !c_in)
           { type: 'or' },
-          { type: 'pop', symbol: '$$$_INTEGER1_BIT0_$$$' }
+          { type: 'pop', symbol: '$$$_L2_INTEGER1_BIT0_$$$' }
         ]);
       });
     });
@@ -590,7 +590,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.and();
-      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP1_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -599,7 +599,7 @@ describe("InstructionSet", function () {
       var newSymbol = stack.pop();
 
       expect(symbolTable.type(newSymbol)).toEqual("boolean");
-      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_BOOLEAN1_$$$"]);
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L2_BOOLEAN1_$$$"]);
     });
 
     it("writes instructions for 'and'", function () {
@@ -610,7 +610,7 @@ describe("InstructionSet", function () {
         { type: "push", symbol: "a" },
         { type: "push", symbol: "b" },
         { type: "and" },
-        { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+        { type: "pop", symbol: "$$$_L2_BOOLEAN1_$$$" }
       ]);
     });
 
@@ -638,7 +638,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.or();
-      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP1_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -647,7 +647,7 @@ describe("InstructionSet", function () {
       var newSymbol = stack.pop();
 
       expect(symbolTable.type(newSymbol)).toEqual("boolean");
-      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_BOOLEAN1_$$$"]);
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L2_BOOLEAN1_$$$"]);
     });
 
     it("writes instructions for 'or'", function () {
@@ -658,7 +658,7 @@ describe("InstructionSet", function () {
         { type: "push", symbol: "a" },
         { type: "push", symbol: "b" },
         { type: "or" },
-        { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+        { type: "pop", symbol: "$$$_L2_BOOLEAN1_$$$" }
       ]);
     });
 
@@ -684,7 +684,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top symbol on the stack", function () {
       subject.not();
-      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP1_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -693,7 +693,7 @@ describe("InstructionSet", function () {
       var newSymbol = stack.pop();
 
       expect(symbolTable.type(newSymbol)).toEqual("boolean");
-      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_BOOLEAN1_$$$"]);
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L2_BOOLEAN1_$$$"]);
     });
 
     it("writes instructions for 'not'", function () {
@@ -703,7 +703,7 @@ describe("InstructionSet", function () {
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
         { type: "push", symbol: "a" },
         { type: "not" },
-        { type: "pop", symbol: "$$$_BOOLEAN1_$$$" }
+        { type: "pop", symbol: "$$$_L2_BOOLEAN1_$$$" }
       ]);
     });
 
@@ -729,7 +729,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top symbol on the stack", function () {
       subject.negate();
-      expect(stack.pop()).toEqual("$$$_TMP3_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP3_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -739,9 +739,9 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type(newSymbol)).toEqual("integer");
       expect(symbolTable.symbols(newSymbol)).toEqual([
-        "$$$_INTEGER3_BIT0_$$$",
-        "$$$_INTEGER3_BIT1_$$$",
-        "$$$_INTEGER3_BIT2_$$$"
+        "$$$_L2_INTEGER3_BIT0_$$$",
+        "$$$_L2_INTEGER3_BIT1_$$$",
+        "$$$_L2_INTEGER3_BIT2_$$$"
       ]);
     });
 
@@ -755,22 +755,22 @@ describe("InstructionSet", function () {
         // negate bit 0
         { type: 'push', symbol: 'a' },
         { type: 'not' },
-        { type: 'pop', symbol: '$$$_INTEGER1_BIT0_$$$' },
+        { type: 'pop', symbol: '$$$_L2_INTEGER1_BIT0_$$$' },
 
         // negate bit 1
         { type: 'push', symbol: 'b' },
         { type: 'not' },
-        { type: 'pop', symbol: '$$$_INTEGER1_BIT1_$$$' },
+        { type: 'pop', symbol: '$$$_L2_INTEGER1_BIT1_$$$' },
 
         // self.constant(1)
         { type: 'false' },
-        { type: 'pop', symbol: '$$$_INTEGER2_BIT0_$$$' },
+        { type: 'pop', symbol: '$$$_L2_INTEGER2_BIT0_$$$' },
         { type: 'true' },
-        { type: 'pop', symbol: '$$$_INTEGER2_BIT1_$$$' },
+        { type: 'pop', symbol: '$$$_L2_INTEGER2_BIT1_$$$' },
 
         // self.add()
         { type: 'false' },
-        { type: 'pop', symbol: '$$$_BOOLEAN1_$$$' }
+        { type: 'pop', symbol: '$$$_L2_BOOLEAN1_$$$' }
         // ...
       ]);
     });
@@ -797,7 +797,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top symbol on the stack", function () {
       subject.absolute();
-      expect(stack.pop()).toEqual("$$$_TMP11_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP11_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -807,9 +807,9 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type(newSymbol)).toEqual("integer");
       expect(symbolTable.symbols(newSymbol)).toEqual([
-        "$$$_INTEGER9_BIT0_$$$",
-        "$$$_INTEGER9_BIT1_$$$",
-        "$$$_INTEGER9_BIT2_$$$"
+        "$$$_L2_INTEGER9_BIT0_$$$",
+        "$$$_L2_INTEGER9_BIT1_$$$",
+        "$$$_L2_INTEGER9_BIT2_$$$"
       ]);
     });
   });
@@ -827,7 +827,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.subtract();
-      expect(stack.pop()).toEqual("$$$_TMP4_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP4_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -837,10 +837,10 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type(newSymbol)).toEqual("integer");
       expect(symbolTable.symbols(newSymbol)).toEqual([
-        "$$$_INTEGER4_BIT0_$$$",
-        "$$$_INTEGER4_BIT1_$$$",
-        "$$$_INTEGER4_BIT2_$$$",
-        "$$$_INTEGER4_BIT3_$$$"
+        "$$$_L2_INTEGER4_BIT0_$$$",
+        "$$$_L2_INTEGER4_BIT1_$$$",
+        "$$$_L2_INTEGER4_BIT2_$$$",
+        "$$$_L2_INTEGER4_BIT3_$$$"
       ]);
     });
 
@@ -876,7 +876,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.lessthan();
-      expect(stack.pop()).toEqual("$$$_TMP5_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP5_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -886,7 +886,7 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type(newSymbol)).toEqual("boolean");
       expect(symbolTable.symbols(newSymbol)).toEqual([
-        "$$$_INTEGER4_BIT0_$$$"
+        "$$$_L2_INTEGER4_BIT0_$$$"
       ]);
     });
   });
@@ -904,7 +904,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.greaterthan();
-      expect(stack.pop()).toEqual("$$$_TMP5_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP5_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -914,7 +914,7 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type(newSymbol)).toEqual("boolean");
       expect(symbolTable.symbols(newSymbol)).toEqual([
-        "$$$_INTEGER4_BIT0_$$$"
+        "$$$_L2_INTEGER4_BIT0_$$$"
       ]);
     });
   });
@@ -932,7 +932,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.lessequal();
-      expect(stack.pop()).toEqual("$$$_TMP6_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP6_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -942,7 +942,7 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type(newSymbol)).toEqual("boolean");
       expect(symbolTable.symbols(newSymbol)).toEqual([
-        "$$$_BOOLEAN8_$$$"
+        "$$$_L2_BOOLEAN8_$$$"
       ]);
     });
   });
@@ -960,7 +960,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.greaterequal();
-      expect(stack.pop()).toEqual("$$$_TMP6_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP6_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -970,7 +970,7 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type(newSymbol)).toEqual("boolean");
       expect(symbolTable.symbols(newSymbol)).toEqual([
-        "$$$_BOOLEAN8_$$$"
+        "$$$_L2_BOOLEAN8_$$$"
       ]);
     });
   });
@@ -988,7 +988,7 @@ describe("InstructionSet", function () {
 
     it("replaces the top two symbols for one symbol on the stack", function () {
       subject.multiply();
-      expect(stack.pop()).toEqual("$$$_TMP10_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP10_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -998,10 +998,10 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type(newSymbol)).toEqual("integer");
       expect(symbolTable.symbols(newSymbol)).toEqual([
-        "$$$_INTEGER7_BIT1_$$$",
-        "$$$_INTEGER7_BIT2_$$$",
-        "$$$_INTEGER7_BIT3_$$$",
-        "$$$_INTEGER7_BIT4_$$$"
+        "$$$_L2_INTEGER7_BIT1_$$$",
+        "$$$_L2_INTEGER7_BIT2_$$$",
+        "$$$_L2_INTEGER7_BIT3_$$$",
+        "$$$_L2_INTEGER7_BIT4_$$$"
       ]);
     });
   });
@@ -1020,8 +1020,8 @@ describe("InstructionSet", function () {
     it("replaces the top two symbols for two symbols", function () {
       subject.divmod();
 
-      expect(stack.pop()).toEqual("$$$_TMP1_$$$");
-      expect(stack.pop()).toEqual("$$$_TMP2_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_L2_TMP2_$$$");
       expect(stack.pop()).toEqual("bottom");
     });
 
@@ -1032,14 +1032,14 @@ describe("InstructionSet", function () {
 
       expect(symbolTable.type(quotientSymbol)).toEqual("integer");
       expect(symbolTable.symbols(quotientSymbol)).toEqual([
-        "$$$_INTEGER1_BIT0_$$$",
-        "$$$_INTEGER1_BIT1_$$$"
+        "$$$_L2_INTEGER1_BIT0_$$$",
+        "$$$_L2_INTEGER1_BIT1_$$$"
       ]);
 
       expect(symbolTable.type(moduloSymbol)).toEqual("integer");
       expect(symbolTable.symbols(moduloSymbol)).toEqual([
-        "$$$_INTEGER2_BIT0_$$$",
-        "$$$_INTEGER2_BIT1_$$$"
+        "$$$_L2_INTEGER2_BIT0_$$$",
+        "$$$_L2_INTEGER2_BIT1_$$$"
       ]);
     });
   });
