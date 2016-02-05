@@ -93,4 +93,25 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("push", function () {
+    describe("when the symbol table contains the symbol", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "anything", ["anything"]);
+      });
+
+      it("pushes the symbol onto the stack", function () {
+        subject.push("foo");
+        expect(stack.pop()).toEqual("foo");
+      });
+    });
+
+    describe("when the symbol table does not contain the symbol", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject.push("foo");
+        }).toThrow();
+      });
+    });
+  });
 });

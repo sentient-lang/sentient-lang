@@ -52,7 +52,7 @@ Level 3 Instructions:
 [ ] keys
 [ ] values
 [ ] size
-[ ] push
+[.] push
 [ ] pop
 [ ] not
 [ ] and
