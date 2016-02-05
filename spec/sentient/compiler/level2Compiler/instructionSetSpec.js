@@ -5,7 +5,7 @@ var compiler = "../../../../lib/sentient/compiler";
 var SpecHelper = require("../../../specHelper");
 var describedClass = require(compiler + "/level2Compiler/instructionSet");
 var Stack = require(compiler + "/common/stack");
-var SymbolTable = require(compiler + "/level2Compiler/symbolTable");
+var SymbolTable = require(compiler + "/common/symbolTable");
 var Registry = require(compiler + "/level2Compiler/registry");
 var CodeWriter = require(compiler + "/level2Compiler/codeWriter");
 
