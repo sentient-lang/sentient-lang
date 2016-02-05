@@ -114,6 +114,12 @@ describe("InstructionSet", function () {
       ]);
     });
 
+    it("throws an error if the width isn't provided", function () {
+      expect(function () {
+        subject._integer("foo");
+      }).toThrow();
+    });
+
     describe("when the integer is already declared", function () {
       beforeEach(function () {
         symbolTable.set("foo", "anything", ["anything"]);
