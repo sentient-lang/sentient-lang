@@ -60,8 +60,8 @@ Level 3 Instructions:
 [ ] equal
 [ ] constant
 [ ] variable
-[ ] boolean
-[ ] integer
+[.] boolean
+[.] integer
 [ ] add
 [ ] subtract
 [ ] multiply
