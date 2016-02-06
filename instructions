@@ -54,9 +54,9 @@ Level 3 Instructions:
 [ ] size
 [.] push
 [.] pop
-[ ] not
-[ ] and
-[ ] or
+[.] not
+[.] and
+[.] or
 [ ] equal
 [ ] constant
 [ ] variable

@@ -163,4 +163,145 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("and", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "boolean", ["a"]);
+      symbolTable.set("bar", "boolean", ["b"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.and();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.and();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+    });
+
+    it("writes instructions for 'and'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.and();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "and" },
+        { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+      ]);
+    });
+
+    describe("incorrect types", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "integer", ["a"]);
+
+        expect(function () {
+          subject.and();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("or", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "boolean", ["a"]);
+      symbolTable.set("bar", "boolean", ["b"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.or();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.or();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+    });
+
+    it("writes instructions for 'or'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.or();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "or" },
+        { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+      ]);
+    });
+
+    describe("incorrect types", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "integer", ["a"]);
+
+        expect(function () {
+          subject.or();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("not", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "boolean", ["a"]);
+    });
+
+    it("replaces the top symbol on the stack", function () {
+      subject.not();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.not();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+    });
+
+    it("writes instructions for 'not'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.not();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "not" },
+        { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "integer", ["a"]);
+
+        expect(function () {
+          subject.not();
+        }).toThrow();
+      });
+    });
+  });
 });
