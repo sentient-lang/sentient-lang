@@ -304,4 +304,52 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("add", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("a");
+      stack.push("b");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("a", "integer", ["foo"]);
+      symbolTable.set("b", "integer", ["bar"]);
+    });
+
+    it("replaces the top two symbols on the stack", function () {
+      subject.add();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.add();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+    });
+
+    it("writes instructions for 'add'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.add();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "foo" },
+        { type: "push", symbol: "bar" },
+        { type: "add" },
+        { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("a", "boolean", ["foo"]);
+
+        expect(function () {
+          subject.add();
+        }).toThrow();
+      });
+    });
+  });
 });
