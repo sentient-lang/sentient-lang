@@ -352,4 +352,341 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("subtract", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("a");
+      stack.push("b");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("a", "integer", ["foo"]);
+      symbolTable.set("b", "integer", ["bar"]);
+    });
+
+    it("replaces the top two symbols on the stack", function () {
+      subject.subtract();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.subtract();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+    });
+
+    it("writes instructions for 'subtract'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.subtract();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "foo" },
+        { type: "push", symbol: "bar" },
+        { type: "subtract" },
+        { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("a", "boolean", ["foo"]);
+
+        expect(function () {
+          subject.subtract();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("multiply", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("a");
+      stack.push("b");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("a", "integer", ["foo"]);
+      symbolTable.set("b", "integer", ["bar"]);
+    });
+
+    it("replaces the top two symbols on the stack", function () {
+      subject.multiply();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.multiply();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+    });
+
+    it("writes instructions for 'multiply'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.multiply();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "foo" },
+        { type: "push", symbol: "bar" },
+        { type: "multiply" },
+        { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("a", "boolean", ["foo"]);
+
+        expect(function () {
+          subject.multiply();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("divide", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("a");
+      stack.push("b");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("a", "integer", ["foo"]);
+      symbolTable.set("b", "integer", ["bar"]);
+    });
+
+    it("replaces the top two symbols on the stack", function () {
+      subject.divide();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.divide();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+    });
+
+    it("writes instructions for 'divide'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.divide();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "foo" },
+        { type: "push", symbol: "bar" },
+        { type: "divide" },
+        { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("a", "boolean", ["foo"]);
+
+        expect(function () {
+          subject.divide();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("modulo", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("a");
+      stack.push("b");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("a", "integer", ["foo"]);
+      symbolTable.set("b", "integer", ["bar"]);
+    });
+
+    it("replaces the top two symbols on the stack", function () {
+      subject.modulo();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.modulo();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+    });
+
+    it("writes instructions for 'modulo'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.modulo();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "foo" },
+        { type: "push", symbol: "bar" },
+        { type: "modulo" },
+        { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("a", "boolean", ["foo"]);
+
+        expect(function () {
+          subject.modulo();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("divmod", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("a");
+      stack.push("b");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("a", "integer", ["foo"]);
+      symbolTable.set("b", "integer", ["bar"]);
+    });
+
+    it("replaces the top two symbols for two symbols", function () {
+      subject.divmod();
+
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("$$$_L3_TMP2_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbols to the symbol table", function () {
+      subject.divmod();
+      var quotientSymbol = stack.pop();
+      var moduloSymbol = stack.pop();
+
+      expect(symbolTable.type(quotientSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(quotientSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+
+      expect(symbolTable.type(moduloSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(moduloSymbol)).toEqual(["$$$_L3_INTEGER2_$$$"]);
+    });
+
+    it("writes instructions for 'divmod'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.divmod();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "foo" },
+        { type: "push", symbol: "bar" },
+        { type: "divmod" },
+        { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" },
+        { type: "pop", symbol: "$$$_L3_INTEGER2_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("a", "boolean", ["foo"]);
+
+        expect(function () {
+          subject.divmod();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("negate", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["bar"]);
+    });
+
+    it("replaces the top symbol on the stack", function () {
+      subject.negate();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.negate();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+    });
+
+    it("writes instructions for 'modulo'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.negate();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "bar" },
+        { type: "negate" },
+        { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "boolean", ["bar"]);
+
+        expect(function () {
+          subject.negate();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("absolute", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["bar"]);
+    });
+
+    it("replaces the top symbol on the stack", function () {
+      subject.absolute();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.absolute();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+    });
+
+    it("writes instructions for 'modulo'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.absolute();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "bar" },
+        { type: "absolute" },
+        { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "boolean", ["bar"]);
+
+        expect(function () {
+          subject.absolute();
+        }).toThrow();
+      });
+    });
+  });
 });

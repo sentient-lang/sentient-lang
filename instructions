@@ -62,13 +62,13 @@ Level 3 Instructions:
 [ ] variable
 [.] boolean
 [.] integer
-[ ] add
-[ ] subtract
-[ ] multiply
-[ ] divmod
-[ ] divide
-[ ] modulo
-[ ] negate
+[.] add
+[.] subtract
+[.] multiply
+[.] divmod
+[.] divide
+[.] modulo
+[.] negate
 [ ] lessthan
 [ ] greaterthan
 [ ] lessequal
@@ -76,5 +76,5 @@ Level 3 Instructions:
 [ ] duplicate
 [ ] swap
 [ ] if
-[ ] absolute
+[.] absolute
 [ ] invariant
