@@ -73,8 +73,8 @@ Level 3 Instructions:
 [.] greaterthan
 [.] lessequal
 [.] greaterequal
-[ ] duplicate
-[ ] swap
+[.] duplicate
+[.] swap
 [ ] if
 [.] absolute
-[ ] invariant
+[.] invariant

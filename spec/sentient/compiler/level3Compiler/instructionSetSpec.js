@@ -881,4 +881,61 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("duplicate", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+    });
+
+    it("duplicates the symbol on top of the stack", function () {
+      subject.duplicate();
+
+      expect(stack.pop()).toEqual("foo");
+      expect(stack.pop()).toEqual("foo");
+      expect(stack.pop()).toEqual("bottom");
+    });
+  });
+
+  describe("swap", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+    });
+
+    it("swaps the top two symbols on the stack", function () {
+      subject.swap();
+
+      expect(stack.pop()).toEqual("foo");
+      expect(stack.pop()).toEqual("bar");
+      expect(stack.pop()).toEqual("bottom");
+    });
+  });
+
+  describe("invariant", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+
+      symbolTable.set("foo", "boolean", ["a"]);
+    });
+
+    it("removes the symbol on top of the stack", function () {
+      subject.invariant();
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("writes instructions for 'invariant'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.invariant();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "invariant" }
+      ]);
+
+      expect(codeWriter.instruction.calls.count()).toEqual(2);
+    });
+  });
 });
