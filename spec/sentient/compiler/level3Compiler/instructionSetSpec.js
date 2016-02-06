@@ -689,4 +689,196 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("lessthan", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["a"]);
+      symbolTable.set("bar", "integer", ["b"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.lessthan();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.lessthan();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+    });
+
+    it("writes instructions for 'lessthan'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.lessthan();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "lessthan" },
+        { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "boolean", ["a"]);
+
+        expect(function () {
+          subject.lessthan();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("greaterthan", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["a"]);
+      symbolTable.set("bar", "integer", ["b"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.greaterthan();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.greaterthan();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+    });
+
+    it("writes instructions for 'greaterthan'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.greaterthan();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "greaterthan" },
+        { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "boolean", ["a"]);
+
+        expect(function () {
+          subject.greaterthan();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("lessequal", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["a"]);
+      symbolTable.set("bar", "integer", ["b"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.lessequal();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.lessequal();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+    });
+
+    it("writes instructions for 'lessequal'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.lessequal();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "lessequal" },
+        { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "boolean", ["a"]);
+
+        expect(function () {
+          subject.lessequal();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("greaterequal", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("foo");
+      stack.push("bar");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "integer", ["a"]);
+      symbolTable.set("bar", "integer", ["b"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.greaterequal();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.greaterequal();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+    });
+
+    it("writes instructions for 'greaterequal'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.greaterequal();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "greaterequal" },
+        { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+      ]);
+    });
+
+    describe("incorrect type", function () {
+      it("throws an error", function () {
+        symbolTable.set("foo", "boolean", ["a"]);
+
+        expect(function () {
+          subject.greaterequal();
+        }).toThrow();
+      });
+    });
+  });
 });

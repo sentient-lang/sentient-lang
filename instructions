@@ -69,10 +69,10 @@ Level 3 Instructions:
 [.] divide
 [.] modulo
 [.] negate
-[ ] lessthan
-[ ] greaterthan
-[ ] lessequal
-[ ] greaterequal
+[.] lessthan
+[.] greaterthan
+[.] lessequal
+[.] greaterequal
 [ ] duplicate
 [ ] swap
 [ ] if
