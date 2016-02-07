@@ -47,12 +47,9 @@ Level 3 Instructions:
 
 [.] typedef
 [.] array
-[ ] hash
-[ ] build
+[ ] collect
 [ ] fetch
-[ ] keys
-[ ] values
-[ ] size
+[ ] width
 [.] push
 [.] pop
 [.] not
