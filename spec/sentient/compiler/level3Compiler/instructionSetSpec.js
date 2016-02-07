@@ -1107,4 +1107,198 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("array", function () {
+    describe("when the typedef stack is empty", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject.array("foo", 3);
+        }).toThrow();
+      });
+    });
+
+    describe("when a width isn't specified", function () {
+      it("throws an error", function () {
+        typedefStack.push({ type: "boolean" });
+
+        expect(function () {
+          subject.array("foo");
+        }).toThrow();
+      });
+    });
+
+    describe("when the array is already declared", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "anything", ["anything"]);
+      });
+
+      it("throws an error", function () {
+        typedefStack.push({ type: "boolean" });
+
+        expect(function () {
+          subject.array("foo", 3);
+        }).toThrow();
+      });
+    });
+
+    describe("when the typedef stack contains a boolean", function () {
+      beforeEach(function () {
+        typedefStack.push({ type: "boolean" });
+      });
+
+      it("adds the array element symbols to the symbol table", function () {
+        subject.array("foo", 3);
+
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual(["$$$_L3_BOOLEAN2_$$$"]);
+
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual(["$$$_L3_BOOLEAN3_$$$"]);
+      });
+
+      it("adds the array symbol to the symbol table", function () {
+        subject.array("foo", 3);
+
+        expect(symbolTable.type("foo")).toEqual("array");
+        expect(symbolTable.symbols("foo")).toEqual([
+          "$$$_L3_ARRAY1_ELEMENT0_$$$",
+          "$$$_L3_ARRAY1_ELEMENT1_$$$",
+          "$$$_L3_ARRAY1_ELEMENT2_$$$"
+        ]);
+      });
+
+      it("writes instructions to register the element symbols", function () {
+        spyOn(codeWriter, "instruction");
+        subject.array("foo", 3);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "boolean", symbol: "$$$_L3_BOOLEAN1_$$$" },
+          { type: "boolean", symbol: "$$$_L3_BOOLEAN2_$$$" },
+          { type: "boolean", symbol: "$$$_L3_BOOLEAN3_$$$" }
+        ]);
+      });
+    });
+
+    describe("when the typedef stack contains an integer", function () {
+      beforeEach(function () {
+        typedefStack.push({ type: "integer", width: 6 });
+      });
+
+      it("adds the array element symbols to the symbol table", function () {
+        subject.array("foo", 3);
+
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual("integer");
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual(["$$$_L3_INTEGER1_$$$"]);
+
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual("integer");
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual(["$$$_L3_INTEGER2_$$$"]);
+
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual("integer");
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual(["$$$_L3_INTEGER3_$$$"]);
+      });
+
+      it("adds the array symbol to the symbol table", function () {
+        subject.array("foo", 3);
+
+        expect(symbolTable.type("foo")).toEqual("array");
+        expect(symbolTable.symbols("foo")).toEqual([
+          "$$$_L3_ARRAY1_ELEMENT0_$$$",
+          "$$$_L3_ARRAY1_ELEMENT1_$$$",
+          "$$$_L3_ARRAY1_ELEMENT2_$$$"
+        ]);
+      });
+
+      it("writes instructions to register the element symbols", function () {
+        spyOn(codeWriter, "instruction");
+        subject.array("foo", 3);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "integer", symbol: "$$$_L3_INTEGER1_$$$", width: 6 },
+          { type: "integer", symbol: "$$$_L3_INTEGER2_$$$", width: 6 },
+          { type: "integer", symbol: "$$$_L3_INTEGER3_$$$", width: 6 }
+        ]);
+      });
+    });
+
+    describe("when the typedef stack contains an array", function () {
+      beforeEach(function () {
+        typedefStack.push({
+          type: "array",
+          width: 2,
+          elements: {
+            type: "boolean"
+          }
+        });
+      });
+
+      it("recursively adds symbols for nested primitives", function () {
+        subject.array("foo", 3);
+
+        expect(symbolTable.type("$$$_L3_ARRAY2_ELEMENT0_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_ARRAY2_ELEMENT0_$$$")).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY2_ELEMENT1_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_ARRAY2_ELEMENT1_$$$")).toEqual(["$$$_L3_BOOLEAN2_$$$"]);
+
+        expect(symbolTable.type("$$$_L3_ARRAY3_ELEMENT0_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_ARRAY3_ELEMENT0_$$$")).toEqual(["$$$_L3_BOOLEAN3_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY3_ELEMENT1_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_ARRAY3_ELEMENT1_$$$")).toEqual(["$$$_L3_BOOLEAN4_$$$"]);
+
+        expect(symbolTable.type("$$$_L3_ARRAY4_ELEMENT0_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_ARRAY4_ELEMENT0_$$$")).toEqual(["$$$_L3_BOOLEAN5_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY4_ELEMENT1_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_ARRAY4_ELEMENT1_$$$")).toEqual(["$$$_L3_BOOLEAN6_$$$"]);
+      });
+
+      it("recursively adds symbols for nested arrays", function () {
+        subject.array("foo", 3);
+
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual("array");
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual([
+          "$$$_L3_ARRAY2_ELEMENT0_$$$",
+          "$$$_L3_ARRAY2_ELEMENT1_$$$"
+        ]);
+
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual("array");
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual([
+          "$$$_L3_ARRAY3_ELEMENT0_$$$",
+          "$$$_L3_ARRAY3_ELEMENT1_$$$"
+        ]);
+
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual("array");
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual([
+          "$$$_L3_ARRAY4_ELEMENT0_$$$",
+          "$$$_L3_ARRAY4_ELEMENT1_$$$"
+        ]);
+      });
+
+      it("adds the top-level array symbol to the symbol table", function () {
+        subject.array("foo", 3);
+
+        expect(symbolTable.type("foo")).toEqual("array");
+        expect(symbolTable.symbols("foo")).toEqual([
+          "$$$_L3_ARRAY1_ELEMENT0_$$$",
+          "$$$_L3_ARRAY1_ELEMENT1_$$$",
+          "$$$_L3_ARRAY1_ELEMENT2_$$$"
+        ]);
+      });
+
+      it("writes instructions to register the primitive symbols", function () {
+        spyOn(codeWriter, "instruction");
+        subject.array("foo", 3);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "boolean", symbol: "$$$_L3_BOOLEAN1_$$$" },
+          { type: "boolean", symbol: "$$$_L3_BOOLEAN2_$$$" },
+          { type: "boolean", symbol: "$$$_L3_BOOLEAN3_$$$" },
+          { type: "boolean", symbol: "$$$_L3_BOOLEAN4_$$$" },
+          { type: "boolean", symbol: "$$$_L3_BOOLEAN5_$$$" },
+          { type: "boolean", symbol: "$$$_L3_BOOLEAN6_$$$" }
+        ]);
+      });
+    });
+  });
 });
