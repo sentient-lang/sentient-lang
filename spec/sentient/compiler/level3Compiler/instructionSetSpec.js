@@ -1048,6 +1048,14 @@ describe("InstructionSet", function () {
         subject.typedef("integer", 6);
         expect(typedefStack.pop()).toEqual({ type: "integer", width: 6 });
       });
+
+      describe("when no width is specified", function () {
+        it("throws an error", function () {
+          expect(function () {
+            subject.typedef("integer");
+          }).toThrow();
+        });
+      });
     });
 
     describe("boolean", function () {
@@ -1076,6 +1084,16 @@ describe("InstructionSet", function () {
         it("throws an error", function () {
           expect(function () {
             subject.typedef("array", 6);
+          }).toThrow();
+        });
+      });
+
+      describe("when no width is specified", function () {
+        it("throws an error", function () {
+          subject.typedef("integer", 3);
+
+          expect(function () {
+            subject.typedef("array");
           }).toThrow();
         });
       });
