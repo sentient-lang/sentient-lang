@@ -22,5 +22,15 @@ describe("Registry", function () {
     expect(subject.nextInteger()).toEqual(["$$$_L3_INTEGER1_$$$"]);
     expect(subject.nextInteger()).toEqual(["$$$_L3_INTEGER2_$$$"]);
     expect(subject.nextInteger()).toEqual(["$$$_L3_INTEGER3_$$$"]);
+
+    expect(subject.nextArray(1)).toEqual(["$$$_L3_ARRAY1_ELEMENT0_$$$"]);
+    expect(subject.nextArray(2)).toEqual([
+      "$$$_L3_ARRAY2_ELEMENT0_$$$",
+      "$$$_L3_ARRAY2_ELEMENT1_$$$"
+    ]);
+
+    expect(function () {
+      subject.nextArray();
+    }).toThrow();
   });
 });
