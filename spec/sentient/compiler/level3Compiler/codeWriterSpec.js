@@ -67,6 +67,52 @@ describe("CodeWriter", function () {
     });
   });
 
+  describe("supporting variables", function () {
+    it("can mark variables as supporting", function () {
+      subject.variable("foo", "boolean", ["a"], true);
+      var code = subject.write();
+
+      expect(code).toEqual({
+        metadata: {
+          level3Variables: {
+            foo: { type: "boolean", symbols: ["a"], supporting: true }
+          }
+        },
+        instructions: []
+      });
+    });
+
+    it("can promote variables from supporting to top-level", function () {
+      subject.variable("foo", "boolean", ["a"], true);
+      subject.variable("foo", "boolean", ["a"], false);
+      var code = subject.write();
+
+      expect(code).toEqual({
+        metadata: {
+          level3Variables: {
+            foo: { type: "boolean", symbols: ["a"] }
+          }
+        },
+        instructions: []
+      });
+    });
+
+    it("does not demote variables from top-level to supporting", function () {
+      subject.variable("foo", "boolean", ["a"], false);
+      subject.variable("foo", "boolean", ["a"], true);
+      var code = subject.write();
+
+      expect(code).toEqual({
+        metadata: {
+          level3Variables: {
+            foo: { type: "boolean", symbols: ["a"] }
+          }
+        },
+        instructions: []
+      });
+    });
+  });
+
   it("can set the variables and the metadata together", function () {
     subject.variable("foo", "boolean", ["a"]);
     subject.metadata({ foo: "bar", baz: 123 });
