@@ -26,6 +26,28 @@ describe("InstructionSet", function () {
     });
   });
 
+  describe("call", function () {
+    it("calls the method that handles the given instruction", function () {
+      spyOn(subject, "push");
+      subject.call({ type: "push", symbol: "foo" });
+      expect(subject.push).toHaveBeenCalledWith("foo");
+
+      spyOn(subject, "_boolean");
+      subject.call({ type: "boolean", symbol: "foo" });
+      expect(subject._boolean).toHaveBeenCalledWith("foo");
+
+      spyOn(subject, "_integer");
+      subject.call({ type: "integer", symbol: "foo", width: 6 });
+      expect(subject._integer).toHaveBeenCalledWith("foo", 6);
+    });
+
+    it("throws an error on an unrecognised instruction", function () {
+      expect(function () {
+        subject.call({ type: "unrecognised" });
+      }).toThrow();
+    });
+  });
+
   describe("boolean", function () {
     it("adds the boolean to the symbol table", function () {
       subject._boolean("foo");
