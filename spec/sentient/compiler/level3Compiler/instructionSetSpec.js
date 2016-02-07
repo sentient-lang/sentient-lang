@@ -960,4 +960,83 @@ describe("InstructionSet", function () {
       expect(codeWriter.instruction.calls.count()).toEqual(2);
     });
   });
+
+  describe("variable", function () {
+    beforeEach(function () {
+      symbolTable.set("foo", "integer", ["a"]);
+      symbolTable.set("bar", "array", ["foo"]);
+      symbolTable.set("baz", "array", ["bar"]);
+    });
+
+    describe("primitives", function () {
+      it("writes the variable with its type and symbols", function () {
+        spyOn(codeWriter, "variable");
+        subject.variable("foo");
+        expect(codeWriter.variable).toHaveBeenCalledWith(
+          "foo", "integer", ["a"], false
+        );
+      });
+
+      it("writes instructions for 'variable'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.variable("foo");
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "variable", symbol: "a" }
+        ]);
+      });
+    });
+
+    describe("arrays of primitives", function () {
+      it("writes the variable as well as its primitive variables", function () {
+        spyOn(codeWriter, "variable");
+        subject.variable("bar");
+
+        expect(codeWriter.variable.calls.argsFor(0)).toEqual(
+          ["foo", "integer", ["a"], true]
+        );
+
+        expect(codeWriter.variable.calls.argsFor(1)).toEqual(
+          ["bar", "array", ["foo"], false]
+        );
+      });
+
+      it("writes instructions for 'variable'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.variable("bar");
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "variable", symbol: "a" }
+        ]);
+      });
+    });
+
+    describe("arrays of arrays", function () {
+      it("writes the variable as well as nested arrays", function () {
+        spyOn(codeWriter, "variable");
+        subject.variable("baz");
+
+        expect(codeWriter.variable.calls.argsFor(0)).toEqual(
+          ["foo", "integer", ["a"], true]
+        );
+
+        expect(codeWriter.variable.calls.argsFor(1)).toEqual(
+          ["bar", "array", ["foo"], true]
+        );
+
+        expect(codeWriter.variable.calls.argsFor(2)).toEqual(
+          ["baz", "array", ["bar"], false]
+        );
+      });
+
+      it("writes instructions for 'variable'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.variable("baz");
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "variable", symbol: "a" }
+        ]);
+      });
+    });
+  });
 });

@@ -59,7 +59,7 @@ Level 3 Instructions:
 [.] or
 [ ] equal
 [ ] constant
-[ ] variable
+[.] variable
 [.] boolean
 [.] integer
 [.] add
