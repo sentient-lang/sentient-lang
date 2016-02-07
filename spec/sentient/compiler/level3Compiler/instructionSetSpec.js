@@ -10,16 +10,18 @@ var Registry = require(compiler + "/level3Compiler/registry");
 var CodeWriter = require(compiler + "/level3Compiler/codeWriter");
 
 describe("InstructionSet", function () {
-  var subject, stack, symbolTable, registry, codeWriter;
+  var subject, stack, typedefStack, symbolTable, registry, codeWriter;
 
   beforeEach(function () {
     stack = new Stack();
+    typedefStack = new Stack();
     symbolTable = new SymbolTable();
     registry = new Registry();
     codeWriter = new CodeWriter();
 
     subject = new describedClass({
       stack: stack,
+      typedefStack: typedefStack,
       symbolTable: symbolTable,
       registry: registry,
       codeWriter: codeWriter
@@ -1036,6 +1038,54 @@ describe("InstructionSet", function () {
         expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
           { type: "variable", symbol: "a" }
         ]);
+      });
+    });
+  });
+
+  describe("typedef", function () {
+    describe("integer", function () {
+      it("adds the type definition to the typedef stack", function () {
+        subject.typedef("integer", 6);
+        expect(typedefStack.pop()).toEqual({ type: "integer", width: 6 });
+      });
+    });
+
+    describe("boolean", function () {
+      it("adds the type definition to the typedef stack", function () {
+        subject.typedef("boolean");
+        expect(typedefStack.pop()).toEqual({ type: "boolean" });
+      });
+    });
+
+    describe("array", function () {
+      it("expands the type definition on the typedef stack", function () {
+        subject.typedef("integer", 3);
+        subject.typedef("array", 6);
+
+        expect(typedefStack.pop()).toEqual({
+          type: "array",
+          width: 6,
+          elements: {
+            type: "integer",
+            width: 3
+          }
+        });
+      });
+
+      describe("when the stack is empty", function () {
+        it("throws an error", function () {
+          expect(function () {
+            subject.typedef("array", 6);
+          }).toThrow();
+        });
+      });
+    });
+
+    describe("unrecognised type", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject.typedef("unrecognised");
+        }).toThrow();
       });
     });
   });
