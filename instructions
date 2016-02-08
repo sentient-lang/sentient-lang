@@ -47,7 +47,7 @@ Level 3 Instructions:
 
 [.] typedef
 [.] array
-[ ] collect
+[.] collect
 [ ] fetch
 [ ] width
 [.] push

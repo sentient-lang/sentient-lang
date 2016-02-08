@@ -1301,4 +1301,138 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("collect", function () {
+    describe("creating an array of primitives", function () {
+      beforeEach(function () {
+        stack.push("bottom");
+        stack.push("foo");
+        stack.push("bar");
+        stack.push("baz");
+
+        symbolTable.set("bottom", "anything", ["anything"]);
+        symbolTable.set("foo", "integer", ["a"]);
+        symbolTable.set("bar", "integer", ["b"]);
+        symbolTable.set("baz", "integer", ["c"]);
+      });
+
+      it("replaces the top N symbols for one symbol on the stack", function () {
+        subject.collect(3);
+
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.collect(3);
+
+        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("array")
+        expect(symbolTable.symbols("$$$_L3_TMP1_$$$")).toEqual([
+          "foo", "bar", "baz"
+        ]);
+      });
+    });
+
+    describe("creating an array of arrays", function () {
+      beforeEach(function () {
+        stack.push("bottom");
+        stack.push("arr1");
+        stack.push("arr2");
+
+        symbolTable.set("bottom", "anything", ["anything"]);
+
+        symbolTable.set("arr1", "array", ["foo"]);
+        symbolTable.set("arr2", "array", ["bar"]);
+
+        symbolTable.set("foo", "integer", ["a"]);
+        symbolTable.set("bar", "integer", ["b"]);
+      });
+
+      it("replaces the top N symbols for one symbol on the stack", function () {
+        subject.collect(2);
+
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.collect(2);
+
+        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("array")
+        expect(symbolTable.symbols("$$$_L3_TMP1_$$$")).toEqual([
+          "arr1", "arr2"
+        ]);
+      });
+    });
+
+    describe("creating an array of [int, bool]", function () {
+      beforeEach(function () {
+        stack.push("int");
+        stack.push("bool");
+
+        symbolTable.set("int", "integer", ["a"]);
+        symbolTable.set("bool", "boolean", ["b"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.collect(2);
+        }).toThrow();
+      });
+    });
+
+    describe("creating an array of [int, [int]]", function () {
+      beforeEach(function () {
+        stack.push("int");
+        stack.push("arrayOfInt");
+
+        symbolTable.set("int", "integer", ["a"]);
+        symbolTable.set("arrayOfInt", "array", ["int"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.collect(2);
+        }).toThrow();
+      });
+    });
+
+    describe("creating an array of [[int], [bool]]", function () {
+      beforeEach(function () {
+        stack.push("arrayOfInt");
+        stack.push("arrayOfBool");
+
+        symbolTable.set("int", "integer", ["a"]);
+        symbolTable.set("bool", "bool", ["b"]);
+        symbolTable.set("arrayOfInt", "array", ["int"]);
+        symbolTable.set("arrayOfBool", "array", ["bool"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.collect(2);
+        }).toThrow();
+      });
+    });
+
+    describe("creating an array of [[[int]], [[bool]]]", function () {
+      beforeEach(function () {
+        stack.push("arrayOfArrayOfInt");
+        stack.push("arrayOfArrayOfBool");
+
+        symbolTable.set("int", "integer", ["a"]);
+        symbolTable.set("bool", "boolean", ["b"]);
+        symbolTable.set("arrayOfInt", "array", ["int"]);
+        symbolTable.set("arrayOfBool", "array", ["bool"]);
+        symbolTable.set("arrayOfArrayOfInt", "array", ["arrayOfInt"]);
+        symbolTable.set("arrayOfArrayOfBool", "array", ["arrayOfBool"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.collect(2);
+        }).toThrow();
+      });
+    });
+  });
 });
