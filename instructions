@@ -45,8 +45,8 @@ Level 2 Instructions:
 
 Level 3 Instructions:
 
-[.] typedef
-[.] array
+[X] typedef
+[X] array
 [.] collect
 [.] fetch
 [ ] width
