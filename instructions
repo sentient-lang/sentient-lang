@@ -55,7 +55,7 @@ Level 3 Instructions:
 [.] not
 [.] and
 [.] or
-[ ] equal
+[.] equal
 [ ] constant
 [.] variable
 [.] boolean
