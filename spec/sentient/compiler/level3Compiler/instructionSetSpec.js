@@ -118,6 +118,22 @@ describe("InstructionSet", function () {
         }).toThrow();
       });
     });
+
+    describe("when no width is specified", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject._integer("foo");
+        }).toThrow();
+      });
+    });
+
+    describe("when an invalid width is specified", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject._integer("foo", -1);
+        }).toThrow();
+      });
+    });
   });
 
   describe("push", function () {
@@ -1099,6 +1115,16 @@ describe("InstructionSet", function () {
           }).toThrow();
         });
       });
+
+      describe("when an invalid width is specified", function () {
+        it("throws an error", function () {
+          subject.typedef("integer", 3);
+
+          expect(function () {
+            subject.typedef("array", -1);
+          }).toThrow();
+        });
+      });
     });
 
     describe("unrecognised type", function () {
@@ -1125,6 +1151,16 @@ describe("InstructionSet", function () {
 
         expect(function () {
           subject.array("foo");
+        }).toThrow();
+      });
+    });
+
+    describe("when an invalid width is specified", function () {
+      it("throws an error", function () {
+        typedefStack.push({ type: "boolean" });
+
+        expect(function () {
+          subject.array("foo", -1);
         }).toThrow();
       });
     });
@@ -1436,6 +1472,22 @@ describe("InstructionSet", function () {
         }).toThrow();
       });
     });
+
+    describe("creating an empty array", function () {
+      beforeEach(function () {
+        stack.push("bottom");
+        stack.push("foo");
+
+        symbolTable.set("bottom", "anything", ["anything"]);
+        symbolTable.set("foo", "integer", ["a"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.collect(0);
+        }).toThrow();
+      });
+    });
   });
 
   describe("fetch", function () {
@@ -1665,6 +1717,18 @@ describe("InstructionSet", function () {
           { keySymbols: ["k"], keyIndex: 1, nilIndex: 2 }
         ]);
       });
+
+      describe("which includes empty arrays", function () {
+        beforeEach(function () {
+          symbolTable.set("foo", "array", []);
+        });
+
+        it("does not throw an error", function () {
+          expect(function () {
+            subject.fetch("key");
+          }).not.toThrow();
+        });
+      });
     });
 
     describe("fetching from an array with restrictions", function () {
@@ -1717,6 +1781,18 @@ describe("InstructionSet", function () {
           { keySymbols: ["p"], keyIndex: 0, nilIndex: 1 },
           { keySymbols: ["p"], keyIndex: 2, nilIndex: 3 }
         ]);
+      });
+    });
+
+    describe("fetching from an empty array", function () {
+      beforeEach(function () {
+        symbolTable.set("someArray", "array", []);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.fetch("key");
+        }).toThrow();
       });
     });
   });
