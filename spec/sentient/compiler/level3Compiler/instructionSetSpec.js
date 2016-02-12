@@ -10,7 +10,7 @@ var Registry = require(compiler + "/level3Compiler/registry");
 var CodeWriter = require(compiler + "/level3Compiler/codeWriter");
 
 describe("InstructionSet", function () {
-  var subject, stack, typedefStack, symbolTable, registry, codeWriter;
+  var subject, stack, typedefStack, symbolTable, registry, codeWriter, fetchRestrictions;
 
   beforeEach(function () {
     stack = new Stack();
@@ -18,13 +18,15 @@ describe("InstructionSet", function () {
     symbolTable = new SymbolTable();
     registry = new Registry();
     codeWriter = new CodeWriter();
+    fetchRestrictions = {};
 
     subject = new describedClass({
       stack: stack,
       typedefStack: typedefStack,
       symbolTable: symbolTable,
       registry: registry,
-      codeWriter: codeWriter
+      codeWriter: codeWriter,
+      fetchRestrictions: fetchRestrictions
     });
   });
 
@@ -1432,6 +1434,289 @@ describe("InstructionSet", function () {
         expect(function () {
           subject.collect(2);
         }).toThrow();
+      });
+    });
+  });
+
+  describe("fetch", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("someArray");
+
+      symbolTable.set("someArray", "array", ["foo", "bar"]);
+      symbolTable.set("key", "integer", ["k"]);
+    });
+
+    describe("fetching from a non-array", function () {
+      beforeEach(function () {
+        symbolTable.set("someArray", "integer", ["foo"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.fetch("key");
+        }).toThrow();
+      });
+    });
+
+    describe("fetching without a key", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject.fetch(undefined);
+        }).toThrow();
+      });
+    });
+
+    describe("fetching with a non-integer key", function () {
+      beforeEach(function () {
+        symbolTable.set("key", "boolean", ["k"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.fetch("key");
+        }).toThrow();
+      });
+    });
+
+    describe("fetching with a key not in the symbol table", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject.fetch("missing");
+        }).toThrow();
+      });
+    });
+
+    describe("fetching from an array of booleans", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "boolean", ["a"]);
+        symbolTable.set("bar", "boolean", ["b"]);
+      });
+
+      it("replaces the top symbol on the stack", function () {
+        subject.fetch("key");
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.fetch("key");
+        var newSymbol = stack.pop();
+
+        expect(symbolTable.type(newSymbol)).toEqual("boolean");
+        expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+      });
+
+      it("writes instructions for 'fetch'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.fetch("key");
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          // invariant: k >= 0
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 0 },
+          { type: "greaterequal" },
+          { type: "invariant" },
+
+          // invariant: k < array.length
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 2 },
+          { type: "lessthan" },
+          { type: "invariant" },
+
+          // if k == 0
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 0 },
+          { type: "equal" },
+
+          // a
+          { type: "push", symbol: "a" },
+
+          // else if k == 1
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 1 },
+          { type: "equal" },
+
+          // b
+          { type: "push", symbol: "b" },
+
+          // else false (this will never be true because of invariants)
+          { type: "constant", value: false },
+          { type: "if" },
+          { type: "if" },
+
+          { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+        ]);
+      });
+    });
+
+    describe("fetching from an array of integers", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "integer", ["a"]);
+        symbolTable.set("bar", "integer", ["b"]);
+      });
+
+      it("replaces the top symbol on the stack", function () {
+        subject.fetch("key");
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.fetch("key");
+        var newSymbol = stack.pop();
+
+        expect(symbolTable.type(newSymbol)).toEqual("integer");
+        expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+      });
+
+      it("writes instructions for 'fetch'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.fetch("key");
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          // invariant: k >= 0
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 0 },
+          { type: "greaterequal" },
+          { type: "invariant" },
+
+          // invariant: k < array.length
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 2 },
+          { type: "lessthan" },
+          { type: "invariant" },
+
+          // if k == 0
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 0 },
+          { type: "equal" },
+
+          // a
+          { type: "push", symbol: "a" },
+
+          // else if k == 1
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 1 },
+          { type: "equal" },
+
+          // b
+          { type: "push", symbol: "b" },
+
+          // else 0 (this will never be true because of invariants)
+          { type: "constant", value: 0 },
+          { type: "if" },
+          { type: "if" },
+
+          { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" },
+        ]);
+      });
+    });
+
+    describe("fetching from a nested array", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "array", ["abc", "def", "ghi"]);
+        symbolTable.set("bar", "array", ["jkl", "mno"]);
+
+        symbolTable.set("abc", "integer", ["a"]);
+        symbolTable.set("def", "integer", ["b"]);
+        symbolTable.set("ghi", "integer", ["c"]);
+        symbolTable.set("jkl", "integer", ["d"]);
+        symbolTable.set("mno", "integer", ["e"]);
+      });
+
+      it("replaces the top symbol on the stack", function () {
+        subject.fetch("key");
+        expect(stack.pop()).toEqual("$$$_L3_TMP8_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.fetch("key");
+        var newSymbol = stack.pop();
+
+        expect(symbolTable.type(newSymbol)).toEqual("array");
+        expect(symbolTable.symbols(newSymbol)).toEqual([
+          "$$$_L3_TMP3_$$$",
+          "$$$_L3_TMP5_$$$",
+          "$$$_L3_TMP7_$$$"
+        ]);
+      });
+
+      it("adds the nested elements to the symbol table", function () {
+        subject.fetch("key");
+
+        expect(symbolTable.type("$$$_L3_TMP3_$$$")).toEqual("integer");
+        expect(symbolTable.type("$$$_L3_TMP5_$$$")).toEqual("integer");
+        expect(symbolTable.type("$$$_L3_TMP7_$$$")).toEqual("integer");
+
+        expect(symbolTable.symbols("$$$_L3_TMP3_$$$")).toEqual(["$$$_L3_INTEGER2_$$$"]);
+        expect(symbolTable.symbols("$$$_L3_TMP5_$$$")).toEqual(["$$$_L3_INTEGER3_$$$"]);
+        expect(symbolTable.symbols("$$$_L3_TMP7_$$$")).toEqual(["$$$_L3_INTEGER4_$$$"]);
+      });
+
+      it("adds a restriction to be applied on the next fetch", function () {
+        subject.fetch("key");
+
+        var newSymbol = stack.pop();
+        var restrictions = fetchRestrictions[newSymbol];
+
+        expect(restrictions).toEqual([
+          { keySymbols: ["k"], keyIndex: 1, nilIndex: 2 }
+        ]);
+      });
+    });
+
+    describe("fetching from an array with restrictions", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "integer", ["a"]);
+        symbolTable.set("bar", "integer", ["b"]);
+
+        fetchRestrictions.someArray = [
+          { keySymbols: ["p"], keyIndex: 0, nilIndex: 1},
+          { keySymbols: ["p"], keyIndex: 2, nilIndex: 3}
+        ];
+
+        symbolTable.set("previousKey", "integer", ["p"]);
+      });
+
+      it("adds an invariant for each restriction", function () {
+        spyOn(codeWriter, "instruction");
+        subject.fetch("key");
+
+        var calls = SpecHelper.calls(codeWriter.instruction)
+        var relevantCalls = calls.slice(0, 18);
+
+        expect(relevantCalls).toEqual([
+          { type: "push", symbol: "p" },
+          { type: "constant", value: 0 },
+          { type: "equal" },
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 1 },
+          { type: "equal" },
+          { type: "and" },
+          { type: "not" },
+          { type: "invariant" },
+
+          { type: "push", symbol: "p" },
+          { type: "constant", value: 2 },
+          { type: "equal" },
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 3 },
+          { type: "equal" },
+          { type: "and" },
+          { type: "not" },
+          { type: "invariant" }
+        ]);
+      });
+
+      it("leaves the restrictions untouched for other fetches", function () {
+        subject.fetch("key");
+
+        expect(fetchRestrictions.someArray).toEqual([
+          { keySymbols: ["p"], keyIndex: 0, nilIndex: 1 },
+          { keySymbols: ["p"], keyIndex: 2, nilIndex: 3 }
+        ]);
       });
     });
   });
