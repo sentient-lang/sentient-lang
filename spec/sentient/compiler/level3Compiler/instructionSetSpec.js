@@ -1514,6 +1514,7 @@ describe("InstructionSet", function () {
     beforeEach(function () {
       stack.push("bottom");
       stack.push("someArray");
+      stack.push("key");
 
       symbolTable.set("someArray", "array", ["foo", "bar"]);
       symbolTable.set("key", "integer", ["k"]);
@@ -1526,15 +1527,7 @@ describe("InstructionSet", function () {
 
       it("throws an error", function () {
         expect(function () {
-          subject.fetch("key");
-        }).toThrow();
-      });
-    });
-
-    describe("fetching without a key", function () {
-      it("throws an error", function () {
-        expect(function () {
-          subject.fetch(undefined);
+          subject.fetch();
         }).toThrow();
       });
     });
@@ -1546,15 +1539,7 @@ describe("InstructionSet", function () {
 
       it("throws an error", function () {
         expect(function () {
-          subject.fetch("key");
-        }).toThrow();
-      });
-    });
-
-    describe("fetching with a key not in the symbol table", function () {
-      it("throws an error", function () {
-        expect(function () {
-          subject.fetch("missing");
+          subject.fetch();
         }).toThrow();
       });
     });
@@ -1566,13 +1551,13 @@ describe("InstructionSet", function () {
       });
 
       it("replaces the top symbol on the stack", function () {
-        subject.fetch("key");
+        subject.fetch();
         expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
         expect(stack.pop()).toEqual("bottom");
       });
 
       it("adds the new symbol to the symbol table", function () {
-        subject.fetch("key");
+        subject.fetch();
         var newSymbol = stack.pop();
 
         expect(symbolTable.type(newSymbol)).toEqual("boolean");
@@ -1581,7 +1566,7 @@ describe("InstructionSet", function () {
 
       it("writes instructions for 'fetch'", function () {
         spyOn(codeWriter, "instruction");
-        subject.fetch("key");
+        subject.fetch();
 
         expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
           // invariant: k >= 0
@@ -1629,13 +1614,13 @@ describe("InstructionSet", function () {
       });
 
       it("replaces the top symbol on the stack", function () {
-        subject.fetch("key");
+        subject.fetch();
         expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
         expect(stack.pop()).toEqual("bottom");
       });
 
       it("adds the new symbol to the symbol table", function () {
-        subject.fetch("key");
+        subject.fetch();
         var newSymbol = stack.pop();
 
         expect(symbolTable.type(newSymbol)).toEqual("integer");
@@ -1644,7 +1629,7 @@ describe("InstructionSet", function () {
 
       it("writes instructions for 'fetch'", function () {
         spyOn(codeWriter, "instruction");
-        subject.fetch("key");
+        subject.fetch();
 
         expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
           // invariant: k >= 0
@@ -1698,13 +1683,13 @@ describe("InstructionSet", function () {
       });
 
       it("replaces the top symbol on the stack", function () {
-        subject.fetch("key");
+        subject.fetch();
         expect(stack.pop()).toEqual("$$$_L3_TMP8_$$$");
         expect(stack.pop()).toEqual("bottom");
       });
 
       it("adds the new symbol to the symbol table", function () {
-        subject.fetch("key");
+        subject.fetch();
         var newSymbol = stack.pop();
 
         expect(symbolTable.type(newSymbol)).toEqual("array");
@@ -1716,7 +1701,7 @@ describe("InstructionSet", function () {
       });
 
       it("adds the nested elements to the symbol table", function () {
-        subject.fetch("key");
+        subject.fetch();
 
         expect(symbolTable.type("$$$_L3_TMP3_$$$")).toEqual("integer");
         expect(symbolTable.type("$$$_L3_TMP5_$$$")).toEqual("integer");
@@ -1728,7 +1713,7 @@ describe("InstructionSet", function () {
       });
 
       it("adds a restriction to be applied on the next fetch", function () {
-        subject.fetch("key");
+        subject.fetch();
 
         var newSymbol = stack.pop();
         var restrictions = fetchRestrictions[newSymbol];
@@ -1745,7 +1730,7 @@ describe("InstructionSet", function () {
 
         it("does not throw an error", function () {
           expect(function () {
-            subject.fetch("key");
+            subject.fetch();
           }).not.toThrow();
         });
       });
@@ -1766,7 +1751,7 @@ describe("InstructionSet", function () {
 
       it("adds an invariant for each restriction", function () {
         spyOn(codeWriter, "instruction");
-        subject.fetch("key");
+        subject.fetch();
 
         var calls = SpecHelper.calls(codeWriter.instruction)
         var relevantCalls = calls.slice(0, 18);
@@ -1795,7 +1780,7 @@ describe("InstructionSet", function () {
       });
 
       it("leaves the restrictions untouched for other fetches", function () {
-        subject.fetch("key");
+        subject.fetch();
 
         expect(fetchRestrictions.someArray).toEqual([
           { keySymbols: ["p"], keyIndex: 0, nilIndex: 1 },
@@ -1811,7 +1796,7 @@ describe("InstructionSet", function () {
 
       it("throws an error", function () {
         expect(function () {
-          subject.fetch("key");
+          subject.fetch();
         }).toThrow();
       });
     });
