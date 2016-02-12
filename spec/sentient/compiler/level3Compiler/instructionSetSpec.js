@@ -1488,6 +1488,26 @@ describe("InstructionSet", function () {
         }).toThrow();
       });
     });
+
+    describe("creating an array of [[int, int], [int]]", function () {
+      beforeEach(function () {
+        stack.push("arr1");
+        stack.push("arr2");
+
+        symbolTable.set("arr1", "array", ["a", "b"]);
+        symbolTable.set("arr2", "array", ["c"]);
+
+        symbolTable.set("a", "integer", ["a"]);
+        symbolTable.set("b", "integer", ["b"]);
+        symbolTable.set("c", "integer", ["c"]);
+      });
+
+      it("does not throw an error", function () {
+        expect(function () {
+          subject.collect(2);
+        }).not.toThrow();
+      });
+    });
   });
 
   describe("fetch", function () {
