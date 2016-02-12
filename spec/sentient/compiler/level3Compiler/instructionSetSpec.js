@@ -1436,6 +1436,74 @@ describe("InstructionSet", function () {
     });
   });
 
+  describe("constant", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+    });
+
+    describe("booleans", function () {
+      it("pushes a symbol onto the stack", function () {
+        subject.constant(true);
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the symbol to the symbol table", function () {
+        subject.constant(true);
+
+        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_TMP1_$$$")).toEqual([
+          "$$$_L3_BOOLEAN1_$$$"
+        ]);
+      });
+
+      it("writes instructions to register the symbol", function () {
+        spyOn(codeWriter, "instruction");
+        subject.constant(true);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "constant", value: true },
+          { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+        ]);
+      });
+    });
+
+    describe("integers", function () {
+      it("pushes a symbol onto the stack", function () {
+        subject.constant(3);
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the symbol to the symbol table", function () {
+        subject.constant(3);
+
+        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("integer");
+        expect(symbolTable.symbols("$$$_L3_TMP1_$$$")).toEqual([
+          "$$$_L3_INTEGER1_$$$"
+        ]);
+      });
+
+      it("writes instructions to register the symbol", function () {
+        spyOn(codeWriter, "instruction");
+        subject.constant(3);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "constant", value: 3 },
+          { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
+        ]);
+      });
+    });
+
+    describe("for an unsupported type", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject.constant({});
+        }).toThrow();
+      });
+    });
+  });
+
   describe("equal", function () {
     describe("for two boolean types", function () {
       beforeEach(function () {
