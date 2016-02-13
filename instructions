@@ -57,7 +57,7 @@ Level 3 Instructions:
 [X] or
 [.] equal
 [X] constant
-[.] variable
+[X] variable
 [X] boolean
 [X] integer
 [X] add
