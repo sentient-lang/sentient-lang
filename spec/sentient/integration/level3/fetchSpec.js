@@ -349,4 +349,118 @@ describe("Integration: 'fetch'", function () {
     expect(result.a).toEqual(0);
     expect(result.b).toEqual(3);
   });
+
+  it("works correctly for [[d,e,f],[[a,b],[c]][x]][y][z]", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "constant", value: 10 },
+        { type: "pop", symbol: "a" },
+        { type: "constant", value: 20 },
+        { type: "pop", symbol: "b" },
+        { type: "constant", value: 30 },
+        { type: "pop", symbol: "c" },
+        { type: "constant", value: 40 },
+        { type: "pop", symbol: "d" },
+        { type: "constant", value: 50 },
+        { type: "pop", symbol: "e" },
+        { type: "constant", value: 60 },
+        { type: "pop", symbol: "f" },
+
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "collect", width: 2 },
+        { type: "pop", symbol: "ab_array" },
+
+        { type: "push", symbol: "c" },
+        { type: "collect", width: 1 },
+        { type: "pop", symbol: "c_array" },
+
+        { type: "push", symbol: "d" },
+        { type: "push", symbol: "e" },
+        { type: "push", symbol: "f" },
+        { type: "collect", width: 3 },
+        { type: "pop", symbol: "def_array" },
+
+        { type: "push", symbol: "ab_array" },
+        { type: "push", symbol: "c_array" },
+        { type: "collect", width: 2 },
+        { type: "pop", symbol: "abc" },
+
+        { type: "integer", symbol: "x", width: 6 },
+        { type: "integer", symbol: "y", width: 6 },
+        { type: "integer", symbol: "z", width: 6 },
+        { type: "variable", symbol: "x" },
+        { type: "variable", symbol: "y" },
+        { type: "variable", symbol: "z" },
+
+        { type: "push", symbol: "def_array" },
+
+        { type: "push", symbol: "abc" },
+        { type: "push", symbol: "x" },
+        { type: "fetch" },
+
+        // TODO pop into a new symbol
+
+        { type: "collect", width: 2 },
+
+        // TODO pop into a new symbol
+
+        { type: "push", symbol: "y" },
+        { type: "fetch" },
+
+        // TODO pop into a new symbol
+
+        { type: "push", symbol: "z" },
+        { type: "fetch" },
+        { type: "pop", symbol: "out" },
+        { type: "variable", symbol: "out" }
+      ]
+    });
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var run = function (assignments) {
+      assignments = Level3Runtime.encode(program, assignments);
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      return result.out;
+    };
+
+    expect(run({ x: 0, y: 0, z: 0 })).toEqual(40);
+    expect(run({ x: 0, y: 0, z: 1 })).toEqual(50);
+    expect(run({ x: 0, y: 0, z: 2 })).toEqual(60);
+    expect(run({ x: 0, y: 1, z: 0 })).toEqual(10);
+    expect(run({ x: 0, y: 1, z: 1 })).toEqual(20);
+    expect(run({ x: 0, y: 1, z: 2 })).toEqual(undefined);
+    expect(run({ x: 0, y: 2, z: 0 })).toEqual(undefined);
+    expect(run({ x: 0, y: 2, z: 1 })).toEqual(undefined);
+    expect(run({ x: 0, y: 2, z: 2 })).toEqual(undefined);
+
+    expect(run({ x: 1, y: 0, z: 0 })).toEqual(40);
+    expect(run({ x: 1, y: 0, z: 1 })).toEqual(50);
+    expect(run({ x: 1, y: 0, z: 2 })).toEqual(60);
+    expect(run({ x: 1, y: 1, z: 0 })).toEqual(30);
+    expect(run({ x: 1, y: 1, z: 1 })).toEqual(undefined);
+    expect(run({ x: 1, y: 1, z: 2 })).toEqual(undefined);
+    expect(run({ x: 1, y: 2, z: 0 })).toEqual(undefined);
+    expect(run({ x: 1, y: 2, z: 1 })).toEqual(undefined);
+    expect(run({ x: 1, y: 2, z: 2 })).toEqual(undefined);
+
+    expect(run({ x: 2, y: 0, z: 0 })).toEqual(undefined);
+    expect(run({ x: 2, y: 0, z: 1 })).toEqual(undefined);
+    expect(run({ x: 2, y: 0, z: 2 })).toEqual(undefined);
+    expect(run({ x: 2, y: 1, z: 0 })).toEqual(undefined);
+    expect(run({ x: 2, y: 1, z: 1 })).toEqual(undefined);
+    expect(run({ x: 2, y: 1, z: 2 })).toEqual(undefined);
+    expect(run({ x: 2, y: 2, z: 0 })).toEqual(undefined);
+    expect(run({ x: 2, y: 2, z: 1 })).toEqual(undefined);
+    expect(run({ x: 2, y: 2, z: 2 })).toEqual(undefined);
+  });
 });
