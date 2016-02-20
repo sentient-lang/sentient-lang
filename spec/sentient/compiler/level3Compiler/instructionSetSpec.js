@@ -10,7 +10,8 @@ var Registry = require(compiler + "/level3Compiler/registry");
 var CodeWriter = require(compiler + "/level3Compiler/codeWriter");
 
 describe("InstructionSet", function () {
-  var subject, stack, typedefStack, symbolTable, registry, codeWriter, conditionalNils;
+  var subject, stack, typedefStack, symbolTable, registry, codeWriter,
+    conditionalNils;
 
   beforeEach(function () {
     stack = new Stack();
@@ -69,7 +70,7 @@ describe("InstructionSet", function () {
       subject._boolean("foo");
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-        { type: "boolean", symbol: "$$$_L3_BOOLEAN1_$$$" },
+        { type: "boolean", symbol: "$$$_L3_BOOLEAN1_$$$" }
       ]);
     });
 
@@ -103,7 +104,7 @@ describe("InstructionSet", function () {
       subject._integer("foo", 3);
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-        { type: "integer", symbol: "$$$_L3_INTEGER1_$$$", width: 3 },
+        { type: "integer", symbol: "$$$_L3_INTEGER1_$$$", width: 3 }
       ]);
     });
 
@@ -612,10 +613,14 @@ describe("InstructionSet", function () {
       var moduloSymbol = stack.pop();
 
       expect(symbolTable.type(quotientSymbol)).toEqual("integer");
-      expect(symbolTable.symbols(quotientSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+      expect(symbolTable.symbols(quotientSymbol)).toEqual([
+        "$$$_L3_INTEGER1_$$$"
+      ]);
 
       expect(symbolTable.type(moduloSymbol)).toEqual("integer");
-      expect(symbolTable.symbols(moduloSymbol)).toEqual(["$$$_L3_INTEGER2_$$$"]);
+      expect(symbolTable.symbols(moduloSymbol)).toEqual([
+        "$$$_L3_INTEGER2_$$$"
+      ]);
     });
 
     it("writes instructions for 'divmod'", function () {
@@ -1187,14 +1192,26 @@ describe("InstructionSet", function () {
       it("adds the array element symbols to the symbol table", function () {
         subject.array("foo", 3);
 
-        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual("boolean");
-        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual(
+          "boolean"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual([
+          "$$$_L3_BOOLEAN1_$$$"
+        ]);
 
-        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual("boolean");
-        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual(["$$$_L3_BOOLEAN2_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual(
+          "boolean"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual([
+          "$$$_L3_BOOLEAN2_$$$"
+        ]);
 
-        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual("boolean");
-        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual(["$$$_L3_BOOLEAN3_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual(
+          "boolean"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual([
+          "$$$_L3_BOOLEAN3_$$$"
+        ]);
       });
 
       it("adds the array symbol to the symbol table", function () {
@@ -1228,14 +1245,26 @@ describe("InstructionSet", function () {
       it("adds the array element symbols to the symbol table", function () {
         subject.array("foo", 3);
 
-        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual("integer");
-        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual(["$$$_L3_INTEGER1_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual(
+          "integer"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT0_$$$")).toEqual([
+          "$$$_L3_INTEGER1_$$$"
+        ]);
 
-        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual("integer");
-        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual(["$$$_L3_INTEGER2_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual(
+          "integer"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT1_$$$")).toEqual([
+          "$$$_L3_INTEGER2_$$$"
+        ]);
 
-        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual("integer");
-        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual(["$$$_L3_INTEGER3_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual(
+          "integer"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY1_ELEMENT2_$$$")).toEqual([
+          "$$$_L3_INTEGER3_$$$"
+        ]);
       });
 
       it("adds the array symbol to the symbol table", function () {
@@ -1275,20 +1304,44 @@ describe("InstructionSet", function () {
       it("recursively adds symbols for nested primitives", function () {
         subject.array("foo", 3);
 
-        expect(symbolTable.type("$$$_L3_ARRAY2_ELEMENT0_$$$")).toEqual("boolean");
-        expect(symbolTable.symbols("$$$_L3_ARRAY2_ELEMENT0_$$$")).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
-        expect(symbolTable.type("$$$_L3_ARRAY2_ELEMENT1_$$$")).toEqual("boolean");
-        expect(symbolTable.symbols("$$$_L3_ARRAY2_ELEMENT1_$$$")).toEqual(["$$$_L3_BOOLEAN2_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY2_ELEMENT0_$$$")).toEqual(
+          "boolean"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY2_ELEMENT0_$$$")).toEqual([
+          "$$$_L3_BOOLEAN1_$$$"
+        ]);
+        expect(symbolTable.type("$$$_L3_ARRAY2_ELEMENT1_$$$")).toEqual(
+          "boolean"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY2_ELEMENT1_$$$")).toEqual([
+          "$$$_L3_BOOLEAN2_$$$"
+        ]);
 
-        expect(symbolTable.type("$$$_L3_ARRAY3_ELEMENT0_$$$")).toEqual("boolean");
-        expect(symbolTable.symbols("$$$_L3_ARRAY3_ELEMENT0_$$$")).toEqual(["$$$_L3_BOOLEAN3_$$$"]);
-        expect(symbolTable.type("$$$_L3_ARRAY3_ELEMENT1_$$$")).toEqual("boolean");
-        expect(symbolTable.symbols("$$$_L3_ARRAY3_ELEMENT1_$$$")).toEqual(["$$$_L3_BOOLEAN4_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY3_ELEMENT0_$$$")).toEqual(
+          "boolean"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY3_ELEMENT0_$$$")).toEqual([
+          "$$$_L3_BOOLEAN3_$$$"
+        ]);
+        expect(symbolTable.type("$$$_L3_ARRAY3_ELEMENT1_$$$")).toEqual(
+          "boolean"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY3_ELEMENT1_$$$")).toEqual([
+          "$$$_L3_BOOLEAN4_$$$"
+        ]);
 
-        expect(symbolTable.type("$$$_L3_ARRAY4_ELEMENT0_$$$")).toEqual("boolean");
-        expect(symbolTable.symbols("$$$_L3_ARRAY4_ELEMENT0_$$$")).toEqual(["$$$_L3_BOOLEAN5_$$$"]);
-        expect(symbolTable.type("$$$_L3_ARRAY4_ELEMENT1_$$$")).toEqual("boolean");
-        expect(symbolTable.symbols("$$$_L3_ARRAY4_ELEMENT1_$$$")).toEqual(["$$$_L3_BOOLEAN6_$$$"]);
+        expect(symbolTable.type("$$$_L3_ARRAY4_ELEMENT0_$$$")).toEqual(
+          "boolean"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY4_ELEMENT0_$$$")).toEqual([
+          "$$$_L3_BOOLEAN5_$$$"
+        ]);
+        expect(symbolTable.type("$$$_L3_ARRAY4_ELEMENT1_$$$")).toEqual(
+          "boolean"
+        );
+        expect(symbolTable.symbols("$$$_L3_ARRAY4_ELEMENT1_$$$")).toEqual([
+          "$$$_L3_BOOLEAN6_$$$"
+        ]);
       });
 
       it("recursively adds symbols for nested arrays", function () {
@@ -1364,7 +1417,7 @@ describe("InstructionSet", function () {
       it("adds the new symbol to the symbol table", function () {
         subject.collect(3);
 
-        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("array")
+        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("array");
         expect(symbolTable.symbols("$$$_L3_TMP1_$$$")).toEqual([
           "foo", "bar", "baz"
         ]);
@@ -1396,7 +1449,7 @@ describe("InstructionSet", function () {
       it("adds the new symbol to the symbol table", function () {
         subject.collect(2);
 
-        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("array")
+        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("array");
         expect(symbolTable.symbols("$$$_L3_TMP1_$$$")).toEqual([
           "arr1", "arr2"
         ]);
@@ -1796,7 +1849,7 @@ describe("InstructionSet", function () {
         spyOn(codeWriter, "instruction");
         subject.get(true);
 
-        var calls = SpecHelper.calls(codeWriter.instruction)
+        var calls = SpecHelper.calls(codeWriter.instruction);
         var relevantCalls = calls.slice(0, 22);
 
         expect(relevantCalls).toEqual([
@@ -1886,7 +1939,7 @@ describe("InstructionSet", function () {
 
         conditionalNils.foo = [
           { conditionSymbol: "condition1", nilIndex: 0 }
-        ]
+        ];
 
         symbolTable.set("a", "integer", ["x"]);
         symbolTable.set("b", "integer", ["y"]);
@@ -2053,7 +2106,9 @@ describe("InstructionSet", function () {
           var newSymbol = stack.pop();
 
           expect(symbolTable.type(newSymbol)).toEqual("boolean");
-          expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN3_$$$"]);
+          expect(symbolTable.symbols(newSymbol)).toEqual([
+            "$$$_L3_BOOLEAN3_$$$"
+          ]);
         });
 
         it("writes instructions for 'equal'", function () {
@@ -2103,7 +2158,9 @@ describe("InstructionSet", function () {
           var newSymbol = stack.pop();
 
           expect(symbolTable.type(newSymbol)).toEqual("boolean");
-          expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+          expect(symbolTable.symbols(newSymbol)).toEqual([
+            "$$$_L3_BOOLEAN1_$$$"
+          ]);
         });
 
         it("always returns false", function () {
@@ -2153,7 +2210,9 @@ describe("InstructionSet", function () {
           var newSymbol = stack.pop();
 
           expect(symbolTable.type(newSymbol)).toEqual("boolean");
-          expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN7_$$$"]);
+          expect(symbolTable.symbols(newSymbol)).toEqual([
+            "$$$_L3_BOOLEAN7_$$$"
+          ]);
         });
 
         it("recursively calls equal to generate instructions", function () {

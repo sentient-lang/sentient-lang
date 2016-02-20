@@ -21,7 +21,7 @@ describe("Integration: 'push'", function () {
         { type: "constant", value: 25 },
         { type: "equal" },
         { type: "invariant" },
-        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "a" }
       ]
     });
     program = Level2Compiler.compile(program);

@@ -68,7 +68,7 @@ describe("Integration: 'array'", function () {
     expect(function () {
       Level3Compiler.compile({
         instructions: [
-          { type: "typedef", name: "array", width: 4 },
+          { type: "typedef", name: "array", width: 4 }
         ]
       });
     }).toThrow();
@@ -78,7 +78,7 @@ describe("Integration: 'array'", function () {
     expect(function () {
       Level3Compiler.compile({
         instructions: [
-          { type: "typedef", name: "array", width: 0 },
+          { type: "typedef", name: "array", width: 0 }
         ]
       });
     }).toThrow();

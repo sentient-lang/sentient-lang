@@ -173,7 +173,9 @@ describe("InstructionSet", function () {
         subject.pop("foo");
 
         expect(symbolTable.type("foo")).toEqual("integer");
-        expect(symbolTable.symbols("foo")).toEqual(["$$$_L2_INTEGER1_BIT0_$$$"]);
+        expect(symbolTable.symbols("foo")).toEqual([
+          "$$$_L2_INTEGER1_BIT0_$$$"
+        ]);
       });
     });
 
@@ -189,7 +191,9 @@ describe("InstructionSet", function () {
         subject.pop("foo");
 
         expect(symbolTable.type("foo")).toEqual("integer");
-        expect(symbolTable.symbols("foo")).toEqual(["$$$_L2_INTEGER1_BIT0_$$$"]);
+        expect(symbolTable.symbols("foo")).toEqual([
+          "$$$_L2_INTEGER1_BIT0_$$$"
+        ]);
       });
     });
 
@@ -353,7 +357,9 @@ describe("InstructionSet", function () {
           var newSymbol = stack.pop();
 
           expect(symbolTable.type(newSymbol)).toEqual("boolean");
-          expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L2_BOOLEAN1_$$$"]);
+          expect(symbolTable.symbols(newSymbol)).toEqual([
+            "$$$_L2_BOOLEAN1_$$$"
+          ]);
         });
 
         it("writes instructions for 'equal'", function () {

@@ -48,7 +48,7 @@ if (typeof window !== "undefined") {
   window.Sentient = module.exports;
 }
 
-},{"./sentient/compiler/level1Compiler":3,"./sentient/compiler/level2Compiler":8,"./sentient/machine":14,"./sentient/machine/miniSatAdapter":15,"./sentient/runtime/level1Runtime":16,"./sentient/runtime/level2Runtime":17}],2:[function(require,module,exports){
+},{"./sentient/compiler/level1Compiler":4,"./sentient/compiler/level2Compiler":9,"./sentient/machine":14,"./sentient/machine/miniSatAdapter":15,"./sentient/runtime/level1Runtime":16,"./sentient/runtime/level2Runtime":17}],2:[function(require,module,exports){
 "use strict";
 
 var Stack = function () {
@@ -73,6 +73,40 @@ var Stack = function () {
 module.exports = Stack;
 
 },{}],3:[function(require,module,exports){
+"use strict";
+
+var SymbolTable = function () {
+  var self = this;
+  var object = {};
+
+  self.set = function (symbol, type, symbols) {
+    object[symbol] = { type: type, symbols: symbols };
+  };
+
+  self.type = function (symbol) {
+    throwIfMissing(symbol);
+    return object[symbol].type;
+  };
+
+  self.symbols = function (symbol) {
+    throwIfMissing(symbol);
+    return object[symbol].symbols;
+  };
+
+  self.contains = function (symbol) {
+    return typeof object[symbol] !== "undefined";
+  };
+
+  var throwIfMissing = function (symbol) {
+    if (!self.contains(symbol)) {
+      throw new Error("Symbol '" + symbol + "' is not in the SymbolTable");
+    }
+  };
+};
+
+module.exports = SymbolTable;
+
+},{}],4:[function(require,module,exports){
 "use strict";
 
 var Stack = require("./common/stack");
@@ -116,7 +150,7 @@ Compiler.compile = function (input) {
 
 module.exports = Compiler;
 
-},{"./common/stack":2,"./level1Compiler/codeWriter":4,"./level1Compiler/instructionSet":5,"./level1Compiler/registry":6,"./level1Compiler/symbolTable":7,"underscore":181}],4:[function(require,module,exports){
+},{"./common/stack":2,"./level1Compiler/codeWriter":5,"./level1Compiler/instructionSet":6,"./level1Compiler/registry":7,"./level1Compiler/symbolTable":8,"underscore":181}],5:[function(require,module,exports){
 "use strict";
 
 var _ = require("underscore");
@@ -197,7 +231,7 @@ var CodeWriter = function () {
 
 module.exports = CodeWriter;
 
-},{"underscore":181}],5:[function(require,module,exports){
+},{"underscore":181}],6:[function(require,module,exports){
 "use strict";
 
 var InstructionSet = function (params) {
@@ -416,11 +450,13 @@ var InstructionSet = function (params) {
 
 module.exports = InstructionSet;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 var Registry = function () {
   var self = this;
+  var prefix = "$$$_L1_";
+  var suffix = "_$$$";
 
   var literalNumber = 0;
   var symbolNumber = 0;
@@ -432,21 +468,21 @@ var Registry = function () {
 
   self.nextSymbol = function () {
     symbolNumber += 1;
-    return "$$$_TMP" + symbolNumber + "_$$$";
+    return prefix + "TMP" + symbolNumber + suffix;
   };
 
   self.trueSymbol = function () {
-    return "$$$_TRUE_$$$";
+    return prefix + "TRUE" + suffix;
   };
 
   self.falseSymbol = function () {
-    return "$$$_FALSE_$$$";
+    return prefix + "FALSE" + suffix;
   };
 };
 
 module.exports = Registry;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 var SymbolTable = function () {
@@ -475,11 +511,11 @@ var SymbolTable = function () {
 
 module.exports = SymbolTable;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
 var Stack = require("./common/stack");
-var SymbolTable = require("./level2Compiler/symbolTable");
+var SymbolTable = require("./common/symbolTable");
 var Registry = require("./level2Compiler/registry");
 var CodeWriter = require("./level2Compiler/codeWriter");
 var InstructionSet = require("./level2Compiler/instructionSet");
@@ -519,7 +555,7 @@ Compiler.compile = function (input) {
 
 module.exports = Compiler;
 
-},{"./common/stack":2,"./level2Compiler/codeWriter":9,"./level2Compiler/instructionSet":10,"./level2Compiler/registry":11,"./level2Compiler/symbolTable":12,"underscore":181}],9:[function(require,module,exports){
+},{"./common/stack":2,"./common/symbolTable":3,"./level2Compiler/codeWriter":10,"./level2Compiler/instructionSet":11,"./level2Compiler/registry":12,"underscore":181}],10:[function(require,module,exports){
 "use strict";
 
 var CodeWriter = function () {
@@ -553,7 +589,7 @@ var CodeWriter = function () {
 
 module.exports = CodeWriter;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 var TwosComplement = require("./twosComplement");
@@ -659,6 +695,10 @@ var InstructionSet = function (params) {
   };
 
   self._integer = function (symbol, width) {
+    if (!width) {
+      throw new Error("No width provided when declaring integer");
+    }
+
     declare(symbol, "integer", registry.nextInteger(width));
   };
 
@@ -1224,11 +1264,13 @@ var InstructionSet = function (params) {
 
 module.exports = InstructionSet;
 
-},{"./twosComplement":13,"underscore":181}],11:[function(require,module,exports){
+},{"./twosComplement":13,"underscore":181}],12:[function(require,module,exports){
 "use strict";
 
 var Registry = function () {
   var self = this;
+  var prefix = "$$$_L2_";
+  var suffix = "_$$$";
 
   var symbolNumber = 0;
   var booleanNumber = 0;
@@ -1236,12 +1278,12 @@ var Registry = function () {
 
   self.nextSymbol = function () {
     symbolNumber += 1;
-    return "$$$_TMP" + symbolNumber + "_$$$";
+    return prefix + "TMP" + symbolNumber + suffix;
   };
 
   self.nextBoolean = function () {
     booleanNumber += 1;
-    return ["$$$_BOOLEAN" + booleanNumber + "_$$$"];
+    return [prefix + "BOOLEAN" + booleanNumber + suffix];
   };
 
   self.nextInteger = function (width) {
@@ -1253,47 +1295,13 @@ var Registry = function () {
 
     var symbols = [];
     for (var i = 0; i < width; i += 1) {
-      symbols.push("$$$_INTEGER" + integerNumber + "_BIT" + i + "_$$$");
+      symbols.push(prefix + "INTEGER" + integerNumber + "_BIT" + i + suffix);
     }
     return symbols;
   };
 };
 
 module.exports = Registry;
-
-},{}],12:[function(require,module,exports){
-"use strict";
-
-var SymbolTable = function () {
-  var self = this;
-  var object = {};
-
-  self.set = function (symbol, type, symbols) {
-    object[symbol] = { type: type, symbols: symbols };
-  };
-
-  self.type = function (symbol) {
-    throwIfMissing(symbol);
-    return object[symbol].type;
-  };
-
-  self.symbols = function (symbol) {
-    throwIfMissing(symbol);
-    return object[symbol].symbols;
-  };
-
-  self.contains = function (symbol) {
-    return typeof object[symbol] !== "undefined";
-  };
-
-  var throwIfMissing = function (symbol) {
-    if (!self.contains(symbol)) {
-      throw new Error("Symbol '" + symbol + "' is not in the SymbolTable");
-    }
-  };
-};
-
-module.exports = SymbolTable;
 
 },{}],13:[function(require,module,exports){
 "use strict";

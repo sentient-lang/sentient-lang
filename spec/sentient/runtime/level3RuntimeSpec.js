@@ -59,7 +59,7 @@ describe("Level3Runtime", function () {
       expect(results).toEqual({
         foo: true
       });
-    })
+    });
   });
 
   describe("primitives", function () {
@@ -228,7 +228,7 @@ describe("Level3Runtime", function () {
     it("throws an error on a width mismatch", function () {
       expect(function () {
         describedClass.encode(program, {
-          bools: [true],
+          bools: [true]
         });
       }).toThrow();
     });

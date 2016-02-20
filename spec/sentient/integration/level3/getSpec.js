@@ -31,7 +31,7 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 1 },
         { type: "get" },
         { type: "pop", symbol: "b" },
-        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "b" }
       ]
     });
 
@@ -70,7 +70,7 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 1 },
         { type: "get" },
         { type: "pop", symbol: "b" },
-        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "b" }
       ]
     });
 
@@ -226,7 +226,7 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 0 },
         { type: "get" },
         { type: "pop", symbol: "c" },
-        { type: "variable", symbol: "c" },
+        { type: "variable", symbol: "c" }
       ]
     });
 
@@ -383,7 +383,7 @@ describe("Integration: 'get'", function () {
         { type: "pop", symbol: "a" },
         { type: "pop", symbol: "aOutOfBounds" },
         { type: "variable", symbol: "a" },
-        { type: "variable", symbol: "aOutOfBounds" },
+        { type: "variable", symbol: "aOutOfBounds" }
       ]
     });
 
@@ -512,7 +512,7 @@ describe("Integration: 'get'", function () {
         { type: "invariant" },
 
         { type: "variable", symbol: "a" },
-        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "b" }
       ]
     });
 

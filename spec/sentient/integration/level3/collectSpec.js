@@ -54,7 +54,7 @@ describe("Integration: 'collect'", function () {
         { type: "collect", width: 1 },
         { type: "collect", width: 1 },
         { type: "pop", symbol: "abc" },
-        { type: "variable", symbol: "abc" },
+        { type: "variable", symbol: "abc" }
       ]
     });
 

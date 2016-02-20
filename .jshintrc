@@ -70,7 +70,7 @@
 
   // Numeric options:
   "maxerr"               : 50,
-  "maxparams"            : 3,
+  "maxparams"            : 5,
   "maxdepth"             : 3,
   "maxcomplexity"        : 6,
   "maxlen"               : 80,
