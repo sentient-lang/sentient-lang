@@ -10,7 +10,7 @@ var Registry = require(compiler + "/level3Compiler/registry");
 var CodeWriter = require(compiler + "/level3Compiler/codeWriter");
 
 describe("InstructionSet", function () {
-  var subject, stack, typedefStack, symbolTable, registry, codeWriter;
+  var subject, stack, typedefStack, symbolTable, registry, codeWriter, conditionalNils;
 
   beforeEach(function () {
     stack = new Stack();
@@ -18,13 +18,15 @@ describe("InstructionSet", function () {
     symbolTable = new SymbolTable();
     registry = new Registry();
     codeWriter = new CodeWriter();
+    conditionalNils = {};
 
     subject = new describedClass({
       stack: stack,
       typedefStack: typedefStack,
       symbolTable: symbolTable,
       registry: registry,
-      codeWriter: codeWriter
+      codeWriter: codeWriter,
+      conditionalNils: conditionalNils
     });
   });
 
@@ -1504,6 +1506,746 @@ describe("InstructionSet", function () {
         expect(function () {
           subject.collect(2);
         }).not.toThrow();
+      });
+    });
+  });
+
+  describe("get", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("someArray");
+      stack.push("key");
+
+      symbolTable.set("someArray", "array", ["foo", "bar"]);
+      symbolTable.set("key", "integer", ["k"]);
+    });
+
+    describe("getting from a non-array", function () {
+      beforeEach(function () {
+        symbolTable.set("someArray", "integer", ["foo"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.get(true);
+        }).toThrow();
+      });
+    });
+
+    describe("getting with a non-integer key", function () {
+      beforeEach(function () {
+        symbolTable.set("key", "boolean", ["k"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.get(true);
+        }).toThrow();
+      });
+    });
+
+    describe("getting from an array of integers", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "integer", ["a"]);
+        symbolTable.set("bar", "integer", ["b"]);
+      });
+
+      it("replaces the top two symbols on the stack", function () {
+        subject.get(true);
+
+        expect(stack.pop()).toEqual("$$$_L3_TMP2_$$$");
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the value and nil symbols to the symbol table", function () {
+        subject.get(true);
+
+        var valueSymbol = stack.pop();
+        var nilSymbol = stack.pop();
+
+        expect(symbolTable.type(valueSymbol)).toEqual("integer");
+        expect(symbolTable.symbols(valueSymbol)).toEqual([
+          "$$$_L3_INTEGER1_$$$"
+        ]);
+
+        expect(symbolTable.type(nilSymbol)).toEqual("boolean");
+        expect(symbolTable.symbols(nilSymbol)).toEqual([
+          "$$$_L3_BOOLEAN1_$$$"
+        ]);
+      });
+
+      it("writes instructions for 'get'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.get(true);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          // k < 0
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 0 },
+          { type: "lessthan" },
+
+          // k >= length
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 2 },
+          { type: "greaterequal" },
+
+          // k is out of bounds
+          { type: "or" },
+
+          // outOfBounds
+          { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" },
+
+          // if k == 0
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 0 },
+          { type: "equal" },
+
+          // a
+          { type: "push", symbol: "a" },
+
+          // else if k == 1
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 1 },
+          { type: "equal" },
+
+          // b
+          { type: "push", symbol: "b" },
+
+          // else 0
+          { type: "constant", value: 0 },
+          { type: "if" },
+          { type: "if" },
+
+          // value
+          { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
+        ]);
+      });
+    });
+
+    describe("getting from an array of booleans", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "boolean", ["a"]);
+        symbolTable.set("bar", "boolean", ["b"]);
+      });
+
+      it("replaces the top two symbols on the stack", function () {
+        subject.get(true);
+
+        expect(stack.pop()).toEqual("$$$_L3_TMP2_$$$");
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the value and nil symbols to the symbol table", function () {
+        subject.get(true);
+
+        var valueSymbol = stack.pop();
+        var nilSymbol = stack.pop();
+
+        expect(symbolTable.type(valueSymbol)).toEqual("boolean");
+        expect(symbolTable.symbols(valueSymbol)).toEqual([
+          "$$$_L3_BOOLEAN2_$$$"
+        ]);
+
+        expect(symbolTable.type(nilSymbol)).toEqual("boolean");
+        expect(symbolTable.symbols(nilSymbol)).toEqual([
+          "$$$_L3_BOOLEAN1_$$$"
+        ]);
+      });
+
+      it("writes instructions for 'get'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.get(true);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          // k < 0
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 0 },
+          { type: "lessthan" },
+
+          // k >= length
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 2 },
+          { type: "greaterequal" },
+
+          // k is out of bounds
+          { type: "or" },
+
+          // outOfBounds
+          { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" },
+
+          // if k == 0
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 0 },
+          { type: "equal" },
+
+          // a
+          { type: "push", symbol: "a" },
+
+          // else if k == 1
+          { type: "push", symbol: "k" },
+          { type: "constant", value: 1 },
+          { type: "equal" },
+
+          // b
+          { type: "push", symbol: "b" },
+
+          // else false
+          { type: "constant", value: false },
+          { type: "if" },
+          { type: "if" },
+
+          // value
+          { type: "pop", symbol: "$$$_L3_BOOLEAN2_$$$" }
+        ]);
+      });
+    });
+
+    describe("getting from an array of arrays", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "array", ["abc", "def"]);
+        symbolTable.set("bar", "array", ["ghi"]);
+
+        symbolTable.set("abc", "integer", ["a"]);
+        symbolTable.set("def", "integer", ["b"]);
+        symbolTable.set("ghi", "integer", ["c"]);
+      });
+
+      it("replaces the top two symbols on the stack", function () {
+        subject.get(true);
+
+        expect(stack.pop()).toEqual("$$$_L3_TMP7_$$$");
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the value and nil symbols to the symbol table", function () {
+        subject.get(true);
+
+        var valueSymbol = stack.pop();
+        var nilSymbol = stack.pop();
+
+        expect(symbolTable.type(valueSymbol)).toEqual("array");
+        expect(symbolTable.symbols(valueSymbol)).toEqual([
+          "$$$_L3_TMP4_$$$",
+          "$$$_L3_TMP6_$$$"
+        ]);
+
+        expect(symbolTable.type(nilSymbol)).toEqual("boolean");
+        expect(symbolTable.symbols(nilSymbol)).toEqual([
+          "$$$_L3_BOOLEAN1_$$$"
+        ]);
+      });
+
+      it("adds the value's elements to the symbol table", function () {
+        subject.get(true);
+
+        var valueSymbol = stack.pop();
+        var elements = symbolTable.symbols(valueSymbol);
+
+        expect(symbolTable.type(elements[0])).toEqual("integer");
+        expect(symbolTable.symbols(elements[0])).toEqual([
+          "$$$_L3_INTEGER2_$$$"
+        ]);
+
+        expect(symbolTable.type(elements[1])).toEqual("integer");
+        expect(symbolTable.symbols(elements[1])).toEqual([
+          "$$$_L3_INTEGER3_$$$"
+        ]);
+      });
+
+      describe("when the nested array includes an empty array", function () {
+        beforeEach(function () {
+          symbolTable.set("foo", "array", []);
+        });
+
+        it("does not throw an error", function () {
+          expect(function () {
+            subject.get(true);
+          }).not.toThrow();
+        });
+      });
+
+      it("adds conditional nils for the smaller array", function () {
+        subject.get(true);
+
+        var newSymbol = stack.pop();
+        var conditions = conditionalNils[newSymbol];
+
+        expect(conditions).toEqual([
+          { conditionSymbol: "$$$_L3_BOOLEAN2_$$$", nilIndex: 1 },
+          { conditionSymbol: "$$$_L3_BOOLEAN1_$$$" }
+        ]);
+      });
+    });
+
+    describe("getting from an array with conditional nils", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "integer", ["a"]);
+        symbolTable.set("bar", "integer", ["b"]);
+
+        conditionalNils.someArray = [
+          { conditionSymbol: "condition1", nilIndex: 1 },
+          { conditionSymbol: "condition2", nilIndex: 3 },
+          { conditionSymbol: "condition3" }
+        ];
+      });
+
+      it("writes code for the conditional nils", function () {
+        spyOn(codeWriter, "instruction");
+        subject.get(true);
+
+        var calls = SpecHelper.calls(codeWriter.instruction)
+        var relevantCalls = calls.slice(0, 22);
+
+        expect(relevantCalls).toEqual([
+          // check bounds
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 0 },
+          { type: 'lessthan' },
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 2 },
+          { type: 'greaterequal' },
+          { type: 'or' },
+
+          // conditional1 && k == 1
+          { type: 'push', symbol: 'condition1' },
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 1 },
+          { type: 'equal' },
+          { type: 'and' },
+          { type: 'or' },
+
+          // condition2 && k == 3
+          { type: 'push', symbol: 'condition2' },
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 3 },
+          { type: 'equal' },
+          { type: 'and' },
+          { type: 'or' },
+
+          // condition3
+          { type: 'push', symbol: 'condition3' },
+          { type: 'or' },
+
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' }
+        ]);
+      });
+
+      it("leaves the conditions untouched for other fetches", function () {
+        subject.get(true);
+
+        expect(conditionalNils.someArray).toEqual([
+          { conditionSymbol: "condition1", nilIndex: 1 },
+          { conditionSymbol: "condition2", nilIndex: 3 },
+          { conditionSymbol: "condition3" }
+        ]);
+      });
+    });
+
+    describe("getting without bounds checking", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "integer", ["a"]);
+        symbolTable.set("bar", "integer", ["b"]);
+
+        conditionalNils.someArray = [
+          { conditionSymbol: "condition1", nilIndex: 1 },
+          { conditionSymbol: "condition2", nilIndex: 3 }
+        ];
+      });
+
+      it("doesn't write any condition checking code", function () {
+        spyOn(codeWriter, "instruction");
+        subject.get(false);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 0 },
+          { type: 'equal' },
+          { type: 'push', symbol: 'a' },
+
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 1 },
+          { type: 'equal' },
+          { type: 'push', symbol: 'b' },
+
+          { type: 'constant', value: 0 },
+          { type: 'if' },
+          { type: 'if' },
+
+          { type: 'pop', symbol: '$$$_L3_INTEGER1_$$$' }
+        ]);
+      });
+    });
+
+    describe("getting a nested array that has conditional nils", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "array", ["a", "b"]);
+        symbolTable.set("bar", "array", ["c"]);
+
+        conditionalNils.foo = [
+          { conditionSymbol: "condition1", nilIndex: 0 }
+        ]
+
+        symbolTable.set("a", "integer", ["x"]);
+        symbolTable.set("b", "integer", ["y"]);
+        symbolTable.set("c", "integer", ["z"]);
+      });
+
+      it("adds an additional conditional", function () {
+        subject.get();
+        var newSymbol = stack.pop();
+
+        expect(conditionalNils[newSymbol]).toEqual([
+          { conditionSymbol: '$$$_L3_BOOLEAN2_$$$', nilIndex: 1 },
+          { conditionSymbol: 'condition1', nilIndex: 0 },
+          { conditionSymbol: '$$$_L3_BOOLEAN1_$$$' }
+        ]);
+      });
+    });
+
+    describe("getting from an empty array", function () {
+      beforeEach(function () {
+        symbolTable.set("someArray", "array", []);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.get();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("constant", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+    });
+
+    describe("booleans", function () {
+      it("pushes a symbol onto the stack", function () {
+        subject.constant(true);
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the symbol to the symbol table", function () {
+        subject.constant(true);
+
+        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("boolean");
+        expect(symbolTable.symbols("$$$_L3_TMP1_$$$")).toEqual([
+          "$$$_L3_BOOLEAN1_$$$"
+        ]);
+      });
+
+      it("writes instructions to register the symbol", function () {
+        spyOn(codeWriter, "instruction");
+        subject.constant(true);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "constant", value: true },
+          { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+        ]);
+      });
+    });
+
+    describe("integers", function () {
+      it("pushes a symbol onto the stack", function () {
+        subject.constant(3);
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the symbol to the symbol table", function () {
+        subject.constant(3);
+
+        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("integer");
+        expect(symbolTable.symbols("$$$_L3_TMP1_$$$")).toEqual([
+          "$$$_L3_INTEGER1_$$$"
+        ]);
+      });
+
+      it("writes instructions to register the symbol", function () {
+        spyOn(codeWriter, "instruction");
+        subject.constant(3);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "constant", value: 3 },
+          { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
+        ]);
+      });
+    });
+
+    describe("for an unsupported type", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject.constant({});
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("equal", function () {
+    describe("for two boolean types", function () {
+      beforeEach(function () {
+        stack.push("bottom");
+        stack.push("a");
+        stack.push("b");
+
+        symbolTable.set("bottom", "anything", ["anything"]);
+        symbolTable.set("a", "boolean", ["foo"]);
+        symbolTable.set("b", "boolean", ["bar"]);
+      });
+
+      it("replaces the top two symbols for one symbol", function () {
+        subject.equal();
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.equal();
+        var newSymbol = stack.pop();
+
+        expect(symbolTable.type(newSymbol)).toEqual("boolean");
+        expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+      });
+
+      it("writes instructions for 'equal'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.equal();
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "push", symbol: "foo"},
+          { type: "push", symbol: "bar"},
+          { type: "equal" },
+          { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" }
+        ]);
+      });
+    });
+
+    describe("for two arrays", function () {
+      describe("of the same width", function () {
+        beforeEach(function () {
+          stack.push("bottom");
+          stack.push("arr1");
+          stack.push("arr2");
+
+          symbolTable.set("bottom", "anything", ["anything"]);
+          symbolTable.set("arr1", "array", ["foo", "bar"]);
+          symbolTable.set("arr2", "array", ["baz", "qux"]);
+
+          symbolTable.set("foo", "integer", ["a"]);
+          symbolTable.set("bar", "integer", ["b"]);
+          symbolTable.set("baz", "integer", ["c"]);
+          symbolTable.set("qux", "integer", ["d"]);
+        });
+
+        it("replaces the top two symbols for one symbol", function () {
+          subject.equal();
+          expect(stack.pop()).toEqual("$$$_L3_TMP3_$$$");
+          expect(stack.pop()).toEqual("bottom");
+        });
+
+        it("adds the new symbol to the symbol table", function () {
+          subject.equal();
+          var newSymbol = stack.pop();
+
+          expect(symbolTable.type(newSymbol)).toEqual("boolean");
+          expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN3_$$$"]);
+        });
+
+        it("writes instructions for 'equal'", function () {
+          spyOn(codeWriter, "instruction");
+          subject.equal();
+
+          expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+            { type: 'push', symbol: 'a' },
+            { type: 'push', symbol: 'c' },
+            { type: 'equal' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
+            { type: 'push', symbol: 'b' },
+            { type: 'push', symbol: 'd' },
+            { type: 'equal' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN2_$$$' },
+            { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
+            { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
+            { type: 'and' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN3_$$$' }
+          ]);
+        });
+      });
+
+      describe("of different widths", function () {
+        beforeEach(function () {
+          stack.push("bottom");
+          stack.push("arr1");
+          stack.push("arr2");
+
+          symbolTable.set("bottom", "anything", ["anything"]);
+          symbolTable.set("arr1", "array", ["foo", "bar"]);
+          symbolTable.set("arr2", "array", ["baz"]);
+
+          symbolTable.set("foo", "integer", ["a"]);
+          symbolTable.set("bar", "integer", ["b"]);
+          symbolTable.set("baz", "integer", ["c"]);
+        });
+
+        it("replaces the top two symbols for one symbol", function () {
+          subject.equal();
+          expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+          expect(stack.pop()).toEqual("bottom");
+        });
+
+        it("adds the new symbol to the symbol table", function () {
+          subject.equal();
+          var newSymbol = stack.pop();
+
+          expect(symbolTable.type(newSymbol)).toEqual("boolean");
+          expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+        });
+
+        it("always returns false", function () {
+          spyOn(codeWriter, "instruction");
+          subject.equal();
+
+          expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+            { type: 'constant', value: false },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' }
+          ]);
+        });
+      });
+
+      describe("nested arrays", function () {
+        beforeEach(function () {
+          stack.push("bottom");
+          stack.push("arr1");
+          stack.push("arr2");
+
+          symbolTable.set("bottom", "anything", ["anything"]);
+          symbolTable.set("arr1", "array", ["arr3", "arr4"]);
+          symbolTable.set("arr2", "array", ["arr5", "arr6"]);
+
+          symbolTable.set("arr3", "array", ["foo", "bar"]);
+          symbolTable.set("arr4", "array", ["baz", "qux"]);
+          symbolTable.set("arr5", "array", ["abc", "def"]);
+          symbolTable.set("arr6", "array", ["ghi", "jkl"]);
+
+          symbolTable.set("foo", "integer", ["a"]);
+          symbolTable.set("bar", "integer", ["b"]);
+          symbolTable.set("baz", "integer", ["c"]);
+          symbolTable.set("qux", "integer", ["d"]);
+          symbolTable.set("abc", "integer", ["e"]);
+          symbolTable.set("def", "integer", ["f"]);
+          symbolTable.set("ghi", "integer", ["g"]);
+          symbolTable.set("jkl", "integer", ["h"]);
+        });
+
+        it("replaces the top two symbols for one symbol", function () {
+          subject.equal();
+          expect(stack.pop()).toEqual("$$$_L3_TMP7_$$$");
+          expect(stack.pop()).toEqual("bottom");
+        });
+
+        it("adds the new symbol to the symbol table", function () {
+          subject.equal();
+          var newSymbol = stack.pop();
+
+          expect(symbolTable.type(newSymbol)).toEqual("boolean");
+          expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN7_$$$"]);
+        });
+
+        it("recursively calls equal to generate instructions", function () {
+          spyOn(codeWriter, "instruction");
+          subject.equal();
+
+          // [[a, b], [c, d]] == [[e, f], [g, h]]
+          expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+            // a == e
+            { type: 'push', symbol: 'a' },
+            { type: 'push', symbol: 'e' },
+            { type: 'equal' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
+
+            // b == f
+            { type: 'push', symbol: 'b' },
+            { type: 'push', symbol: 'f' },
+            { type: 'equal' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN2_$$$' },
+
+            // a == e && b == f
+            { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
+            { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
+            { type: 'and' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN3_$$$' },
+
+            // c == g
+            { type: 'push', symbol: 'c' },
+            { type: 'push', symbol: 'g' },
+            { type: 'equal' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN4_$$$' },
+
+            // d == h
+            { type: 'push', symbol: 'd' },
+            { type: 'push', symbol: 'h' },
+            { type: 'equal' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN5_$$$' },
+
+            // c == g && d == h
+            { type: 'push', symbol: '$$$_L3_BOOLEAN4_$$$' },
+            { type: 'push', symbol: '$$$_L3_BOOLEAN5_$$$' },
+            { type: 'and' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN6_$$$' },
+
+            // (a == e && b == f) && (c == g && d == h)
+            { type: 'push', symbol: '$$$_L3_BOOLEAN3_$$$' },
+            { type: 'push', symbol: '$$$_L3_BOOLEAN6_$$$' },
+            { type: 'and' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN7_$$$' }
+          ]);
+        });
+      });
+    });
+
+    describe("for mismatched types", function () {
+      beforeEach(function () {
+        stack.push("bottom");
+        stack.push("a");
+        stack.push("b");
+
+        symbolTable.set("bottom", "anything", ["anything"]);
+        symbolTable.set("a", "integer", ["foo"]);
+        symbolTable.set("b", "boolean", ["bar"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.equal();
+        }).toThrow();
+      });
+    });
+
+    describe("arrays with mismatched types", function () {
+      beforeEach(function () {
+        stack.push("bottom");
+        stack.push("arr1");
+        stack.push("arr2");
+
+        symbolTable.set("bottom", "anything", ["anything"]);
+        symbolTable.set("arr1", "array", ["foo", "bar"]);
+        symbolTable.set("arr2", "array", ["baz", "qux"]);
+
+        symbolTable.set("foo", "integer", ["a"]);
+        symbolTable.set("bar", "integer", ["b"]);
+        symbolTable.set("baz", "boolean", ["c"]);
+        symbolTable.set("qux", "boolean", ["d"]);
+      });
+
+      it("throws an error", function () {
+        expect(function () {
+          subject.equal();
+        }).toThrow();
       });
     });
   });

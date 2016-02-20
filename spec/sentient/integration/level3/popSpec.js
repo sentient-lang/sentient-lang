@@ -36,6 +36,44 @@ describe("Integration: 'pop'", function () {
     expect(result.a).toEqual(5);
   });
 
+  it("copies over conditional invariants if present", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "constant", value: 10 },
+        { type: "constant", value: 20 },
+        { type: "collect", width: 2 },
+        { type: "constant", value: 30 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 2 },
+        { type: "constant", value: 1 },
+        { type: "get" },
+        { type: "pop", symbol: "foo" },
+
+        { type: "push", symbol: "foo" },
+        { type: "constant", value: 1 },
+        { type: "get", checkBounds: true },
+        { type: "pop", symbol: "bar" },
+        { type: "pop", symbol: "barOutOfBounds" },
+        { type: "variable", symbol: "bar" },
+        { type: "variable", symbol: "barOutOfBounds" }
+      ]
+    });
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level2Runtime.encode(program, {});
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result.bar).toEqual(0);
+    expect(result.barOutOfBounds).toEqual(true);
+  });
+
   it("throws an error if the stack is empty", function () {
     expect(function () {
       Level3Compiler.compile({
