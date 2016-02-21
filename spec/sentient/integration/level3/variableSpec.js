@@ -201,4 +201,163 @@ describe("Integration: 'variable'", function () {
       Level3Runtime.encode(program, { foo: [1, 2, 3] });
     }).toThrow();
   });
+
+  it("excludes nulls from transposed arrays", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "integer", symbol: "a", width: 8 },
+        { type: "integer", symbol: "b", width: 8 },
+        { type: "integer", symbol: "c", width: 8 },
+        { type: "integer", symbol: "d", width: 8 },
+        { type: "integer", symbol: "e", width: 8 },
+        { type: "integer", symbol: "f", width: 8 },
+        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "c" },
+        { type: "variable", symbol: "d" },
+        { type: "variable", symbol: "e" },
+        { type: "variable", symbol: "f" },
+
+        // foo = [a, b]
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "collect", width: 2 },
+        { type: "pop", symbol: "foo" },
+        { type: "variable", symbol: "foo" },
+
+        // bar = [c]
+        { type: "push", symbol: "c" },
+        { type: "collect", width: 1 },
+        { type: "pop", symbol: "bar" },
+        { type: "variable", symbol: "bar" },
+
+        // baz = [foo, bar] = [[a, b], [c]]
+        { type: "push", symbol: "foo" },
+        { type: "push", symbol: "bar" },
+        { type: "collect", width: 2 },
+        { type: "pop", symbol: "baz" },
+        { type: "variable", symbol: "baz" },
+
+        // qux = [d, e, f]
+        { type: "push", symbol: "d" },
+        { type: "push", symbol: "e" },
+        { type: "push", symbol: "f" },
+        { type: "collect", width: 3 },
+        { type: "pop", symbol: "qux" },
+        { type: "variable", symbol: "qux" },
+
+        // abc = [qux] = [[d, e, f]]
+        { type: "push", symbol: "qux" },
+        { type: "collect", width: 1 },
+        { type: "pop", symbol: "abc" },
+        { type: "variable", symbol: "abc" },
+
+        // def
+        // = [baz, abc]
+        // = [[foo, bar], [qux]]
+        // = [[[a, b], [c]], [[d, e, f]]]
+        { type: "push", symbol: "baz" },
+        { type: "push", symbol: "abc" },
+        { type: "collect", width: 2 },
+        { type: "pop", symbol: "def" },
+        { type: "variable", symbol: "def" },
+
+        // def[0][0] = foo
+        { type: "push", symbol: "def" },
+        { type: "constant", value: 0 },
+        { type: "get" },
+        { type: "constant", value: 0 },
+        { type: "get" },
+        { type: "pop", symbol: "fooOut" },
+        { type: "variable", symbol: "fooOut" },
+
+        // def[0][1] = bar
+        { type: "push", symbol: "def" },
+        { type: "constant", value: 0 },
+        { type: "get" },
+        { type: "constant", value: 1 },
+        { type: "get" },
+        { type: "pop", symbol: "barOut" },
+        { type: "variable", symbol: "barOut" },
+
+        // def[0] = baz
+        { type: "push", symbol: "def" },
+        { type: "constant", value: 0 },
+        { type: "get" },
+        { type: "pop", symbol: "bazOut" },
+        { type: "variable", symbol: "bazOut" },
+
+        // def[1][0] = qux
+        { type: "push", symbol: "def" },
+        { type: "constant", value: 1 },
+        { type: "get" },
+        { type: "constant", value: 0 },
+        { type: "get" },
+        { type: "pop", symbol: "quxOut" },
+        { type: "variable", symbol: "quxOut" },
+
+        // def[1] = abc
+        { type: "push", symbol: "def" },
+        { type: "constant", value: 1 },
+        { type: "get" },
+        { type: "pop", symbol: "abcOut" },
+        { type: "variable", symbol: "abcOut" },
+
+        { type: "integer", symbol: "x", width: 8 },
+        { type: "integer", symbol: "y", width: 8 },
+        { type: "variable", symbol: "x" },
+        { type: "variable", symbol: "y" },
+
+        // def[x][y]
+        { type: "push", symbol: "def" },
+        { type: "push", symbol: "x" },
+        { type: "get" },
+        { type: "push", symbol: "y" },
+        { type: "get" },
+        { type: "pop", symbol: "z" },
+        { type: "variable", symbol: "z" }
+      ]
+    });
+
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level3Runtime.encode(program, {
+      baz: [[10, 20], [30]],
+      qux: { 0: 40, 2: 60 },
+      e: 50,
+      x: 0,
+      y: 1
+    });
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result.a).toEqual(10);
+    expect(result.b).toEqual(20);
+    expect(result.c).toEqual(30);
+    expect(result.d).toEqual(40);
+    expect(result.e).toEqual(50);
+    expect(result.f).toEqual(60);
+
+    expect(result.foo).toEqual([10, 20]);
+    expect(result.bar).toEqual([30]);
+    expect(result.baz).toEqual([[10, 20], [30]]);
+    expect(result.qux).toEqual([40, 50, 60]);
+    expect(result.abc).toEqual([[40, 50, 60]]);
+    expect(result.def).toEqual([[[10, 20], [30]], [[40, 50, 60]]]);
+
+    expect(result.fooOut).toEqual([10, 20]);
+    expect(result.barOut).toEqual([30]);
+    expect(result.bazOut).toEqual([[10, 20], [30]]);
+    expect(result.quxOut).toEqual([40, 50, 60]);
+    expect(result.abcOut).toEqual([[40, 50, 60]]);
+
+    expect(result.z).toEqual([30]);
+  });
 });

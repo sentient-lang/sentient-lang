@@ -998,7 +998,7 @@ describe("InstructionSet", function () {
         spyOn(codeWriter, "variable");
         subject.variable("foo");
         expect(codeWriter.variable).toHaveBeenCalledWith(
-          "foo", "integer", ["a"], false
+          "foo", "integer", ["a"], false, undefined
         );
       });
 
@@ -1018,11 +1018,11 @@ describe("InstructionSet", function () {
         subject.variable("bar");
 
         expect(codeWriter.variable.calls.argsFor(0)).toEqual(
-          ["foo", "integer", ["a"], true]
+          ["foo", "integer", ["a"], true, undefined]
         );
 
         expect(codeWriter.variable.calls.argsFor(1)).toEqual(
-          ["bar", "array", ["foo"], false]
+          ["bar", "array", ["foo"], false, undefined]
         );
       });
 
@@ -1042,15 +1042,15 @@ describe("InstructionSet", function () {
         subject.variable("baz");
 
         expect(codeWriter.variable.calls.argsFor(0)).toEqual(
-          ["foo", "integer", ["a"], true]
+          ["foo", "integer", ["a"], true, undefined]
         );
 
         expect(codeWriter.variable.calls.argsFor(1)).toEqual(
-          ["bar", "array", ["foo"], true]
+          ["bar", "array", ["foo"], true, undefined]
         );
 
         expect(codeWriter.variable.calls.argsFor(2)).toEqual(
-          ["baz", "array", ["bar"], false]
+          ["baz", "array", ["bar"], false, undefined]
         );
       });
 
