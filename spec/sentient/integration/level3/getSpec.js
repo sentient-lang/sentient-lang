@@ -712,4 +712,47 @@ describe("Integration: 'get'", function () {
     expect(run({ x: 2, y: 2, z: 1 })).toEqual("out of bounds");
     expect(run({ x: 2, y: 2, z: 2 })).toEqual("out of bounds");
   });
+
+  it("works for heavily nested array", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        // [[[[[10]]]]]
+        { type: "constant", value: 10 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 1 },
+
+        { type: "constant", value: 0 },
+        { type: "get" },
+        { type: "constant", value: 0 },
+        { type: "get" },
+        { type: "constant", value: 0 },
+        { type: "get" },
+        { type: "constant", value: 0 },
+        { type: "get" },
+        { type: "constant", value: 0 },
+        { type: "get" },
+
+        { type: "pop", symbol: "foo" },
+        { type: "variable", symbol: "foo" }
+      ]
+    });
+
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level3Runtime.encode(program, {});
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result.foo).toEqual(10);
+  });
 });
