@@ -2561,4 +2561,144 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("fetch", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("array");
+      stack.push("key");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("array", "array", ["foo", "bar"]);
+      symbolTable.set("key", "integer", ["k"]);
+    });
+
+    describe("for an integer array", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "integer", ["a"]);
+        symbolTable.set("bar", "integer", ["b"]);
+      });
+
+      it("replaces the top two symbols for one symbol on the stack", function () {
+        subject.fetch();
+        expect(stack.pop()).toEqual("$$$_L3_TMP3_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.fetch();
+        var newSymbol = stack.pop();
+
+        expect(symbolTable.type(newSymbol)).toEqual("integer");
+        expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+      });
+
+      it("writes instructions for 'fetch'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.fetch();
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 0 },
+          { type: 'lessthan' },
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 2 },
+          { type: 'greaterequal' },
+          { type: 'or' },
+
+          { type: 'not' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'not' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN2_$$$' },
+
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 0 },
+          { type: 'equal' },
+
+          { type: 'push', symbol: 'a' },
+
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 1 },
+          { type: 'equal' },
+
+          { type: 'push', symbol: 'b' },
+
+          { type: 'constant', value: 0 },
+          { type: 'if' },
+          { type: 'if' },
+
+          { type: 'pop', symbol: '$$$_L3_INTEGER1_$$$' },
+
+          { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
+          { type: 'not' },
+          { type: 'invariant' }
+        ]);
+      });
+    });
+
+    describe("for a boolean array", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "boolean", ["a"]);
+        symbolTable.set("bar", "boolean", ["b"]);
+      });
+
+      it("replaces the top two symbols for one symbol on the stack", function () {
+        subject.fetch();
+        expect(stack.pop()).toEqual("$$$_L3_TMP3_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.fetch();
+        var newSymbol = stack.pop();
+
+        expect(symbolTable.type(newSymbol)).toEqual("boolean");
+        expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN3_$$$"]);
+      });
+
+      it("writes instructions for 'fetch'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.fetch();
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 0 },
+          { type: 'lessthan' },
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 2 },
+          { type: 'greaterequal' },
+          { type: 'or' },
+
+          { type: 'not' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'not' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN2_$$$' },
+
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 0 },
+          { type: 'equal' },
+
+          { type: 'push', symbol: 'a' },
+
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 1 },
+          { type: 'equal' },
+
+          { type: 'push', symbol: 'b' },
+
+          { type: 'constant', value: false },
+          { type: 'if' },
+          { type: 'if' },
+
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN3_$$$' },
+
+          { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
+          { type: 'not' },
+          { type: 'invariant' }
+        ]);
+      });
+    });
+  });
 });

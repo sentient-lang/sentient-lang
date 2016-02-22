@@ -49,7 +49,7 @@ Level 3 Instructions:
 [X] array
 [X] collect
 [X] get
-[ ] fetch
+[X] fetch
 [X] width
 [X] bounds
 [X] push
