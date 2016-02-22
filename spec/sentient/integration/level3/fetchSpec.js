@@ -277,4 +277,60 @@ describe("Integration: 'fetch'", function () {
 
     expect(result).toEqual({});
   });
+
+  it("supports returning a default if a value doesn't exist", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "constant", value: 10 },
+        { type: "collect", width: 1 },
+        { type: "pop", symbol: "intArray" },
+
+        { type: "constant", value: false },
+        { type: "collect", width: 1 },
+        { type: "pop", symbol: "boolArray" },
+
+        { type: "push", symbol: "intArray" },
+        { type: "constant", value: 0 },
+        { type: "fetch", defaultValue: 123 },
+        { type: "pop", symbol: "a" },
+        { type: "variable", symbol: "a" },
+
+        { type: "push", symbol: "intArray" },
+        { type: "constant", value: 1 },
+        { type: "fetch", defaultValue: 123 },
+        { type: "pop", symbol: "b" },
+        { type: "variable", symbol: "b" },
+
+        { type: "push", symbol: "boolArray" },
+        { type: "constant", value: 0 },
+        { type: "fetch", defaultValue: true },
+        { type: "pop", symbol: "c" },
+        { type: "variable", symbol: "c" },
+
+        { type: "push", symbol: "boolArray" },
+        { type: "constant", value: 1 },
+        { type: "fetch", defaultValue: true },
+        { type: "pop", symbol: "d" },
+        { type: "variable", symbol: "d" }
+      ]
+    });
+
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level3Runtime.encode(program, {});
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result.a).toEqual(10);
+    expect(result.b).toEqual(123);
+    expect(result.c).toEqual(false);
+    expect(result.d).toEqual(true);
+  });
 });

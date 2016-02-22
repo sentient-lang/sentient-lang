@@ -2579,7 +2579,7 @@ describe("InstructionSet", function () {
         symbolTable.set("bar", "integer", ["b"]);
       });
 
-      it("replaces the top two symbols for one symbol on the stack", function () {
+      it("replaces the top two symbols for one symbol", function () {
         subject.fetch();
         expect(stack.pop()).toEqual("$$$_L3_TMP3_$$$");
         expect(stack.pop()).toEqual("bottom");
@@ -2635,6 +2635,33 @@ describe("InstructionSet", function () {
           { type: 'invariant' }
         ]);
       });
+
+      describe("when a default is provided", function () {
+        it("writes instructions for 'fetch'", function () {
+          spyOn(codeWriter, "instruction");
+          subject.fetch(123);
+
+          var calls = SpecHelper.calls(codeWriter.instruction);
+          var relevantCalls = calls.slice(23, 29);
+
+          expect(relevantCalls).toEqual([
+            { type: 'pop', symbol: '$$$_L3_INTEGER1_$$$' },
+
+            { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
+            { type: 'constant', value: 123 },
+            { type: 'push', symbol: '$$$_L3_INTEGER1_$$$' },
+            { type: 'if' },
+
+            { type: 'pop', symbol: '$$$_L3_INTEGER2_$$$' }
+          ]);
+        });
+
+        it("throws an error if the default is the wrong type", function () {
+          expect(function () {
+            subject.fetch(true);
+          }).toThrow();
+        });
+      });
     });
 
     describe("for a boolean array", function () {
@@ -2643,7 +2670,7 @@ describe("InstructionSet", function () {
         symbolTable.set("bar", "boolean", ["b"]);
       });
 
-      it("replaces the top two symbols for one symbol on the stack", function () {
+      it("replaces the top two symbols for one symbol", function () {
         subject.fetch();
         expect(stack.pop()).toEqual("$$$_L3_TMP3_$$$");
         expect(stack.pop()).toEqual("bottom");
@@ -2698,6 +2725,55 @@ describe("InstructionSet", function () {
           { type: 'not' },
           { type: 'invariant' }
         ]);
+      });
+
+      describe("when a default is provided", function () {
+        it("writes instructions for 'fetch'", function () {
+          spyOn(codeWriter, "instruction");
+          subject.fetch(true);
+
+          var calls = SpecHelper.calls(codeWriter.instruction);
+          var relevantCalls = calls.slice(23, 29);
+
+          expect(relevantCalls).toEqual([
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN3_$$$' },
+
+            { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
+            { type: 'constant', value: true },
+            { type: 'push', symbol: '$$$_L3_BOOLEAN3_$$$' },
+            { type: 'if' },
+
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN4_$$$' }
+          ]);
+        });
+
+        it("throws an error if the default is the wrong type", function () {
+          expect(function () {
+            subject.fetch(123);
+          }).toThrow();
+        });
+      });
+    });
+
+    describe("for a nested array", function () {
+      beforeEach(function () {
+        symbolTable.set("foo", "array", ["a"]);
+        symbolTable.set("bar", "array", ["b"]);
+
+        symbolTable.set("a", "integer", ["x"]);
+        symbolTable.set("b", "integer", ["y"]);
+      });
+
+      it("does not throw an error for a fetch without a default", function () {
+        expect(function () {
+          subject.fetch();
+        }).not.toThrow();
+      });
+
+      it("throws an error for a fetch with a default", function () {
+        expect(function () {
+          subject.fetch([]);
+        }).toThrow();
       });
     });
   });
