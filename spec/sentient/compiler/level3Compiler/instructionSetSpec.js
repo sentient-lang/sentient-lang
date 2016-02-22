@@ -1606,8 +1606,8 @@ describe("InstructionSet", function () {
       it("replaces the top two symbols on the stack", function () {
         subject.get(true);
 
+        expect(stack.pop()).toEqual("$$$_L3_TMP3_$$$");
         expect(stack.pop()).toEqual("$$$_L3_TMP2_$$$");
-        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
         expect(stack.pop()).toEqual("bottom");
       });
 
@@ -1624,7 +1624,7 @@ describe("InstructionSet", function () {
 
         expect(symbolTable.type(nilSymbol)).toEqual("boolean");
         expect(symbolTable.symbols(nilSymbol)).toEqual([
-          "$$$_L3_BOOLEAN1_$$$"
+          "$$$_L3_BOOLEAN2_$$$"
         ]);
       });
 
@@ -1646,8 +1646,14 @@ describe("InstructionSet", function () {
           // k is out of bounds
           { type: "or" },
 
+          // inBounds
+          { type: 'not' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
+
           // outOfBounds
-          { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" },
+          { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'not' },
+          { type: "pop", symbol: "$$$_L3_BOOLEAN2_$$$" },
 
           // if k == 0
           { type: "push", symbol: "k" },
@@ -1685,8 +1691,8 @@ describe("InstructionSet", function () {
       it("replaces the top two symbols on the stack", function () {
         subject.get(true);
 
+        expect(stack.pop()).toEqual("$$$_L3_TMP3_$$$");
         expect(stack.pop()).toEqual("$$$_L3_TMP2_$$$");
-        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
         expect(stack.pop()).toEqual("bottom");
       });
 
@@ -1698,12 +1704,12 @@ describe("InstructionSet", function () {
 
         expect(symbolTable.type(valueSymbol)).toEqual("boolean");
         expect(symbolTable.symbols(valueSymbol)).toEqual([
-          "$$$_L3_BOOLEAN2_$$$"
+          "$$$_L3_BOOLEAN3_$$$"
         ]);
 
         expect(symbolTable.type(nilSymbol)).toEqual("boolean");
         expect(symbolTable.symbols(nilSymbol)).toEqual([
-          "$$$_L3_BOOLEAN1_$$$"
+          "$$$_L3_BOOLEAN2_$$$"
         ]);
       });
 
@@ -1724,9 +1730,15 @@ describe("InstructionSet", function () {
 
           // k is out of bounds
           { type: "or" },
+          { type: 'not' },
+
+          // inBounds
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
 
           // outOfBounds
-          { type: "pop", symbol: "$$$_L3_BOOLEAN1_$$$" },
+          { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'not' },
+          { type: "pop", symbol: "$$$_L3_BOOLEAN2_$$$" },
 
           // if k == 0
           { type: "push", symbol: "k" },
@@ -1750,7 +1762,7 @@ describe("InstructionSet", function () {
           { type: "if" },
 
           // value
-          { type: "pop", symbol: "$$$_L3_BOOLEAN2_$$$" }
+          { type: "pop", symbol: "$$$_L3_BOOLEAN3_$$$" }
         ]);
       });
     });
@@ -1768,8 +1780,8 @@ describe("InstructionSet", function () {
       it("replaces the top two symbols on the stack", function () {
         subject.get(true);
 
-        expect(stack.pop()).toEqual("$$$_L3_TMP7_$$$");
-        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("$$$_L3_TMP8_$$$");
+        expect(stack.pop()).toEqual("$$$_L3_TMP2_$$$");
         expect(stack.pop()).toEqual("bottom");
       });
 
@@ -1781,13 +1793,13 @@ describe("InstructionSet", function () {
 
         expect(symbolTable.type(valueSymbol)).toEqual("array");
         expect(symbolTable.symbols(valueSymbol)).toEqual([
-          "$$$_L3_TMP4_$$$",
-          "$$$_L3_TMP6_$$$"
+          "$$$_L3_TMP5_$$$",
+          "$$$_L3_TMP7_$$$"
         ]);
 
         expect(symbolTable.type(nilSymbol)).toEqual("boolean");
         expect(symbolTable.symbols(nilSymbol)).toEqual([
-          "$$$_L3_BOOLEAN1_$$$"
+          "$$$_L3_BOOLEAN2_$$$"
         ]);
       });
 
@@ -1827,8 +1839,8 @@ describe("InstructionSet", function () {
         var conditions = conditionalNils[newSymbol];
 
         expect(conditions).toEqual([
-          { conditionSymbol: "$$$_L3_BOOLEAN2_$$$", nilIndex: 1 },
-          { conditionSymbol: "$$$_L3_BOOLEAN1_$$$" }
+          { conditionSymbol: "$$$_L3_BOOLEAN3_$$$", nilIndex: 1 },
+          { conditionSymbol: "$$$_L3_BOOLEAN2_$$$" }
         ]);
       });
     });
@@ -1850,7 +1862,7 @@ describe("InstructionSet", function () {
         subject.get(true);
 
         var calls = SpecHelper.calls(codeWriter.instruction);
-        var relevantCalls = calls.slice(0, 22);
+        var relevantCalls = calls.slice(0, 26);
 
         expect(relevantCalls).toEqual([
           // check bounds
@@ -1882,7 +1894,12 @@ describe("InstructionSet", function () {
           { type: 'push', symbol: 'condition3' },
           { type: 'or' },
 
-          { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' }
+          { type: 'not' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'not' },
+
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN2_$$$' }
         ]);
       });
 
@@ -1951,9 +1968,9 @@ describe("InstructionSet", function () {
         var newSymbol = stack.pop();
 
         expect(conditionalNils[newSymbol]).toEqual([
-          { conditionSymbol: '$$$_L3_BOOLEAN2_$$$', nilIndex: 1 },
+          { conditionSymbol: '$$$_L3_BOOLEAN3_$$$', nilIndex: 1 },
           { conditionSymbol: 'condition1', nilIndex: 0 },
-          { conditionSymbol: '$$$_L3_BOOLEAN1_$$$' }
+          { conditionSymbol: '$$$_L3_BOOLEAN2_$$$' }
         ]);
       });
     });
