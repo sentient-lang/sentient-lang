@@ -2308,4 +2308,124 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("bounds", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("array");
+      stack.push("key");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("array", "array", ["a", "b"]);
+      symbolTable.set("key", "integer", ["k"]);
+    });
+
+    it("replaces the top two symbols for one symbol on the stack", function () {
+      subject.bounds();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.bounds();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("boolean");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_BOOLEAN1_$$$"]);
+    });
+
+    it("writes instructions for 'bounds'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.bounds();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: 'push', symbol: 'k' },
+        { type: 'constant', value: 0 },
+        { type: 'lessthan' },
+        { type: 'push', symbol: 'k' },
+        { type: 'constant', value: 2 },
+        { type: 'greaterequal' },
+        { type: 'or' },
+        { type: 'not' },
+        { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' }
+      ]);
+    });
+
+    it("throws an error when checking bounds of a non-array", function () {
+      symbolTable.set("array", "integer", ["a"]);
+
+      expect(function () {
+        subject.bounds();
+      }).toThrow();
+    });
+
+    it("throws an error when checking bounds with a non-integer", function () {
+      symbolTable.set("key", "boolean", ["a"]);
+
+      expect(function () {
+        subject.bounds();
+      }).toThrow();
+    });
+
+    describe("when there are conditionalNils for the array", function () {
+      beforeEach(function () {
+        conditionalNils.array = [
+          { conditionSymbol: "indexSpecificCondition", nilIndex: 1 },
+          { conditionSymbol: "universalCondition" }
+        ];
+      });
+
+      it("writes instructions for 'bounds'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.bounds();
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 0 },
+          { type: 'lessthan' },
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 2 },
+          { type: 'greaterequal' },
+          { type: 'or' },
+
+          { type: 'push', symbol: 'indexSpecificCondition' },
+          { type: 'push', symbol: 'k' },
+          { type: 'constant', value: 1 },
+          { type: 'equal' },
+          { type: 'and' },
+          { type: 'or' },
+
+          { type: 'push', symbol: 'universalCondition' },
+          { type: 'or' },
+
+          { type: 'not' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' }
+        ]);
+      });
+
+      describe("when 'skipBoundaries' is true", function () {
+        it("only checks the 'conditionalNils'", function () {
+          spyOn(codeWriter, "instruction");
+          subject.bounds(true);
+
+          expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+            { type: "constant", value: true },
+
+            { type: 'push', symbol: 'indexSpecificCondition' },
+            { type: 'push', symbol: 'k' },
+            { type: 'constant', value: 1 },
+            { type: 'equal' },
+            { type: 'and' },
+            { type: 'or' },
+
+            { type: 'push', symbol: 'universalCondition' },
+            { type: 'or' },
+
+            { type: 'not' },
+            { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' }
+          ]);
+        });
+      });
+    });
+  });
 });

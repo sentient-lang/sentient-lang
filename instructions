@@ -51,6 +51,7 @@ Level 3 Instructions:
 [X] get
 [ ] fetch
 [ ] width
+[X] bounds
 [X] push
 [X] pop
 [X] not
