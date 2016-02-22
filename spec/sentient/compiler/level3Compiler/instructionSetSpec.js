@@ -2445,4 +2445,120 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("width", function () {
+    beforeEach(function () {
+      stack.push("bottom");
+      stack.push("array");
+
+      symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("array", "array", ["a", "b", "c"]);
+    });
+
+    it("replaces the top symbol on the stack", function () {
+      subject.width();
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+      expect(stack.pop()).toEqual("bottom");
+    });
+
+    it("adds the new symbol to the symbol table", function () {
+      subject.width();
+      var newSymbol = stack.pop();
+
+      expect(symbolTable.type(newSymbol)).toEqual("integer");
+      expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+    });
+
+    it("writes instructions for 'width'", function () {
+      spyOn(codeWriter, "instruction");
+      subject.width();
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: 'constant', value: 3 },
+        { type: 'pop', symbol: '$$$_L3_INTEGER1_$$$' }
+      ]);
+    });
+
+    it("throws an error when checking width of a non-array", function () {
+      symbolTable.set("array", "integer", ["a"]);
+
+      expect(function () {
+        subject.width();
+      }).toThrow();
+    });
+
+    describe("when there are index specific conditionalNils", function () {
+      beforeEach(function () {
+        conditionalNils.array = [
+          { conditionSymbol: "indexSpecificCondition", nilIndex: 1 }
+        ];
+      });
+
+      it("writes instructions for 'width'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.width();
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          // if indexSpecificCondition then 0 else 1
+          { type: 'push', symbol: 'indexSpecificCondition' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'constant', value: 0 },
+          { type: 'constant', value: 1 },
+          { type: 'if' },
+
+          { type: 'constant', value: 2 },
+          { type: 'add' },
+
+          { type: 'pop', symbol: '$$$_L3_INTEGER1_$$$' }
+        ]);
+      });
+    });
+
+    describe("when there is a universal conditionalNil", function () {
+      beforeEach(function () {
+        conditionalNils.array = [
+          { conditionSymbol: "universalCondition" }
+        ];
+      });
+
+      it("writes instructions for 'width'", function () {
+        spyOn(codeWriter, "instruction");
+        subject.width();
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          // if universalCondition then 0 else 1
+          { type: 'push', symbol: 'universalCondition' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
+          { type: 'constant', value: 0 },
+          { type: 'constant', value: 1 },
+          { type: 'if' },
+
+          // if universalCondition then 0 else 1
+          { type: 'push', symbol: 'universalCondition' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN2_$$$' },
+          { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
+          { type: 'constant', value: 0 },
+          { type: 'constant', value: 1 },
+          { type: 'if' },
+
+          // if universalCondition then 0 else 1
+          { type: 'push', symbol: 'universalCondition' },
+          { type: 'pop', symbol: '$$$_L3_BOOLEAN3_$$$' },
+          { type: 'push', symbol: '$$$_L3_BOOLEAN3_$$$' },
+          { type: 'constant', value: 0 },
+          { type: 'constant', value: 1 },
+          { type: 'if' },
+
+          { type: 'constant', value: 0 },
+          { type: 'add' },
+          { type: 'add' },
+          { type: 'add' },
+
+          { type: 'pop', symbol: '$$$_L3_INTEGER1_$$$' }
+        ]);
+      });
+    });
+  });
 });

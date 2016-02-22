@@ -755,4 +755,37 @@ describe("Integration: 'get'", function () {
 
     expect(result.foo).toEqual(10);
   });
+
+  it("returns an empty array if nested index is out of bounds", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        // [[10]]
+        { type: "constant", value: 10 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 1 },
+        { type: "pop", symbol: "array" },
+
+        { type: "push", symbol: "array" },
+        { type: "constant", value: 1 },
+        { type: "get" },
+        { type: "pop", symbol: "foo" },
+        { type: "variable", symbol: "foo" }
+      ]
+    });
+
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level3Runtime.encode(program, {});
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result.foo).toEqual([]);
+  });
 });

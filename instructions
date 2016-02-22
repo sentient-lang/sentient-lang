@@ -50,7 +50,7 @@ Level 3 Instructions:
 [X] collect
 [X] get
 [ ] fetch
-[ ] width
+[X] width
 [X] bounds
 [X] push
 [X] pop
