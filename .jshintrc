@@ -71,7 +71,7 @@
   // Numeric options:
   "maxerr"               : 50,
   "maxparams"            : 5,
-  "maxdepth"             : 3,
+  "maxdepth"             : 4,
   "maxcomplexity"        : 6,
   "maxlen"               : 80,
   "indent"               : 2

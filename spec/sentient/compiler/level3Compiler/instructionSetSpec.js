@@ -2114,7 +2114,7 @@ describe("InstructionSet", function () {
 
         it("replaces the top two symbols for one symbol", function () {
           subject.equal();
-          expect(stack.pop()).toEqual("$$$_L3_TMP3_$$$");
+          expect(stack.pop()).toEqual("$$$_L3_TMP7_$$$");
           expect(stack.pop()).toEqual("bottom");
         });
 
@@ -2124,27 +2124,7 @@ describe("InstructionSet", function () {
 
           expect(symbolTable.type(newSymbol)).toEqual("boolean");
           expect(symbolTable.symbols(newSymbol)).toEqual([
-            "$$$_L3_BOOLEAN3_$$$"
-          ]);
-        });
-
-        it("writes instructions for 'equal'", function () {
-          spyOn(codeWriter, "instruction");
-          subject.equal();
-
-          expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-            { type: 'push', symbol: 'a' },
-            { type: 'push', symbol: 'c' },
-            { type: 'equal' },
-            { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
-            { type: 'push', symbol: 'b' },
-            { type: 'push', symbol: 'd' },
-            { type: 'equal' },
-            { type: 'pop', symbol: '$$$_L3_BOOLEAN2_$$$' },
-            { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
-            { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
-            { type: 'and' },
-            { type: 'pop', symbol: '$$$_L3_BOOLEAN3_$$$' }
+            "$$$_L3_BOOLEAN7_$$$"
           ]);
         });
       });
@@ -2187,98 +2167,6 @@ describe("InstructionSet", function () {
           expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
             { type: 'constant', value: false },
             { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' }
-          ]);
-        });
-      });
-
-      describe("nested arrays", function () {
-        beforeEach(function () {
-          stack.push("bottom");
-          stack.push("arr1");
-          stack.push("arr2");
-
-          symbolTable.set("bottom", "anything", ["anything"]);
-          symbolTable.set("arr1", "array", ["arr3", "arr4"]);
-          symbolTable.set("arr2", "array", ["arr5", "arr6"]);
-
-          symbolTable.set("arr3", "array", ["foo", "bar"]);
-          symbolTable.set("arr4", "array", ["baz", "qux"]);
-          symbolTable.set("arr5", "array", ["abc", "def"]);
-          symbolTable.set("arr6", "array", ["ghi", "jkl"]);
-
-          symbolTable.set("foo", "integer", ["a"]);
-          symbolTable.set("bar", "integer", ["b"]);
-          symbolTable.set("baz", "integer", ["c"]);
-          symbolTable.set("qux", "integer", ["d"]);
-          symbolTable.set("abc", "integer", ["e"]);
-          symbolTable.set("def", "integer", ["f"]);
-          symbolTable.set("ghi", "integer", ["g"]);
-          symbolTable.set("jkl", "integer", ["h"]);
-        });
-
-        it("replaces the top two symbols for one symbol", function () {
-          subject.equal();
-          expect(stack.pop()).toEqual("$$$_L3_TMP7_$$$");
-          expect(stack.pop()).toEqual("bottom");
-        });
-
-        it("adds the new symbol to the symbol table", function () {
-          subject.equal();
-          var newSymbol = stack.pop();
-
-          expect(symbolTable.type(newSymbol)).toEqual("boolean");
-          expect(symbolTable.symbols(newSymbol)).toEqual([
-            "$$$_L3_BOOLEAN7_$$$"
-          ]);
-        });
-
-        it("recursively calls equal to generate instructions", function () {
-          spyOn(codeWriter, "instruction");
-          subject.equal();
-
-          // [[a, b], [c, d]] == [[e, f], [g, h]]
-          expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-            // a == e
-            { type: 'push', symbol: 'a' },
-            { type: 'push', symbol: 'e' },
-            { type: 'equal' },
-            { type: 'pop', symbol: '$$$_L3_BOOLEAN1_$$$' },
-
-            // b == f
-            { type: 'push', symbol: 'b' },
-            { type: 'push', symbol: 'f' },
-            { type: 'equal' },
-            { type: 'pop', symbol: '$$$_L3_BOOLEAN2_$$$' },
-
-            // a == e && b == f
-            { type: 'push', symbol: '$$$_L3_BOOLEAN1_$$$' },
-            { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
-            { type: 'and' },
-            { type: 'pop', symbol: '$$$_L3_BOOLEAN3_$$$' },
-
-            // c == g
-            { type: 'push', symbol: 'c' },
-            { type: 'push', symbol: 'g' },
-            { type: 'equal' },
-            { type: 'pop', symbol: '$$$_L3_BOOLEAN4_$$$' },
-
-            // d == h
-            { type: 'push', symbol: 'd' },
-            { type: 'push', symbol: 'h' },
-            { type: 'equal' },
-            { type: 'pop', symbol: '$$$_L3_BOOLEAN5_$$$' },
-
-            // c == g && d == h
-            { type: 'push', symbol: '$$$_L3_BOOLEAN4_$$$' },
-            { type: 'push', symbol: '$$$_L3_BOOLEAN5_$$$' },
-            { type: 'and' },
-            { type: 'pop', symbol: '$$$_L3_BOOLEAN6_$$$' },
-
-            // (a == e && b == f) && (c == g && d == h)
-            { type: 'push', symbol: '$$$_L3_BOOLEAN3_$$$' },
-            { type: 'push', symbol: '$$$_L3_BOOLEAN6_$$$' },
-            { type: 'and' },
-            { type: 'pop', symbol: '$$$_L3_BOOLEAN7_$$$' }
           ]);
         });
       });
