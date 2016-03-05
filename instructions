@@ -75,6 +75,6 @@ Level 3 Instructions:
 [X] greaterequal
 [X] duplicate
 [X] swap
-[ ] if
+[X] if
 [X] absolute
 [X] invariant
