@@ -54,7 +54,7 @@ describe("Level 3 Abstraction", function () {
           City       | Revenue                                                 \
           -----------|---------                                                \
           Birmingham | 2200 GBP                                                \
-          Brighton   | 2000 GBP                                                \
+          Brighton   | 3100 GBP                                                \
           Bristol    | 1500 GBP                                                \
           Cambridge  | 2300 GBP                                                \
           Cardiff    | 3500 GBP                                                \
@@ -131,7 +131,7 @@ describe("Level 3 Abstraction", function () {
 
         // Define an array to hold the sales for each city.
         { type: "constant", value: 0 },
-        { type: "constant", value: 2000 },
+        { type: "constant", value: 3100 },
         { type: "constant", value: 1500 },
         { type: "constant", value: 3500 },
         { type: "constant", value: 2300 },
@@ -196,8 +196,8 @@ describe("Level 3 Abstraction", function () {
         { type: "fetch" },
         { type: "constant", value: 4 },
         { type: "equal" },
-        { type: "constant", value: 30 },
         { type: "constant", value: 50 },
+        { type: "constant", value: 30 },
         { type: "if" },
         { type: "push", symbol: "fuelCost" },
         { type: "add" },
@@ -235,8 +235,8 @@ describe("Level 3 Abstraction", function () {
         { type: "fetch" },
         { type: "constant", value: 4 },
         { type: "equal" },
-        { type: "constant", value: 30 },
         { type: "constant", value: 50 },
+        { type: "constant", value: 30 },
         { type: "if" },
         { type: "push", symbol: "fuelCost" },
         { type: "add" },
@@ -274,8 +274,8 @@ describe("Level 3 Abstraction", function () {
         { type: "fetch" },
         { type: "constant", value: 4 },
         { type: "equal" },
-        { type: "constant", value: 30 },
         { type: "constant", value: 50 },
+        { type: "constant", value: 30 },
         { type: "if" },
         { type: "push", symbol: "fuelCost" },
         { type: "add" },
@@ -313,8 +313,8 @@ describe("Level 3 Abstraction", function () {
         { type: "fetch" },
         { type: "constant", value: 4 },
         { type: "equal" },
-        { type: "constant", value: 30 },
         { type: "constant", value: 50 },
+        { type: "constant", value: 30 },
         { type: "if" },
         { type: "push", symbol: "fuelCost" },
         { type: "add" },
@@ -352,8 +352,8 @@ describe("Level 3 Abstraction", function () {
         { type: "fetch" },
         { type: "constant", value: 4 },
         { type: "equal" },
-        { type: "constant", value: 30 },
         { type: "constant", value: 50 },
+        { type: "constant", value: 30 },
         { type: "if" },
         { type: "push", symbol: "fuelCost" },
         { type: "add" },
@@ -391,8 +391,8 @@ describe("Level 3 Abstraction", function () {
         { type: "fetch" },
         { type: "constant", value: 4 },
         { type: "equal" },
-        { type: "constant", value: 30 },
         { type: "constant", value: 50 },
+        { type: "constant", value: 30 },
         { type: "if" },
         { type: "push", symbol: "fuelCost" },
         { type: "add" },
@@ -461,7 +461,7 @@ describe("Level 3 Abstraction", function () {
         { type: "variable", symbol: "fuelCost" },
         { type: "variable", symbol: "shoppingCost" },
         { type: "variable", symbol: "shoppingPurchased" },
-        { type: "variable", symbol: "moneyToKeep" },
+        { type: "variable", symbol: "moneyToKeep" }
       ]
     });
 
@@ -469,8 +469,8 @@ describe("Level 3 Abstraction", function () {
     program = Level1Compiler.compile(level1Code);
   });
 
-  it("can find a solution", function () {
-    var assignments = {};
+  it("can find a solution that visits Cambridge on day 1", function () {
+    var assignments = { route: { 1: 4 } };
     assignments = Level3Runtime.encode(program, assignments);
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
@@ -482,12 +482,70 @@ describe("Level 3 Abstraction", function () {
 
     expect(result).toEqual({
       route: [0, 4, 5, 3, 5, 4, 0],
-      fuelCost: 260,
+      fuelCost: 220,
       shoppingPurchased: true,
       shoppingCost: 68,
-      totalRevenue: 12172,
-      surplus: 160,
-      moneyToKeep: 53
+      totalRevenue: 12212,
+      surplus: 200,
+      moneyToKeep: 66
     });
+  });
+
+  it("can find a solution that visits Bristol on day 1", function () {
+    var assignments = { route: { 1: 1 } };
+    assignments = Level3Runtime.encode(program, assignments);
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result).toEqual({
+      route: [0, 1, 2, 3, 5, 4, 0],
+      fuelCost: 200,
+      shoppingPurchased: true,
+      shoppingCost: 68,
+      totalRevenue: 12332,
+      surplus: 320,
+      moneyToKeep: 106
+    });
+  });
+
+  it("can find a solution that can't afford to purchase shopping", function () {
+    var assignments = { shoppingPurchased: false };
+    assignments = Level3Runtime.encode(program, assignments);
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result).toEqual({
+      route: [0, 2, 3, 5, 3, 2, 0],
+      fuelCost: 180,
+      shoppingPurchased: false,
+      shoppingCost: 68,
+      totalRevenue: 12020,
+      surplus: 8,
+      moneyToKeep: 2
+    });
+  });
+
+  it("verifes that there are no solutions with fuel costing 240", function () {
+    var assignments = { fuelCost: 240 };
+    assignments = Level3Runtime.encode(program, assignments);
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result).toEqual({});
   });
 });
