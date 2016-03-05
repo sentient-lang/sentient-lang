@@ -291,25 +291,29 @@ describe("Integration: 'fetch'", function () {
 
         { type: "push", symbol: "intArray" },
         { type: "constant", value: 0 },
-        { type: "fetch", defaultValue: 123 },
+        { type: "constant", value: 123 },
+        { type: "fetch", hasDefault: true },
         { type: "pop", symbol: "a" },
         { type: "variable", symbol: "a" },
 
         { type: "push", symbol: "intArray" },
         { type: "constant", value: 1 },
-        { type: "fetch", defaultValue: 123 },
+        { type: "constant", value: 123 },
+        { type: "fetch", hasDefault: true },
         { type: "pop", symbol: "b" },
         { type: "variable", symbol: "b" },
 
         { type: "push", symbol: "boolArray" },
         { type: "constant", value: 0 },
-        { type: "fetch", defaultValue: true },
+        { type: "constant", value: true },
+        { type: "fetch", hasDefault: true },
         { type: "pop", symbol: "c" },
         { type: "variable", symbol: "c" },
 
         { type: "push", symbol: "boolArray" },
         { type: "constant", value: 1 },
-        { type: "fetch", defaultValue: true },
+        { type: "constant", value: true },
+        { type: "fetch", hasDefault: true },
         { type: "pop", symbol: "d" },
         { type: "variable", symbol: "d" }
       ]

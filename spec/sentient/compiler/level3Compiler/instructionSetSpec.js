@@ -2525,9 +2525,14 @@ describe("InstructionSet", function () {
       });
 
       describe("when a default is provided", function () {
+        beforeEach(function () {
+          stack.push("default");
+          symbolTable.set("default", "integer", ["d"]);
+        });
+
         it("writes instructions for 'fetch'", function () {
           spyOn(codeWriter, "instruction");
-          subject.fetch(123);
+          subject.fetch(true);
 
           var calls = SpecHelper.calls(codeWriter.instruction);
           var relevantCalls = calls.slice(23, 29);
@@ -2536,7 +2541,7 @@ describe("InstructionSet", function () {
             { type: 'pop', symbol: '$$$_L3_INTEGER1_$$$' },
 
             { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
-            { type: 'constant', value: 123 },
+            { type: 'push', symbol: 'd' },
             { type: 'push', symbol: '$$$_L3_INTEGER1_$$$' },
             { type: 'if' },
 
@@ -2545,6 +2550,8 @@ describe("InstructionSet", function () {
         });
 
         it("throws an error if the default is the wrong type", function () {
+          symbolTable.set("default", "boolean", ["d"]);
+
           expect(function () {
             subject.fetch(true);
           }).toThrow();
@@ -2616,6 +2623,11 @@ describe("InstructionSet", function () {
       });
 
       describe("when a default is provided", function () {
+        beforeEach(function () {
+          stack.push("default");
+          symbolTable.set("default", "boolean", ["d"]);
+        });
+
         it("writes instructions for 'fetch'", function () {
           spyOn(codeWriter, "instruction");
           subject.fetch(true);
@@ -2627,7 +2639,7 @@ describe("InstructionSet", function () {
             { type: 'pop', symbol: '$$$_L3_BOOLEAN3_$$$' },
 
             { type: 'push', symbol: '$$$_L3_BOOLEAN2_$$$' },
-            { type: 'constant', value: true },
+            { type: 'push', symbol: 'd' },
             { type: 'push', symbol: '$$$_L3_BOOLEAN3_$$$' },
             { type: 'if' },
 
@@ -2636,6 +2648,8 @@ describe("InstructionSet", function () {
         });
 
         it("throws an error if the default is the wrong type", function () {
+          symbolTable.set("default", "integer", ["d"]);
+
           expect(function () {
             subject.fetch(123);
           }).toThrow();
