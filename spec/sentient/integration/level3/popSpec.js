@@ -74,6 +74,205 @@ describe("Integration: 'pop'", function () {
     expect(result.barOutOfBounds).toEqual(true);
   });
 
+  it("supports re-assignment of primitives", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "constant", value: 10 },
+        { type: "pop", symbol: "foo" },
+        { type: "constant", value: 20 },
+        { type: "pop", symbol: "foo" },
+        { type: "variable", symbol: "foo" },
+
+        { type: "constant", value: false },
+        { type: "pop", symbol: "bar" },
+        { type: "constant", value: true },
+        { type: "pop", symbol: "bar" },
+        { type: "variable", symbol: "bar" }
+      ]
+    });
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level2Runtime.encode(program, {});
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result.foo).toEqual(20);
+    expect(result.bar).toEqual(true);
+  });
+
+  it("supports re-assignment of arrays", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "constant", value: 10 },
+        { type: "constant", value: 20 },
+        { type: "collect", width: 2 },
+        { type: "pop", symbol: "foo" },
+
+        { type: "constant", value: 30 },
+        { type: "collect", width: 1 },
+        { type: "pop", symbol: "foo" },
+
+        { type: "variable", symbol: "foo" }
+      ]
+    });
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level2Runtime.encode(program, {});
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result.foo).toEqual([30]);
+  });
+
+  it("supports re-assignment of nested arrays", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "constant", value: 10 },
+        { type: "constant", value: 20 },
+        { type: "collect", width: 2 },
+        { type: "collect", width: 1 },
+        { type: "pop", symbol: "foo" },
+
+        { type: "constant", value: 30 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 1 },
+        { type: "pop", symbol: "foo" },
+
+        { type: "variable", symbol: "foo" }
+      ]
+    });
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level2Runtime.encode(program, {});
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result.foo).toEqual([[30]]);
+  });
+
+  it("integrates re-assignment correctly with fetch", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "constant", value: 10 },
+        { type: "pop", symbol: "x" },
+
+        { type: "push", symbol: "x" },
+        { type: "collect", width: 1 },
+        { type: "pop", symbol: "foo" },
+
+        { type: "push", symbol: "foo" },
+        { type: "constant", value: 0 },
+        { type: "fetch" },
+        { type: "pop", symbol: "a" },
+
+        { type: "constant", value: 20 },
+        { type: "pop", symbol: "x" },
+
+        { type: "push", symbol: "foo" },
+        { type: "constant", value: 0 },
+        { type: "fetch" },
+        { type: "pop", symbol: "b" },
+
+        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "b" }
+      ]
+    });
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level2Runtime.encode(program, {});
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result.a).toEqual(10);
+    expect(result.b).toEqual(20);
+  });
+
+  it("throws an error if a re-assignment changes type", function () {
+    expect(function () {
+      Level3Compiler.compile({
+        instructions: [
+          { type: "constant", value: 10 },
+          { type: "pop", symbol: "foo" },
+          { type: "constant", value: true },
+          { type: "pop", symbol: "foo" }
+        ]
+      });
+    }).toThrow();
+  });
+
+  it("throws an error if array re-assignment changes type", function () {
+    expect(function () {
+      Level3Compiler.compile({
+        instructions: [
+          { type: "constant", value: 10 },
+          { type: "collect", width: 1 },
+          { type: "pop", symbol: "foo" },
+
+          { type: "constant", value: true },
+          { type: "collect", width: 1 },
+          { type: "pop", symbol: "foo" }
+        ]
+      });
+    }).toThrow();
+  });
+
+  it("throws an error if nested array re-assignment changes type", function () {
+    expect(function () {
+      Level3Compiler.compile({
+        instructions: [
+          { type: "constant", value: 10 },
+          { type: "collect", width: 1 },
+          { type: "collect", width: 1 },
+          { type: "pop", symbol: "foo" },
+
+          { type: "constant", value: true },
+          { type: "collect", width: 1 },
+          { type: "collect", width: 1 },
+          { type: "pop", symbol: "foo" }
+        ]
+      });
+    }).toThrow();
+
+    expect(function () {
+      Level3Compiler.compile({
+        instructions: [
+          { type: "constant", value: 10 },
+          { type: "collect", width: 1 },
+          { type: "collect", width: 1 },
+          { type: "pop", symbol: "foo" },
+
+          { type: "constant", value: 10 },
+          { type: "collect", width: 1 },
+          { type: "pop", symbol: "foo" }
+        ]
+      });
+    }).toThrow();
+  });
+
   it("throws an error if the stack is empty", function () {
     expect(function () {
       Level3Compiler.compile({
