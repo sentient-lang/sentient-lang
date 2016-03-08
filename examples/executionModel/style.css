@@ -1,0 +1,30 @@
+body {
+  font-family: Helvetica, sans-serif;
+  text-align: center;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -ms-user-select: none;
+
+  padding: 2em 0;
+}
+
+h1 {
+  color: #333;
+}
+
+canvas {
+  border: 2px solid gray;
+  cursor: pointer;
+  margin: 1em 0;
+}
+
+p {
+  font-size: 1.2em;
+  color: #333;
+}
+
+a {
+  color: black;
+}
