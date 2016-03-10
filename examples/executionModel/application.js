@@ -15,6 +15,7 @@ var Application = function () {
     buildAnimation();
 
     registerClickHandler();
+    registerKeypressHandler();
 
     render();
   };
@@ -155,6 +156,27 @@ var Application = function () {
     } else if (control.id === "previous") {
       self.animation.previousFrame();
       render();
+    }
+  };
+
+  var registerKeypressHandler = function () {
+    document.addEventListener("keydown", function (event) {
+      handleKeypress(event.keyCode);
+    });
+  };
+
+  var handleKeypress = function (keyCode) {
+    switch (keyCode) {
+      case 37:
+        event.preventDefault();
+        self.animation.previousFrame();
+        render();
+        break;
+      case 39:
+        event.preventDefault();
+        self.animation.nextFrame();
+        render();
+        break;
     }
   };
 
