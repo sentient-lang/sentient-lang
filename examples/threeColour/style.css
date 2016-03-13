@@ -14,6 +14,7 @@ p {
   margin: 2em auto;
   text-align: left;
   font-size: 1.2em;
+  line-height: 1.5em;
 }
 
 canvas {
