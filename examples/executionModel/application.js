@@ -1,3 +1,6 @@
+/* jshint maxlen: false */
+/* globals document:false */
+
 "use strict";
 
 var Application = function () {
@@ -48,7 +51,7 @@ var Application = function () {
       new Tile({ id: "results",        text: "Results",        color: orange, x: 835, y: 30,  textX: 45 }),
       new Tile({ id: "l2-results",     text: "L2 Results",     color: orange, x: 895, y: 195, textX: 35 }),
       new Tile({ id: "l1-results",     text: "L1 Results",     color: orange, x: 895, y: 345, textX: 35 }),
-      new Tile({ id: "solution",       text: "Solution",       color: orange, x: 895, y: 495, textX: 45 }),
+      new Tile({ id: "solution",       text: "Solution",       color: orange, x: 895, y: 495, textX: 45 })
     ];
   };
 
@@ -75,7 +78,7 @@ var Application = function () {
       new Arrow({ startX: 910, startY: 335, endX: 875, endY: 305, from: "l1-results",     to: "l2-runtime" }),
       new Arrow({ startX: 875, startY: 270, endX: 910, endY: 240, from: "l2-runtime",     to: "l2-results" }),
       new Arrow({ startX: 910, startY: 185, endX: 875, endY: 155, from: "l2-results",     to: "l3-runtime" }),
-      new Arrow({ startX: 850, startY: 110, endX: 850, endY: 80,  from: "l3-runtime",     to: "results"  }),
+      new Arrow({ startX: 850, startY: 110, endX: 850, endY: 80,  from: "l3-runtime",     to: "results"  })
     ];
   };
 
@@ -94,7 +97,7 @@ var Application = function () {
   var buildControls = function () {
     self.controls = [
       new Control({ id: "next", x: 595, y: 695, direction: 1 }),
-      new Control({ id: "previous", x: 575, y: 695, direction: -1 }),
+      new Control({ id: "previous", x: 575, y: 695, direction: -1 })
     ];
   };
 
@@ -121,12 +124,14 @@ var Application = function () {
       x -= canvas.offsetLeft;
       y -= canvas.offsetTop;
 
-      handleClick(x, y)
+      handleClick(x, y);
     });
   };
 
   var handleClick = function (x, y) {
-    for (var i = 0; i < self.tiles.length; i += 1) {
+    var i;
+
+    for (i = 0; i < self.tiles.length; i += 1) {
       var tile = self.tiles[i];
 
       if (tile.contains(x, y)) {
@@ -135,7 +140,7 @@ var Application = function () {
       }
     }
 
-    for (var i = 0; i < self.controls.length; i += 1) {
+    for (i = 0; i < self.controls.length; i += 1) {
       var control = self.controls[i];
 
       if (control.contains(x, y)) {
@@ -145,7 +150,7 @@ var Application = function () {
     }
   };
 
-  var handleTileClick = function (tile) {
+  var handleTileClick = function () {
     // NOOP
   };
 
@@ -160,12 +165,12 @@ var Application = function () {
   };
 
   var registerKeypressHandler = function () {
-    document.addEventListener("keydown", function (event) {
-      handleKeypress(event.keyCode);
-    });
+    document.addEventListener("keydown", handleKeypress);
   };
 
-  var handleKeypress = function (keyCode) {
+  var handleKeypress = function (event) {
+    var keyCode = event.keyCode;
+
     switch (keyCode) {
       case 37:
         event.preventDefault();
@@ -180,12 +185,14 @@ var Application = function () {
     }
   };
 
+  /* jshint maxcomplexity: false */
   var render = function () {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     var frame = self.animation.getFrame();
+    var i;
 
-    for (var i = 0; i < self.tiles.length; i += 1) {
+    for (i = 0; i < self.tiles.length; i += 1) {
       var tile = self.tiles[i];
 
       if (frame.selectedTiles.indexOf(tile) !== -1) {
@@ -197,7 +204,7 @@ var Application = function () {
       tile.render(context);
     }
 
-    for (var i = 0; i < self.arrows.length; i += 1) {
+    for (i = 0; i < self.arrows.length; i += 1) {
       var arrow = self.arrows[i];
 
       if (arrow === frame.selectedArrow) {
@@ -209,7 +216,7 @@ var Application = function () {
       arrow.render(context);
     }
 
-    for (var i = 0; i < self.abstractionLines.length; i += 1) {
+    for (i = 0; i < self.abstractionLines.length; i += 1) {
       var abstractionLine = self.abstractionLines[i];
       abstractionLine.render(context);
     }
@@ -217,7 +224,7 @@ var Application = function () {
     self.textArea.text = frame.text;
     self.textArea.render(context);
 
-    for (var i = 0; i < self.controls.length; i += 1) {
+    for (i = 0; i < self.controls.length; i += 1) {
       var control = self.controls[i];
       control.render(context);
     }
@@ -460,7 +467,7 @@ var Animation = function (params) {
       "The Level 3 Runtime takes these assignments and uses the",
       "metadata produced by the compilation stack to translate these",
       "high-level assignments into an equivalent set of assignments",
-      "for the Level 2 Runtime.",
+      "for the Level 2 Runtime."
     ],
     [
       "This process repeats itself a number of times in a similar manner",
