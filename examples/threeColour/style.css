@@ -1,0 +1,60 @@
+body {
+  font-family: Helvetica;
+  font-size: 16px;
+  text-align: center;
+}
+
+h1 {
+  margin-top: 2em;
+}
+
+p {
+  width: 550px;
+  padding: 25px;
+  margin: 2em auto;
+  text-align: left;
+  font-size: 1.2em;
+}
+
+canvas {
+  margin-top: 1em;
+  border-bottom: 2px solid #ccc;
+  border-top: 2px solid #ccc;
+  padding: 50px 25px;
+}
+
+#inputControls {
+  font-size: 1.2em;
+  width: 550px;
+  padding: 25px;
+  text-align: center;
+  margin-top: 1em;
+  margin: 1em auto;
+}
+
+#numberInput {
+  margin: 10px;
+  padding: 5px;
+  width: 50px;
+  font-size: 0.8em;
+}
+
+#numberButton {
+  font-size: 0.9em;
+  border: 1px solid black;
+  background: white;
+  cursor: pointer;
+}
+
+#errorSpan {
+  display: block;
+  color: red;
+}
+
+#footer {
+  text-align: center;
+}
+
+a {
+  color: blue;
+}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Three Colour</title>
+    <script src="../../bin/sentient.js"></script>
+    <script src="application.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <h1>Three-Colour Numbers</h1>
+
+    <p>
+    In this example, a graph is constructed that resembles the input number.
+    Sentient then tries to find a solution to the three-colour problem such that
+    each colour is given a unique number and the total of all numbers in the
+    graph adds up to the original number.
+    </p>
+
+    <canvas id="canvas" width="550" height="250"></canvas>
+
+    <div id="inputControls">
+      <span>Choose a number (1 - 999):</span>
+      <input type="text" id="numberInput" value="123"></input>
+      <button id="numberButton">Update</button>
+      <span id="errorSpan"></span>
+    </div>
+
+    <p>
+    The integers attributed to the colours must be unique, positive integers.
+    Note that the number 2 has no solutions because it is impossible to
+    construct a graph resembling the number 2 that adheres to these constraints.
+    </p>
+
+    <p id="footer">
+    Created by <a href="https://twitter.com/cpatuzzo">Chris Patuzzo</a>, March 2016
+    </p>
+
+    <script>
+      var app = new Application();
+      app.run();
+    </script>
+  </body>
+</html>
