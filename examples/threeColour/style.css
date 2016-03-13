@@ -6,6 +6,7 @@ body {
 
 h1 {
   margin-top: 2em;
+  display: inline-block;
 }
 
 p {
@@ -25,7 +26,7 @@ canvas {
 }
 
 #inputControls {
-  font-size: 1.2em;
+  font-size: 19px;
   width: 550px;
   padding: 25px;
   text-align: center;
@@ -37,11 +38,11 @@ canvas {
   margin: 10px;
   padding: 5px;
   width: 50px;
-  font-size: 0.8em;
+  font-size: 14px;
 }
 
 #numberButton {
-  font-size: 0.9em;
+  font-size: 14px;
   border: 1px solid black;
   background: white;
   cursor: pointer;
