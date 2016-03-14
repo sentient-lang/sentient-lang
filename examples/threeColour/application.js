@@ -11,6 +11,7 @@ var Application = function () {
   var numberButton = document.getElementById("numberButton");
   var numberInput = document.getElementById("numberInput");
   var errorSpan = document.getElementById("errorSpan");
+  var cache = {};
 
   self.run = function () {
     compileProgram();
@@ -29,7 +30,8 @@ var Application = function () {
     errorSpan.innerText = "";
 
     if (number >= 1 && number <= 999) {
-      self.results = Sentient.run(self.machineCode, { number: number });
+      cache[number] = cache[number] || Sentient.run(self.machineCode, { number: number });
+      self.results = cache[number];
 
       if (typeof self.results.number === "undefined") {
         errorSpan.innerText = "There are no solutions for " + number + ".";
