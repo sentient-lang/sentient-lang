@@ -68,6 +68,27 @@ var Application = function () {
         render();
       }
     });
+
+    document.addEventListener("keyup", function (event) {
+      if (document.activeElement === numberInput) {
+        return;
+      }
+
+      var keyCode = event.keyCode;
+      var number = parseInt(numberInput.value, 10);
+
+      if (keyCode === 37 && number > 1) {
+        event.preventDefault();
+        numberInput.value = number - 1;
+        numberButton.click();
+        render();
+      } else if (keyCode === 39 && number < 999) {
+        event.preventDefault();
+        numberInput.value = number + 1;
+        numberButton.click();
+        render();
+      }
+    });
   };
 
   var render = function () {
