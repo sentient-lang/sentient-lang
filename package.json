@@ -1,5 +1,14 @@
 {
-  "private": true,
+  "name": "sentient-lang",
+  "version": "0.0.0-alpha.0",
+  "description": "An experimental, declarative programming language.",
+  "author": "Chris Patuzzo <chris@patuzzo.co.uk>",
+  "license": "MIT",
+  "main": "lib/sentient",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tuzz/sentient.js"
+  },
   "dependencies": {
     "underscore": "^1.8.3"
   },
