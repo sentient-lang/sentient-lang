@@ -10,7 +10,7 @@ var Level2Runtime = require("./sentient/runtime/level2Runtime");
 var Level1Runtime = require("./sentient/runtime/level1Runtime");
 
 var Machine = require("./sentient/machine");
-var MiniSatAdapter = require("./sentient/machine/miniSatAdapter");
+var MinisatAdapter = require("./sentient/machine/minisatAdapter");
 
 var Sentient = function () {
   var self = this;
@@ -28,7 +28,7 @@ var Sentient = function () {
     var l1Assignments = Level2Runtime.encode(machineCode, l2Assignments);
     var machineAssignments = Level1Runtime.encode(machineCode, l1Assignments);
 
-    var machine = new Machine(MiniSatAdapter);
+    var machine = new Machine(MinisatAdapter);
     var solution = machine.run(machineCode, machineAssignments);
 
     var level1Results = Level1Runtime.decode(machineCode, solution);
@@ -53,7 +53,7 @@ if (typeof window !== "undefined") {
   window.Sentient = module.exports;
 }
 
-},{"./sentient/compiler/level1Compiler":4,"./sentient/compiler/level2Compiler":9,"./sentient/compiler/level3Compiler":14,"./sentient/machine":18,"./sentient/machine/miniSatAdapter":19,"./sentient/runtime/level1Runtime":20,"./sentient/runtime/level2Runtime":21,"./sentient/runtime/level3Runtime":22}],2:[function(require,module,exports){
+},{"./sentient/compiler/level1Compiler":4,"./sentient/compiler/level2Compiler":9,"./sentient/compiler/level3Compiler":14,"./sentient/machine":18,"./sentient/machine/minisatAdapter":19,"./sentient/runtime/level1Runtime":20,"./sentient/runtime/level2Runtime":21,"./sentient/runtime/level3Runtime":22}],2:[function(require,module,exports){
 "use strict";
 
 var Stack = function () {
@@ -2960,7 +2960,7 @@ module.exports = Registry;
 },{}],18:[function(require,module,exports){
 "use strict";
 
-var MiniSatAdapter = require("./machine/miniSatAdapter");
+var MinisatAdapter = require("./machine/minisatAdapter");
 var _ = require("underscore");
 
 var Machine = function (solver) {
@@ -3047,16 +3047,16 @@ var Machine = function (solver) {
 };
 
 Machine.run = function (program, assignments) {
-  return new Machine(MiniSatAdapter).run(program, assignments);
+  return new Machine(MinisatAdapter).run(program, assignments);
 };
 
 module.exports = Machine;
 
-},{"./machine/miniSatAdapter":19,"underscore":186}],19:[function(require,module,exports){
+},{"./machine/minisatAdapter":19,"underscore":186}],19:[function(require,module,exports){
 "use strict";
 
 var _ = require("underscore");
-var MiniSat = require("../../../vendor/minisat.js");
+var Minisat = require("../../../vendor/minisat.js");
 
 var MinisatAdapter = function (dimacs) {
   var self = this;
@@ -3069,7 +3069,7 @@ var MinisatAdapter = function (dimacs) {
   };
 
   var captureErrors = function () {
-    MiniSat.printErr = function (error) {
+    Minisat.printErr = function (error) {
       errors.push(error);
     };
   };
@@ -3080,7 +3080,7 @@ var MinisatAdapter = function (dimacs) {
     var returnType = ["string", "int"];
     var parameters = [dimacs, dimacs.length];
 
-    return MiniSat.ccall(
+    return Minisat.ccall(
       functionName,
       parameterType,
       returnType,

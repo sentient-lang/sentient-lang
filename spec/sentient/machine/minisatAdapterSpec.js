@@ -1,7 +1,7 @@
 "use strict";
 
 var machine = "../../../lib/sentient/machine";
-var describedClass = require(machine + "/miniSatAdapter");
+var describedClass = require(machine + "/minisatAdapter");
 
 describe("MinisatAdapter", function () {
   it("returns an array of literals if the solve is successful", function () {
