@@ -18,6 +18,7 @@
     "browserify": "^13.0.0",
     "ws": "^1.0.1",
     "bufferutil": "^1.2.1",
-    "utf-8-validate": "^1.2.1"
+    "utf-8-validate": "^1.2.1",
+    "pegjs": "^0.9.0"
   }
 }
