@@ -20,6 +20,8 @@ describe("variable", function () {
     expect(subject.parse("a12")).toEqual("a12");
     expect(subject.parse("a12_3b")).toEqual("a12_3b");
     expect(subject.parse("a_")).toEqual("a_");
+    expect(subject.parse("true_x")).toEqual("true_x");
+    expect(subject.parse("x_false")).toEqual("x_false");
   });
 
   it("rejects invalid", function () {
@@ -30,5 +32,7 @@ describe("variable", function () {
     expect(function () { subject.parse("_a"); }).toThrow();
     expect(function () { subject.parse("3"); }).toThrow();
     expect(function () { subject.parse("_"); }).toThrow();
+    expect(function () { subject.parse("true"); }).toThrow();
+    expect(function () { subject.parse("false"); }).toThrow();
   });
 });
