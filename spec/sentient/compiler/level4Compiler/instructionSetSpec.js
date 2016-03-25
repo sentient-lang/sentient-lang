@@ -128,4 +128,17 @@ describe("InstructionSet", function () {
       ]);
     });
   });
+
+  describe("vary", function () {
+    it("emits instructions", function () {
+      spyOn(codeWriter, "instruction");
+      subject.vary(["a", "b", "c"]);
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "c" }
+      ]);
+    });
+  });
 });
