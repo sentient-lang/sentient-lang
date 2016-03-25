@@ -1,13 +1,13 @@
 "use strict";
 
 var compiler = "../../../../../lib/sentient/compiler";
-var Parser = require(compiler + "/level4Compiler/parser");
+var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
 
 describe("type", function () {
   var subject;
 
   beforeEach(function () {
-    subject = new Parser({
+    subject = new SyntaxParser({
       allowedStartRules: ["type"]
     });
   });

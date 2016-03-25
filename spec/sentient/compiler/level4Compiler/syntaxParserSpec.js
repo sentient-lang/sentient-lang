@@ -1,9 +1,9 @@
 "use strict";
 
 var compiler = "../../../../lib/sentient/compiler";
-var describedClass = require(compiler + "/level4Compiler/parser");
+var describedClass = require(compiler + "/level4Compiler/syntaxParser");
 
-describe("Parser", function () {
+describe("SyntaxParser", function () {
   it("parses a simple program", function () {
     var ast = describedClass.parse(' \n\
       int6 a, b;                     \n\
