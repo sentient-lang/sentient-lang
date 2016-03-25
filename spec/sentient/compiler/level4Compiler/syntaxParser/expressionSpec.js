@@ -29,6 +29,16 @@ describe("expression", function () {
       [["a", "b", "<"], ["b", "c", "<"], "||"]
     );
 
+    expect(subject.parse("a * (b.abs + c.get(-1.abs))")).toEqual(
+      ["a", [["b", [], "abs"], ["c", [[[1, "-"], [], "abs"]], "get"], "+"], "*"]
+    );
+
+    expect(subject.parse("arr.empty? || true")).toEqual(
+      [["arr", [], "empty?"], true, "||"]
+    );
+
+    expect(subject.parse("a.abs")).toEqual(["a", [], "abs"]);
+    expect(subject.parse("a.b(1 + 1)")).toEqual(["a", [[1, 1, "+"]], "b"]);
     expect(subject.parse("a || b && c")).toEqual(["a", ["b", "c", "&&"], "||"]);
     expect(subject.parse("a && b == c")).toEqual(["a", ["b", "c", "=="], "&&"]);
     expect(subject.parse("a == b < c")).toEqual(["a", ["b", "c", "<"], "=="]);

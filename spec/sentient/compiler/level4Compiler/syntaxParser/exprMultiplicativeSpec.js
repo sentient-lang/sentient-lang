@@ -33,6 +33,14 @@ describe("exprMultiplicative", function () {
       [[["a", "b", "%"], "c", "*"], "d", "/"]
     );
 
+    expect(subject.parse("-3.abs * a")).toEqual(
+      [[[3, "-"], [], "abs"], "a", "*"]
+    );
+
+    expect(subject.parse("a.b(x) / c.d * -e.f(5)")).toEqual(
+      [[["a", ["x"], "b"], ["c", [], "d"], "/"], [["e", "-"], [5], "f"], "*"]
+    );
+
     expect(subject.parse("-3")).toEqual([3, "-"]);
     expect(subject.parse("!foo")).toEqual(["foo", "!"]);
     expect(subject.parse("true")).toEqual(true);
