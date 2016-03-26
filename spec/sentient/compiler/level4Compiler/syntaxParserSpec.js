@@ -11,6 +11,10 @@ describe("SyntaxParser", function () {
       vary a, b, total;              \n\
     ');
 
-    expect(ast).toEqual("something");
+    expect(ast).toEqual([
+      { type: "declaration", value: [["int", 6], ["a", "b"]] },
+      { type: "assignment", value: [["total"], [["a", ["b"], "+"]]] },
+      { type: "vary", value: ["a", "b", "total"] }
+    ]);
   });
 });
