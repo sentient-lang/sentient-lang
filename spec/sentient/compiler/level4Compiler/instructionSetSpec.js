@@ -138,7 +138,7 @@ describe("InstructionSet", function () {
         { type: "constant", value: 1 },
         { type: "pop", symbol: "a" },
         { type: "constant", value: true },
-        { type: "pop", symbol: "b" },
+        { type: "pop", symbol: "b" }
       ]);
     });
 

@@ -27,9 +27,10 @@ describe("statement", function () {
       { type: "assignment", value: [["a"], [1]] }
     );
 
-    expect(subject.parse("a, b = (1 + 2) / 3, true")).toEqual(
-      { type: "assignment", value: [["a", "b"], [[[1, [2], "+"], [3], "/"], true]] }
-    );
+    expect(subject.parse("a, b = (1 + 2) / 3, true")).toEqual({
+      type: "assignment",
+      value: [["a", "b"], [[[1, [2], "+"], [3], "/"], true]]
+    });
   });
 
   it("parses vary statements", function () {

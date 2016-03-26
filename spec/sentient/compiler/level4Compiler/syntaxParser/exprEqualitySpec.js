@@ -15,14 +15,22 @@ describe("exprEquality", function () {
   it("accepts valid", function () {
     expect(subject.parse("1 == 2")).toEqual([1, [2], "=="]);
     expect(subject.parse("a == b")).toEqual(["a", ["b"], "=="]);
-    expect(subject.parse("a < b == c")).toEqual([["a", ["b"], "<"], ["c"], "=="]);
-    expect(subject.parse("a == b >= c")).toEqual(["a", [["b", ["c"], ">="]], "=="]);
+    expect(subject.parse("a < b == c")).toEqual(
+      [["a", ["b"], "<"], ["c"], "=="]
+    );
+    expect(subject.parse("a == b >= c")).toEqual(
+      ["a", [["b", ["c"], ">="]], "=="]
+    );
     expect(subject.parse("1 == 2 == 3")).toEqual([[1, [2], "=="], [3], "=="]);
 
     expect(subject.parse("1 != 2")).toEqual([1, [2], "!="]);
     expect(subject.parse("a != b")).toEqual(["a", ["b"], "!="]);
-    expect(subject.parse("a < b != c")).toEqual([["a", ["b"], "<"], ["c"], "!="]);
-    expect(subject.parse("a != b >= c")).toEqual(["a", [["b", ["c"], ">="]], "!="]);
+    expect(subject.parse("a < b != c")).toEqual(
+      [["a", ["b"], "<"], ["c"], "!="]
+    );
+    expect(subject.parse("a != b >= c")).toEqual(
+      ["a", [["b", ["c"], ">="]], "!="]
+    );
     expect(subject.parse("1 != 2 != 3")).toEqual([[1, [2], "!="], [3], "!="]);
 
     expect(subject.parse("1 == 2 != 3")).toEqual([[1, [2], "=="], [3], "!="]);
@@ -33,7 +41,9 @@ describe("exprEquality", function () {
     );
 
     expect(subject.parse("1 < 2")).toEqual([1, [2], "<"]);
-    expect(subject.parse("a >= b / c")).toEqual(["a", [["b", ["c"], "/"]], ">="]);
+    expect(subject.parse("a >= b / c")).toEqual(
+      ["a", [["b", ["c"], "/"]], ">="]
+    );
     expect(subject.parse("1 + 2 / 3")).toEqual([1, [[2, [3], "/"]], "+"]);
     expect(subject.parse("-3")).toEqual([3, "-"]);
     expect(subject.parse("!foo")).toEqual(["foo", "!"]);
