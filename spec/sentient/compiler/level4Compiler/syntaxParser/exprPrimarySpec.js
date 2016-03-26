@@ -25,6 +25,9 @@ describe("exprPrimary", function () {
     expect(subject.parse("xfalse")).toEqual("xfalse");
     expect(subject.parse("true_false")).toEqual("true_false");
     expect(subject.parse("false1")).toEqual("false1");
+    expect(subject.parse("[1, 2]")).toEqual([[1, 2], "collect"]);
+    expect(subject.parse("[a, true]")).toEqual([["a", true], "collect"]);
+    expect(subject.parse("[ 1 ]")).toEqual([[1], "collect"]);
   });
 
   it("rejects invalid", function () {
@@ -32,5 +35,7 @@ describe("exprPrimary", function () {
     expect(function () { subject.parse("1a"); }).toThrow();
     expect(function () { subject.parse("1 1"); }).toThrow();
     expect(function () { subject.parse("_a"); }).toThrow();
+    expect(function () { subject.parse("[]"); }).toThrow();
+    expect(function () { subject.parse("[1 1]"); }).toThrow();
   });
 });

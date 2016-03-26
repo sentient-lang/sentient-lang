@@ -37,6 +37,14 @@ describe("expression", function () {
       [["arr", [], "empty?"], true, "||"]
     );
 
+    expect(subject.parse("[1, 2].get(0)")).toEqual(
+      [[[1, 2], "collect"], [0], "get"]
+    );
+
+    expect(subject.parse("[[1].get(0) + 1]")).toEqual(
+      [[[[[[1], "collect"], [0], "get"], 1, "+"]], "collect"]
+    );
+
     expect(subject.parse("a.abs")).toEqual(["a", [], "abs"]);
     expect(subject.parse("a.b(1 + 1)")).toEqual(["a", [[1, 1, "+"]], "b"]);
     expect(subject.parse("a || b && c")).toEqual(["a", ["b", "c", "&&"], "||"]);
