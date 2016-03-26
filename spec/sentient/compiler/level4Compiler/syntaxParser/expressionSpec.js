@@ -38,17 +38,17 @@ describe("expression", function () {
     );
 
     expect(subject.parse("[1, 2].get(0)")).toEqual(
-      [[[1, 2], "collect"], [0], "get"]
+      [[1, [2], "collect"], [0], "get"]
     );
 
     expect(subject.parse("[[1].get(0) + 1]")).toEqual(
-      [[[[[[1], "collect"], [0], "get"], 1, "+"]], "collect"]
+      [[[[1, [], "collect"], [0], "get"], 1, "+"], [], "collect"]
     );
 
     expect(subject.parse("-arr[0]")).toEqual([["arr", [0], "[]"], "-"]);
 
     expect(subject.parse("-[1, 2, x][-y] * 3")).toEqual(
-      [[[[[1, 2, "x"], "collect"], [["y", "-"]], "[]"], "-"], 3, "*"]
+      [[[[1, [2, "x"], "collect"], [["y", "-"]], "[]"], "-"], 3, "*"]
     );
 
     expect(subject.parse("a.abs")).toEqual(["a", [], "abs"]);
