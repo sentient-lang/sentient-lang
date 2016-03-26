@@ -129,6 +129,52 @@ describe("InstructionSet", function () {
     });
   });
 
+  describe("assignment", function () {
+    it("emits instructions for simple assignments", function () {
+      spyOn(codeWriter, "instruction");
+      subject.assignment([["a", "b"], [1, true]]);
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "constant", value: 1 },
+        { type: "pop", symbol: "a" },
+        { type: "constant", value: true },
+        { type: "pop", symbol: "b" },
+      ]);
+    });
+
+    it("emits instructions for complex assignments", function () {
+      spyOn(codeWriter, "instruction");
+      subject.assignment([["a", "b"], [[1, [2], "/"], [true, ["x"], "||"]]]);
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "constant", value: 1 },
+        { type: "constant", value: 2 },
+        { type: "divide" },
+        { type: "pop", symbol: "a" },
+        { type: "constant", value: true },
+        { type: "push", symbol: "x" },
+        { type: "or" },
+        { type: "pop", symbol: "b" }
+      ]);
+    });
+  });
+
+  describe("invariant", function () {
+    it("emits instructions for simple invariants", function () {
+      spyOn(codeWriter, "instruction");
+      subject.invariant([["a", [2], "=="], true]);
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "a" },
+        { type: "constant", value: 2 },
+        { type: "equal" },
+        { type: "invariant" },
+        { type: "constant", value: true },
+        { type: "invariant" }
+      ]);
+    });
+  });
+
   describe("vary", function () {
     it("emits instructions", function () {
       spyOn(codeWriter, "instruction");
