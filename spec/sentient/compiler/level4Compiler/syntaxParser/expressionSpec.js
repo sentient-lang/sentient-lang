@@ -18,23 +18,23 @@ describe("expression", function () {
     expect(subject.parse("((((true))))")).toEqual(true);
 
     expect(subject.parse("a && (b || c)")).toEqual(
-      ["a", ["b", "c", "||"], "&&"]
+      ["a", [["b", ["c"], "||"]], "&&"]
     );
 
     expect(subject.parse("1 > 2 && 3 <= 4 / (1 + 2)")).toEqual(
-      [[1, 2, ">"], [3, [4, [1, 2, "+"], "/"], "<="], "&&"]
+      [[1, [2], ">"], [[3, [[4, [[1, [2], "+"]], "/"]], "<="]], "&&"]
     );
 
     expect(subject.parse("(a < b) || (b < c)")).toEqual(
-      [["a", "b", "<"], ["b", "c", "<"], "||"]
+      [["a", ["b"], "<"], [["b", ["c"], "<"]], "||"]
     );
 
     expect(subject.parse("a * (b.abs + c.get(-1.abs))")).toEqual(
-      ["a", [["b", [], "abs"], ["c", [[[1, "-"], [], "abs"]], "get"], "+"], "*"]
+      ["a", [[["b", [], "abs"], [["c", [[[1, "-"], [], "abs"]], "get"]], "+"]], "*"]
     );
 
     expect(subject.parse("arr.empty? || true")).toEqual(
-      [["arr", [], "empty?"], true, "||"]
+      [["arr", [], "empty?"], [true], "||"]
     );
 
     expect(subject.parse("[1, 2].get(0)")).toEqual(
@@ -42,23 +42,23 @@ describe("expression", function () {
     );
 
     expect(subject.parse("[[1].get(0) + 1]")).toEqual(
-      [[[[1, [], "collect"], [0], "get"], 1, "+"], [], "collect"]
+      [[[[1, [], "collect"], [0], "get"], [1], "+"], [], "collect"]
     );
 
     expect(subject.parse("-arr[0]")).toEqual([["arr", [0], "[]"], "-"]);
 
     expect(subject.parse("-[1, 2, x][-y] * 3")).toEqual(
-      [[[[1, [2, "x"], "collect"], [["y", "-"]], "[]"], "-"], 3, "*"]
+      [[[[1, [2, "x"], "collect"], [["y", "-"]], "[]"], "-"], [3], "*"]
     );
 
     expect(subject.parse("a.abs")).toEqual(["a", [], "abs"]);
-    expect(subject.parse("a.b(1 + 1)")).toEqual(["a", [[1, 1, "+"]], "b"]);
-    expect(subject.parse("a || b && c")).toEqual(["a", ["b", "c", "&&"], "||"]);
-    expect(subject.parse("a && b == c")).toEqual(["a", ["b", "c", "=="], "&&"]);
-    expect(subject.parse("a == b < c")).toEqual(["a", ["b", "c", "<"], "=="]);
-    expect(subject.parse("1 < 2")).toEqual([1, 2, "<"]);
-    expect(subject.parse("a >= b / c")).toEqual(["a", ["b", "c", "/"], ">="]);
-    expect(subject.parse("1 + 2 / 3")).toEqual([1, [2, 3, "/"], "+"]);
+    expect(subject.parse("a.b(1 + 1)")).toEqual(["a", [[1, [1], "+"]], "b"]);
+    expect(subject.parse("a || b && c")).toEqual(["a", [["b", ["c"], "&&"]], "||"]);
+    expect(subject.parse("a && b == c")).toEqual(["a", [["b", ["c"], "=="]], "&&"]);
+    expect(subject.parse("a == b < c")).toEqual(["a", [["b", ["c"], "<"]], "=="]);
+    expect(subject.parse("1 < 2")).toEqual([1, [2], "<"]);
+    expect(subject.parse("a >= b / c")).toEqual(["a", [["b", ["c"], "/"]], ">="]);
+    expect(subject.parse("1 + 2 / 3")).toEqual([1, [[2, [3], "/"]], "+"]);
     expect(subject.parse("-3")).toEqual([3, "-"]);
     expect(subject.parse("!foo")).toEqual(["foo", "!"]);
     expect(subject.parse("true")).toEqual(true);

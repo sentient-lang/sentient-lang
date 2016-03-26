@@ -17,10 +17,10 @@ describe("exprFetch", function () {
     expect(subject.parse("arr[a]")).toEqual(["arr", ["a"], "[]"]);
     expect(subject.parse("arr[ 1 ]")).toEqual(["arr", [1], "[]"]);
     expect(subject.parse("arr[-1]")).toEqual(["arr", [[1, "-"]], "[]"]);
-    expect(subject.parse("x[1 + 2]")).toEqual(["x", [[1, 2, "+"]], "[]"]);
+    expect(subject.parse("x[1 + 2]")).toEqual(["x", [[1, [2], "+"]], "[]"]);
 
     expect(subject.parse("arr[0][1 * 2]")).toEqual(
-      [["arr", [0], "[]"], [[1, 2, "*"]], "[]"]
+      [["arr", [0], "[]"], [[1, [2], "*"]], "[]"]
     );
   });
 

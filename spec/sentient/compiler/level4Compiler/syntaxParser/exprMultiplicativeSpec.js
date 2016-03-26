@@ -13,32 +13,32 @@ describe("exprMultiplicative", function () {
   });
 
   it("accepts valid", function () {
-    expect(subject.parse("1 * 2")).toEqual([1, 2, "*"]);
-    expect(subject.parse("a * b")).toEqual(["a", "b", "*"]);
-    expect(subject.parse("a * 5 * c")).toEqual([["a", 5, "*"], "c", "*"]);
+    expect(subject.parse("1 * 2")).toEqual([1, [2], "*"]);
+    expect(subject.parse("a * b")).toEqual(["a", ["b"], "*"]);
+    expect(subject.parse("a * 5 * c")).toEqual([["a", [5], "*"], ["c"], "*"]);
 
-    expect(subject.parse("1 / 2")).toEqual([1, 2, "/"]);
-    expect(subject.parse("a / b")).toEqual(["a", "b", "/"]);
-    expect(subject.parse("a / 5 / c")).toEqual([["a", 5, "/"], "c", "/"]);
+    expect(subject.parse("1 / 2")).toEqual([1, [2], "/"]);
+    expect(subject.parse("a / b")).toEqual(["a", ["b"], "/"]);
+    expect(subject.parse("a / 5 / c")).toEqual([["a", [5], "/"], ["c"], "/"]);
 
-    expect(subject.parse("1 % 2")).toEqual([1, 2, "%"]);
-    expect(subject.parse("a % b")).toEqual(["a", "b", "%"]);
-    expect(subject.parse("a % 5 % c")).toEqual([["a", 5, "%"], "c", "%"]);
+    expect(subject.parse("1 % 2")).toEqual([1, [2], "%"]);
+    expect(subject.parse("a % b")).toEqual(["a", ["b"], "%"]);
+    expect(subject.parse("a % 5 % c")).toEqual([["a", [5], "%"], ["c"], "%"]);
 
     expect(subject.parse("a * b / c % d")).toEqual(
-      [[["a", "b", "*"], "c", "/"], "d", "%"]
+      [[["a", ["b"], "*"], ["c"], "/"], ["d"], "%"]
     );
 
     expect(subject.parse("a % b * c / d")).toEqual(
-      [[["a", "b", "%"], "c", "*"], "d", "/"]
+      [[["a", ["b"], "%"], ["c"], "*"], ["d"], "/"]
     );
 
     expect(subject.parse("-3.abs * a")).toEqual(
-      [[[3, "-"], [], "abs"], "a", "*"]
+      [[[3, "-"], [], "abs"], ["a"], "*"]
     );
 
-    expect(subject.parse("a.b(x) / c.d * -e.f(5)")).toEqual(
-      [[["a", ["x"], "b"], ["c", [], "d"], "/"], [["e", "-"], [5], "f"], "*"]
+    expect(subject.parse("a.b(x) / c.d * e.f(5)")).toEqual(
+      [[["a", ["x"], "b"], [["c", [], "d"]], "/"], [["e", [5], "f"]], "*"]
     );
 
     expect(subject.parse("-3")).toEqual([3, "-"]);

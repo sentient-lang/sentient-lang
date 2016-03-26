@@ -28,7 +28,7 @@ describe("statement", function () {
     );
 
     expect(subject.parse("a, b = (1 + 2) / 3, true")).toEqual(
-      { type: "assignment", value: [["a", "b"], [[[1, 2, "+"], 3, "/"], true]] }
+      { type: "assignment", value: [["a", "b"], [[[1, [2], "+"], [3], "/"], true]] }
     );
   });
 
@@ -48,7 +48,7 @@ describe("statement", function () {
     );
 
     expect(subject.parse("invariant a && b, b == true")).toEqual(
-      { type: "invariant", value: [["a", "b", "&&"], ["b", true, "=="]] }
+      { type: "invariant", value: [["a", ["b"], "&&"], ["b", [true], "=="]] }
     );
   });
 });
