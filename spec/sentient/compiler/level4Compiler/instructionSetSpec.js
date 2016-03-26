@@ -5,15 +5,18 @@ var compiler = "../../../../lib/sentient/compiler";
 var SpecHelper = require("../../../specHelper");
 var describedClass = require(compiler + "/level4Compiler/instructionSet");
 var CodeWriter = require(compiler + "/level4Compiler/codeWriter");
+var ExpressionParser = require(compiler + "/level4Compiler/expressionParser");
 
 describe("InstructionSet", function () {
-  var subject, codeWriter;
+  var subject, codeWriter, expressionParser;
 
   beforeEach(function () {
     codeWriter = new CodeWriter();
+    expressionParser = new ExpressionParser();
 
     subject = new describedClass({
-      codeWriter: codeWriter
+      codeWriter: codeWriter,
+      expressionParser: expressionParser
     });
   });
 
