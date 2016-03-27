@@ -44,6 +44,18 @@ describe("statement", function () {
     });
   });
 
+  it("parses destructured assignments", function () {
+    expect(subject.parse("div, mod =* 3.divmod(2)")).toEqual({
+      type: "destructuredAssignment",
+      value: [["div", "mod"], [3, [2], "divmod"]]
+    });
+
+    expect(subject.parse("a, a_present =* arr.get(3)")).toEqual({
+      type: "destructuredAssignment",
+      value: [["a", "a_present"], ["arr", [3], "get"]]
+    });
+  });
+
   it("parses vary statements", function () {
     expect(subject.parse("vary a")).toEqual(
       { type: "vary", value: ["a"] }

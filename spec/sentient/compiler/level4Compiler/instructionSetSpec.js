@@ -162,6 +162,37 @@ describe("InstructionSet", function () {
     });
   });
 
+  describe("destructuredAssignment", function () {
+    it("emits instructions for divmod", function () {
+      spyOn(codeWriter, "instruction");
+      subject.destructuredAssignment([["div", "mod"], [3, [2], "divmod"]]);
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "constant", value: 3 },
+        { type: "constant", value: 2 },
+        { type: "divmod" },
+        { type: "pop", symbol: "div" },
+        { type: "pop", symbol: "mod" }
+      ]);
+    });
+
+    it("emits instructions for get", function () {
+      spyOn(codeWriter, "instruction");
+
+      subject.destructuredAssignment(
+        [["a", "a_present"], ["arr", [3], "get"]]
+      );
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "push", symbol: "arr" },
+        { type: "constant", value: 3 },
+        { type: "get" },
+        { type: "pop", symbol: "a" },
+        { type: "pop", symbol: "a_present" }
+      ]);
+    });
+  });
+
   describe("invariant", function () {
     it("emits instructions for simple invariants", function () {
       spyOn(codeWriter, "instruction");

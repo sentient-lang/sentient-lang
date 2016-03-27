@@ -26,6 +26,30 @@ describe("Level4Compiler", function () {
     });
   });
 
+  it("compiles a program that uses destructuring", function () {
+    var code = describedClass.compile("\n\
+      int6 a, b;                       \n\
+      div, mod =* a.divmod(b);         \n\
+      vary a, b, div, mod;             \n\
+    ");
+
+    expect(code).toEqual({
+      instructions: [
+        { type: "integer", symbol: "a", width: 6 },
+        { type: "integer", symbol: "b", width: 6 },
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "divmod" },
+        { type: "pop", symbol: "div" },
+        { type: "pop", symbol: "mod" },
+        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "div" },
+        { type: "variable", symbol: "mod" }
+      ]
+    });
+  });
+
   it("compiles a complicated program", function () {
     var code = describedClass.compile("                                      \n\
       london_edges     = [1, 2, 4];                                          \n\
