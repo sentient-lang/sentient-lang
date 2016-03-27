@@ -1,3 +1,5 @@
+/* jshint camelcase:false */
+
 "use strict";
 
 var Level4Compiler = require("../../../lib/sentient/compiler/level4Compiler");

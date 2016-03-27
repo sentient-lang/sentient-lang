@@ -56,7 +56,7 @@ var Application = function () {
 
     var result = Sentient.run(program, assignments);
 
-    for (var i = 0; i < numberInputs.length; i += 1) {
+    for (i = 0; i < numberInputs.length; i += 1) {
       var input = numberInputs[i];
 
       input.style.borderColor = "red";
@@ -67,7 +67,7 @@ var Application = function () {
       } else {
         input.style.borderColor = "red";
       }
-    };
+    }
 
     if (result.total) {
       totalInput.style.borderColor = "#0c0";
