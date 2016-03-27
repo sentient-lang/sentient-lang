@@ -33,6 +33,17 @@ describe("statement", function () {
     });
   });
 
+  it("parses composite assignments", function () {
+    expect(subject.parse("a += 1")).toEqual(
+      { type: "assignment", value: [["a"], [["a", [1], "+"]]] }
+    );
+
+    expect(subject.parse("a %= (1 + 2) / a")).toEqual({
+      type: "assignment",
+      value: [["a"], [["a", [[[1, [2], "+"], ["a"], "/"]], "%"]]]
+    });
+  });
+
   it("parses vary statements", function () {
     expect(subject.parse("vary a")).toEqual(
       { type: "vary", value: ["a"] }
