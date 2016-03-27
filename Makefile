@@ -16,7 +16,7 @@ node_modules:
 
 build:
 	mkdir -p bin
-	browserify -t brfs lib/sentient.js > bin/sentient.js
+	browserify -t brfs lib/sentient.js | uglifyjs > bin/sentient.js
 
 clean:
 	rm -rf node_modules
