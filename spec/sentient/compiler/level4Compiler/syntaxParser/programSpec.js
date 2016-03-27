@@ -41,4 +41,11 @@ describe("program", function () {
       { type: "vary", value: ["a", "b", "c"] }
     ]);
   });
+
+  it("ignores additional semicolons", function () {
+    expect(subject.parse(";;; ; ; int a;; ;; a = 3 ; ;;")).toEqual([
+      { type: "declaration", value: [["int"], ["a"]] },
+      { type: "assignment", value: [["a"], [3]] }
+    ]);
+  });
 });
