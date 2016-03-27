@@ -51,6 +51,10 @@ describe("expression", function () {
       [[[[1, [2, "x"], "collect"], [["y", "-"]], "[]"], "-"], [3], "*"]
     );
 
+    expect(subject.parse("x == 1 ? 1 + 1 : 2 + 2")).toEqual(
+      [["x", [1], "=="], [[1, [1], "+"], [2, [2], "+"]], "if"]
+    );
+
     expect(subject.parse("a.abs")).toEqual(["a", [], "abs"]);
     expect(subject.parse("a.b(1 + 1)")).toEqual(["a", [[1, [1], "+"]], "b"]);
     expect(subject.parse("a || b && c")).toEqual(

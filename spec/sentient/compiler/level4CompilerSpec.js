@@ -96,7 +96,7 @@ describe("Level4Compiler", function () {
                                                                              \n\
       total_revenue += city_sales[current];                                  \n\
       in_cambridge = current == 4;                                           \n\
-      fuel_cost += in_cambridge.if(50, 30);                                  \n\
+      fuel_cost += in_cambridge ? 50 : 30;                                   \n\
                                                                              \n\
                                                                              \n\
       # Move the delivery truck (2nd time).                                  \n\
@@ -107,7 +107,7 @@ describe("Level4Compiler", function () {
                                                                              \n\
       total_revenue += city_sales[current];                                  \n\
       in_cambridge = current == 4;                                           \n\
-      fuel_cost += in_cambridge.if(50, 30);                                  \n\
+      fuel_cost += in_cambridge ? 50 : 30;                                   \n\
                                                                              \n\
                                                                              \n\
       # Move the delivery truck (3rd time).                                  \n\
@@ -118,7 +118,7 @@ describe("Level4Compiler", function () {
                                                                              \n\
       total_revenue += city_sales[current];                                  \n\
       in_cambridge = current == 4;                                           \n\
-      fuel_cost += in_cambridge.if(50, 30);                                  \n\
+      fuel_cost += in_cambridge ? 50 : 30;                                   \n\
                                                                              \n\
                                                                              \n\
       # Move the delivery truck (4th time).                                  \n\
@@ -129,7 +129,7 @@ describe("Level4Compiler", function () {
                                                                              \n\
       total_revenue += city_sales[current];                                  \n\
       in_cambridge = current == 4;                                           \n\
-      fuel_cost += in_cambridge.if(50, 30);                                  \n\
+      fuel_cost += in_cambridge ? 50 : 30;                                   \n\
                                                                              \n\
                                                                              \n\
       # Move the delivery truck (5th time).                                  \n\
@@ -140,7 +140,7 @@ describe("Level4Compiler", function () {
                                                                              \n\
       total_revenue += city_sales[current];                                  \n\
       in_cambridge = current == 4;                                           \n\
-      fuel_cost += in_cambridge.if(50, 30);                                  \n\
+      fuel_cost += in_cambridge ? 50 : 30;                                   \n\
                                                                              \n\
                                                                              \n\
       # Move the delivery truck (6th time).                                  \n\
@@ -151,15 +151,15 @@ describe("Level4Compiler", function () {
                                                                              \n\
       total_revenue += city_sales[current];                                  \n\
       in_cambridge = current == 4;                                           \n\
-      fuel_cost += in_cambridge.if(50, 30);                                  \n\
+      fuel_cost += in_cambridge ? 50 : 30;                                   \n\
                                                                              \n\
       total_revenue -= fuel_cost;                                            \n\
       surplus = total_revenue - 12012;                                       \n\
       shopping_cost = 4 * 7 + 40;                                            \n\
       shopping_purchased = surplus >= shopping_cost;                         \n\
                                                                              \n\
-      total_revenue -= shopping_purchased.if(shopping_cost, 0);              \n\
-      surplus -= shopping_purchased.if(shopping_cost, 0);                    \n\
+      total_revenue -= shopping_purchased ? shopping_cost : 0;               \n\
+      surplus -= shopping_purchased ? shopping_cost : 0;                     \n\
                                                                              \n\
       invariant total_revenue >= 12012;                                      \n\
       money_to_keep = surplus / 3;                                           \n\
