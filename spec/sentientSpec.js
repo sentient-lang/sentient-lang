@@ -38,13 +38,10 @@ describe("Sentient", function () {
       vary a, b, total;                            \n\
     ");
 
-    var MinisatAdapter = require("../lib/sentient/machine/minisatAdapter");
-    var LingelingAdapter = require("../lib/sentient/machine/lingelingAdapter");
-
-    var result = Sentient.run(program, { total: 100 }, MinisatAdapter);
+    var result = Sentient.run(program, { total: 100 }, "minisat");
     expect(result).toEqual({ a: 38, b: 62, total: 100 });
 
-    result = Sentient.run(program, { total: 100 }, LingelingAdapter);
+    result = Sentient.run(program, { total: 100 }, "lingeling");
     expect(result).toEqual({ a: 39, b: 61, total: 100 });
   });
 });
