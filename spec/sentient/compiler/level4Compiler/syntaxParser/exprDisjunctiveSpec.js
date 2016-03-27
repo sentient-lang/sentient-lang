@@ -25,6 +25,10 @@ describe("exprDisjunctive", function () {
       [["a", ["b"], "||"], ["c"], "||"]
     );
 
+    expect(subject.parse("a||b||c")).toEqual(
+      [["a", ["b"], "||"], ["c"], "||"]
+    );
+
     expect(subject.parse("a && b == c")).toEqual(
       ["a", [["b", ["c"], "=="]], "&&"]
     );
@@ -48,9 +52,6 @@ describe("exprDisjunctive", function () {
   it("rejects invalid", function () {
     expect(function () { subject.parse(""); }).toThrow();
     expect(function () { subject.parse("||"); }).toThrow();
-    expect(function () { subject.parse("a||b"); }).toThrow();
-    expect(function () { subject.parse("a ||b"); }).toThrow();
-    expect(function () { subject.parse("a|| b"); }).toThrow();
     expect(function () { subject.parse("a ||| b"); }).toThrow();
     expect(function () { subject.parse("a || && b"); }).toThrow();
   });

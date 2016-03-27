@@ -24,6 +24,10 @@ describe("assignment", function () {
       [["a", "b", "c"], [1, "x", true]]
     );
 
+    expect(subject.parse("a,b,c=1,x,true")).toEqual(
+      [["a", "b", "c"], [1, "x", true]]
+    );
+
     expect(subject.parse("a, b = x / 2, y + z")).toEqual(
       [["a", "b"], [["x", [2], "/"], ["y", ["z"], "+"]]]
     );
@@ -36,9 +40,6 @@ describe("assignment", function () {
   it("rejects invalid", function () {
     expect(function () { subject.parse(""); }).toThrow();
     expect(function () { subject.parse("a"); }).toThrow();
-    expect(function () { subject.parse("a=b"); }).toThrow();
-    expect(function () { subject.parse("a= b"); }).toThrow();
-    expect(function () { subject.parse("a =b"); }).toThrow();
     expect(function () { subject.parse("a = b = c"); }).toThrow();
     expect(function () { subject.parse("a == b"); }).toThrow();
     expect(function () { subject.parse("1 = a"); }).toThrow();

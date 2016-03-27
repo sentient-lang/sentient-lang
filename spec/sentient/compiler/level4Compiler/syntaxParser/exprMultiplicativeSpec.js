@@ -29,6 +29,10 @@ describe("exprMultiplicative", function () {
       [[["a", ["b"], "*"], ["c"], "/"], ["d"], "%"]
     );
 
+    expect(subject.parse("a*b/c%d")).toEqual(
+      [[["a", ["b"], "*"], ["c"], "/"], ["d"], "%"]
+    );
+
     expect(subject.parse("a % b * c / d")).toEqual(
       [[["a", ["b"], "%"], ["c"], "*"], ["d"], "/"]
     );
@@ -52,14 +56,9 @@ describe("exprMultiplicative", function () {
 
   it("rejects invalid", function () {
     expect(function () { subject.parse(""); }).toThrow();
-    expect(function () { subject.parse("a*b"); }).toThrow();
-    expect(function () { subject.parse("a/b"); }).toThrow();
-    expect(function () { subject.parse("a%b"); }).toThrow();
     expect(function () { subject.parse("*"); }).toThrow();
     expect(function () { subject.parse("/"); }).toThrow();
     expect(function () { subject.parse("%"); }).toThrow();
-    expect(function () { subject.parse("a *b"); }).toThrow();
-    expect(function () { subject.parse("a* b"); }).toThrow();
     expect(function () { subject.parse("a *"); }).toThrow();
     expect(function () { subject.parse("* a"); }).toThrow();
     expect(function () { subject.parse("a ** b"); }).toThrow();

@@ -36,6 +36,8 @@ describe("exprEquality", function () {
     expect(subject.parse("1 == 2 != 3")).toEqual([[1, [2], "=="], [3], "!="]);
     expect(subject.parse("1 != 2 == 3")).toEqual([[1, [2], "!="], [3], "=="]);
 
+    expect(subject.parse("1!=2==3")).toEqual([[1, [2], "!="], [3], "=="]);
+
     expect(subject.parse("!true != !false")).toEqual(
       [[true, "!"], [[false, "!"]], "!="]
     );
@@ -57,9 +59,6 @@ describe("exprEquality", function () {
   it("rejects invalid", function () {
     expect(function () { subject.parse(""); }).toThrow();
     expect(function () { subject.parse("=="); }).toThrow();
-    expect(function () { subject.parse("a==b"); }).toThrow();
-    expect(function () { subject.parse("a== b"); }).toThrow();
-    expect(function () { subject.parse("a ==b"); }).toThrow();
     expect(function () { subject.parse("a === b"); }).toThrow();
   });
 });

@@ -32,6 +32,10 @@ describe("exprAdditive", function () {
       [["a", [["b", "-"]], "-"], ["c"], "-"]
     );
 
+    expect(subject.parse("a--b-c")).toEqual(
+      [["a", [["b", "-"]], "-"], ["c"], "-"]
+    );
+
     expect(subject.parse("a * b")).toEqual(["a", ["b"], "*"]);
     expect(subject.parse("1 / 2 % 3")).toEqual([[1, [2], "/"], [3], "%"]);
     expect(subject.parse("-3")).toEqual([3, "-"]);
@@ -45,12 +49,8 @@ describe("exprAdditive", function () {
 
   it("rejects invalid", function () {
     expect(function () { subject.parse(""); }).toThrow();
-    expect(function () { subject.parse("a+b"); }).toThrow();
-    expect(function () { subject.parse("a-b"); }).toThrow();
     expect(function () { subject.parse("+"); }).toThrow();
     expect(function () { subject.parse("-"); }).toThrow();
-    expect(function () { subject.parse("a +b"); }).toThrow();
-    expect(function () { subject.parse("a+ b"); }).toThrow();
     expect(function () { subject.parse("a +"); }).toThrow();
     expect(function () { subject.parse("+ a"); }).toThrow();
     expect(function () { subject.parse("+a"); }).toThrow();
