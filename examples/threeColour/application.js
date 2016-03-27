@@ -103,1125 +103,215 @@ var Application = function () {
   };
 
   var compileProgram = function () {
-    var sourceCode = {
-      "instructions": [
-        { type: "integer", symbol: "number", width: 11 },
-
-        // Allow integers in the range 0..999.
-        { type: "push", symbol: "number" },
-        { type: "constant", value: 0 },
-        { type: "greaterequal" },
-        { type: "invariant" },
-        { type: "push", symbol: "number" },
-        { type: "constant", value: 999 },
-        { type: "lessequal" },
-        { type: "invariant" },
-
-        // Get the hundreds digit.
-        { type: "push", symbol: "number" },
-        { type: "constant", value: 100 },
-        { type: "divmod" },
-        { type: "pop", symbol: "hundreds" },
-
-        // Get the tens digit.
-        { type: "constant", value: 10 },
-        { type: "divmod" },
-        { type: "pop", symbol: "tens" },
-
-        // Get the ones digit.
-        { type: "pop", symbol: "ones" },
-
-        // Determine whether each hundreds node is visible.
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "pop", symbol: "hundreds_top_left_visible" },
-        { type: "constant", value: true },
-        { type: "pop", symbol: "hundreds_top_right_visible" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "hundreds_middle_left_visible" },
-        { type: "constant", value: true },
-        { type: "pop", symbol: "hundreds_middle_right_visible" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "hundreds_bottom_left_visible" },
-        { type: "constant", value: true },
-        { type: "pop", symbol: "hundreds_bottom_right_visible" },
-
-        // Determine whether each tens node is visible.
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "pop", symbol: "tens_top_left_visible" },
-        { type: "constant", value: true },
-        { type: "pop", symbol: "tens_top_right_visible" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "tens_middle_left_visible" },
-        { type: "constant", value: true },
-        { type: "pop", symbol: "tens_middle_right_visible" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "tens_bottom_left_visible" },
-        { type: "constant", value: true },
-        { type: "pop", symbol: "tens_bottom_right_visible" },
-
-        // Determine whether each ones node is visible.
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "pop", symbol: "ones_top_left_visible" },
-        { type: "constant", value: true },
-        { type: "pop", symbol: "ones_top_right_visible" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "ones_middle_left_visible" },
-        { type: "constant", value: true },
-        { type: "pop", symbol: "ones_middle_right_visible" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "ones_bottom_left_visible" },
-        { type: "constant", value: true },
-        { type: "pop", symbol: "ones_bottom_right_visible" },
-
-        // Determine whether each hundreds edge is visible.
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "hundreds_top_left_top_right_visible" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 0 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "hundreds_middle_left_middle_right_visible" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "hundreds_bottom_left_bottom_right_visible" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 2 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 3 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "hundreds_top_left_middle_left_visible" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 3 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 5 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 9 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "hundreds_middle_left_bottom_left_visible" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 5 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 6 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "hundreds_top_right_middle_right_visible" },
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 2 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "pop", symbol: "hundreds_middle_right_bottom_right_visible" },
-
-        // Determine whether each tens edge is visible.
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "tens_top_left_top_right_visible" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 0 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "tens_middle_left_middle_right_visible" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "tens_bottom_left_bottom_right_visible" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 2 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 3 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "tens_top_left_middle_left_visible" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 3 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 5 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 9 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "tens_middle_left_bottom_left_visible" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 5 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 6 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "tens_top_right_middle_right_visible" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 2 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "pop", symbol: "tens_middle_right_bottom_right_visible" },
-
-        // Determine whether each ones edge is visible.
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "ones_top_left_top_right_visible" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 0 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "ones_middle_left_middle_right_visible" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "ones_bottom_left_bottom_right_visible" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 2 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 3 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "ones_top_left_middle_left_visible" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 1 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 3 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 4 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 5 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 7 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 9 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "ones_middle_left_bottom_left_visible" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 5 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 6 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "and" },
-        { type: "pop", symbol: "ones_top_right_middle_right_visible" },
-        { type: "push", symbol: "ones" },
-        { type: "constant", value: 2 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "pop", symbol: "ones_middle_right_bottom_right_visible" },
-
-        // Determine whether hundreds/tens is visible at all.
-        { type: "push", symbol: "hundreds" },
-        { type: "constant", value: 0 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "pop", symbol: "hundreds_visible" },
-        { type: "push", symbol: "tens" },
-        { type: "constant", value: 0 },
-        { type: "equal" },
-        { type: "not" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "or" },
-        { type: "pop", symbol: "tens_visible" },
-
-        // Override visibility of hundreds nodes if not visible.
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_top_left_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_top_left_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_top_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_top_right_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_middle_left_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_middle_left_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_middle_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_middle_right_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_bottom_left_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_bottom_left_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_bottom_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_bottom_right_visible" },
-
-        // Override visibility of tens nodes if not visible.
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_top_left_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_top_left_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_top_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_top_right_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_middle_left_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_middle_left_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_middle_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_middle_right_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_bottom_left_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_bottom_left_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_bottom_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_bottom_right_visible" },
-
-        // Override visibility of hundreds edges if not visibile.
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_top_left_top_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_top_left_top_right_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_middle_left_middle_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_middle_left_middle_right_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_bottom_left_bottom_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_bottom_left_bottom_right_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_top_left_middle_left_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_top_left_middle_left_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_middle_left_bottom_left_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_middle_left_bottom_left_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_top_right_middle_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_top_right_middle_right_visible" },
-        { type: "push", symbol: "hundreds_visible" },
-        { type: "push", symbol: "hundreds_middle_right_bottom_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "hundreds_middle_right_bottom_right_visible" },
-
-        // Override visibility of hundreds edges if not visibile.
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_top_left_top_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_top_left_top_right_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_middle_left_middle_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_middle_left_middle_right_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_bottom_left_bottom_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_bottom_left_bottom_right_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_top_left_middle_left_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_top_left_middle_left_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_middle_left_bottom_left_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_middle_left_bottom_left_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_top_right_middle_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_top_right_middle_right_visible" },
-        { type: "push", symbol: "tens_visible" },
-        { type: "push", symbol: "tens_middle_right_bottom_right_visible" },
-        { type: "constant", value: false },
-        { type: "if" },
-        { type: "pop", symbol: "tens_middle_right_bottom_right_visible" },
-
-        // Define the colors.
-        { type: "integer", symbol: "red", width: 11 },
-        { type: "integer", symbol: "yellow", width: 11 },
-        { type: "integer", symbol: "blue", width: 11 },
-        { type: "push", symbol: "red" },
-        { type: "push", symbol: "yellow" },
-        { type: "push", symbol: "blue" },
-        { type: "collect", width: 3 },
-        { type: "pop", symbol: "colors" },
-
-        // colors cannot be negative numbers.
-        { type: "push", symbol: "red" },
-        { type: "constant", value: 0 },
-        { type: "greaterequal" },
-        { type: "invariant" },
-        { type: "push", symbol: "yellow" },
-        { type: "constant", value: 0 },
-        { type: "greaterequal" },
-        { type: "invariant" },
-        { type: "push", symbol: "blue" },
-        { type: "constant", value: 0 },
-        { type: "greaterequal" },
-        { type: "invariant" },
-
-        // red != yellow
-        { type: "push", symbol: "red" },
-        { type: "push", symbol: "yellow" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "invariant" },
-
-        // red != blue
-        { type: "push", symbol: "red" },
-        { type: "push", symbol: "blue" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "invariant" },
-
-        // yellow != blue
-        { type: "push", symbol: "yellow" },
-        { type: "push", symbol: "blue" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "invariant" },
-
-        // Define the nodes for the hundreds digit.
-        { type: "integer", symbol: "hundreds_top_left", width: 3 },
-        { type: "integer", symbol: "hundreds_top_right", width: 3 },
-        { type: "integer", symbol: "hundreds_middle_left", width: 3 },
-        { type: "integer", symbol: "hundreds_middle_right", width: 3 },
-        { type: "integer", symbol: "hundreds_bottom_left", width: 3 },
-        { type: "integer", symbol: "hundreds_bottom_right", width: 3 },
-
-        // Define the nodes for the tens digit.
-        { type: "integer", symbol: "tens_top_left", width: 3 },
-        { type: "integer", symbol: "tens_top_right", width: 3 },
-        { type: "integer", symbol: "tens_middle_left", width: 3 },
-        { type: "integer", symbol: "tens_middle_right", width: 3 },
-        { type: "integer", symbol: "tens_bottom_left", width: 3 },
-        { type: "integer", symbol: "tens_bottom_right", width: 3 },
-
-        // Define the nodes for the ones digit.
-        { type: "integer", symbol: "ones_top_left", width: 3 },
-        { type: "integer", symbol: "ones_top_right", width: 3 },
-        { type: "integer", symbol: "ones_middle_left", width: 3 },
-        { type: "integer", symbol: "ones_middle_right", width: 3 },
-        { type: "integer", symbol: "ones_bottom_left", width: 3 },
-        { type: "integer", symbol: "ones_bottom_right", width: 3 },
-
-        // Set up invariants that colors differ for hundreds if edges visible.
-        { type: "push", symbol: "hundreds_top_left_top_right_visible" },
-        { type: "push", symbol: "hundreds_top_left" },
-        { type: "push", symbol: "hundreds_top_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "hundreds_middle_left_middle_right_visible" },
-        { type: "push", symbol: "hundreds_middle_left" },
-        { type: "push", symbol: "hundreds_middle_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "hundreds_bottom_left_bottom_right_visible" },
-        { type: "push", symbol: "hundreds_bottom_left" },
-        { type: "push", symbol: "hundreds_bottom_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "hundreds_top_left_middle_left_visible" },
-        { type: "push", symbol: "hundreds_top_left" },
-        { type: "push", symbol: "hundreds_middle_left" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "hundreds_middle_left_bottom_left_visible" },
-        { type: "push", symbol: "hundreds_middle_left" },
-        { type: "push", symbol: "hundreds_bottom_left" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "hundreds_top_right_middle_right_visible" },
-        { type: "push", symbol: "hundreds_top_right" },
-        { type: "push", symbol: "hundreds_middle_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "hundreds_middle_right_bottom_right_visible" },
-        { type: "push", symbol: "hundreds_middle_right" },
-        { type: "push", symbol: "hundreds_bottom_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-
-        // Set up invariants that colors differ for tens if edges visible.
-        { type: "push", symbol: "tens_top_left_top_right_visible" },
-        { type: "push", symbol: "tens_top_left" },
-        { type: "push", symbol: "tens_top_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "tens_middle_left_middle_right_visible" },
-        { type: "push", symbol: "tens_middle_left" },
-        { type: "push", symbol: "tens_middle_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "tens_bottom_left_bottom_right_visible" },
-        { type: "push", symbol: "tens_bottom_left" },
-        { type: "push", symbol: "tens_bottom_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "tens_top_left_middle_left_visible" },
-        { type: "push", symbol: "tens_top_left" },
-        { type: "push", symbol: "tens_middle_left" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "tens_middle_left_bottom_left_visible" },
-        { type: "push", symbol: "tens_middle_left" },
-        { type: "push", symbol: "tens_bottom_left" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "tens_top_right_middle_right_visible" },
-        { type: "push", symbol: "tens_top_right" },
-        { type: "push", symbol: "tens_middle_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "tens_middle_right_bottom_right_visible" },
-        { type: "push", symbol: "tens_middle_right" },
-        { type: "push", symbol: "tens_bottom_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-
-        // Set up invariants that colors differ for ones if edges visible.
-        { type: "push", symbol: "ones_top_left_top_right_visible" },
-        { type: "push", symbol: "ones_top_left" },
-        { type: "push", symbol: "ones_top_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "ones_middle_left_middle_right_visible" },
-        { type: "push", symbol: "ones_middle_left" },
-        { type: "push", symbol: "ones_middle_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "ones_bottom_left_bottom_right_visible" },
-        { type: "push", symbol: "ones_bottom_left" },
-        { type: "push", symbol: "ones_bottom_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "ones_top_left_middle_left_visible" },
-        { type: "push", symbol: "ones_top_left" },
-        { type: "push", symbol: "ones_middle_left" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "ones_middle_left_bottom_left_visible" },
-        { type: "push", symbol: "ones_middle_left" },
-        { type: "push", symbol: "ones_bottom_left" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "ones_top_right_middle_right_visible" },
-        { type: "push", symbol: "ones_top_right" },
-        { type: "push", symbol: "ones_middle_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-        { type: "push", symbol: "ones_middle_right_bottom_right_visible" },
-        { type: "push", symbol: "ones_middle_right" },
-        { type: "push", symbol: "ones_bottom_right" },
-        { type: "equal" },
-        { type: "not" },
-        { type: "constant", value: true },
-        { type: "if" },
-        { type: "invariant" },
-
-        // Get the color values for the hundreds nodes.
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "hundreds_top_left" },
-        { type: "fetch" },
-        { type: "pop", symbol: "hundreds_top_left_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "hundreds_top_right" },
-        { type: "fetch" },
-        { type: "pop", symbol: "hundreds_top_right_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "hundreds_middle_left" },
-        { type: "fetch" },
-        { type: "pop", symbol: "hundreds_middle_left_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "hundreds_middle_right" },
-        { type: "fetch" },
-        { type: "pop", symbol: "hundreds_middle_right_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "hundreds_bottom_left" },
-        { type: "fetch" },
-        { type: "pop", symbol: "hundreds_bottom_left_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "hundreds_bottom_right" },
-        { type: "fetch" },
-        { type: "pop", symbol: "hundreds_bottom_right_value" },
-
-        // Get the color values for the tens nodes.
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "tens_top_left" },
-        { type: "fetch" },
-        { type: "pop", symbol: "tens_top_left_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "tens_top_right" },
-        { type: "fetch" },
-        { type: "pop", symbol: "tens_top_right_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "tens_middle_left" },
-        { type: "fetch" },
-        { type: "pop", symbol: "tens_middle_left_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "tens_middle_right" },
-        { type: "fetch" },
-        { type: "pop", symbol: "tens_middle_right_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "tens_bottom_left" },
-        { type: "fetch" },
-        { type: "pop", symbol: "tens_bottom_left_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "tens_bottom_right" },
-        { type: "fetch" },
-        { type: "pop", symbol: "tens_bottom_right_value" },
-
-        // Get the color values for the ones nodes.
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "ones_top_left" },
-        { type: "fetch" },
-        { type: "pop", symbol: "ones_top_left_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "ones_top_right" },
-        { type: "fetch" },
-        { type: "pop", symbol: "ones_top_right_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "ones_middle_left" },
-        { type: "fetch" },
-        { type: "pop", symbol: "ones_middle_left_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "ones_middle_right" },
-        { type: "fetch" },
-        { type: "pop", symbol: "ones_middle_right_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "ones_bottom_left" },
-        { type: "fetch" },
-        { type: "pop", symbol: "ones_bottom_left_value" },
-        { type: "push", symbol: "colors" },
-        { type: "push", symbol: "ones_bottom_right" },
-        { type: "fetch" },
-        { type: "pop", symbol: "ones_bottom_right_value" },
-
-        // Calculate the total of the hundreds color values.
-        { type: "push", symbol: "hundreds_top_left_visible" },
-        { type: "push", symbol: "hundreds_top_left_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "hundreds_top_right_visible" },
-        { type: "push", symbol: "hundreds_top_right_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "hundreds_middle_left_visible" },
-        { type: "push", symbol: "hundreds_middle_left_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "hundreds_middle_right_visible" },
-        { type: "push", symbol: "hundreds_middle_right_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "hundreds_bottom_left_visible" },
-        { type: "push", symbol: "hundreds_bottom_left_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "hundreds_bottom_right_visible" },
-        { type: "push", symbol: "hundreds_bottom_right_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "add" },
-        { type: "add" },
-        { type: "add" },
-        { type: "add" },
-        { type: "add" },
-        { type: "pop", symbol: "hundreds_total_value" },
-
-        // Calculate the total of the tens color values.
-        { type: "push", symbol: "tens_top_left_visible" },
-        { type: "push", symbol: "tens_top_left_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "tens_top_right_visible" },
-        { type: "push", symbol: "tens_top_right_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "tens_middle_left_visible" },
-        { type: "push", symbol: "tens_middle_left_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "tens_middle_right_visible" },
-        { type: "push", symbol: "tens_middle_right_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "tens_bottom_left_visible" },
-        { type: "push", symbol: "tens_bottom_left_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "tens_bottom_right_visible" },
-        { type: "push", symbol: "tens_bottom_right_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "add" },
-        { type: "add" },
-        { type: "add" },
-        { type: "add" },
-        { type: "add" },
-        { type: "pop", symbol: "tens_total_value" },
-
-        // Calculate the total of the ones color values.
-        { type: "push", symbol: "ones_top_left_visible" },
-        { type: "push", symbol: "ones_top_left_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "ones_top_right_visible" },
-        { type: "push", symbol: "ones_top_right_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "ones_middle_left_visible" },
-        { type: "push", symbol: "ones_middle_left_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "ones_middle_right_visible" },
-        { type: "push", symbol: "ones_middle_right_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "ones_bottom_left_visible" },
-        { type: "push", symbol: "ones_bottom_left_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "push", symbol: "ones_bottom_right_visible" },
-        { type: "push", symbol: "ones_bottom_right_value" },
-        { type: "constant", value: 0 },
-        { type: "if" },
-        { type: "add" },
-        { type: "add" },
-        { type: "add" },
-        { type: "add" },
-        { type: "add" },
-        { type: "pop", symbol: "ones_total_value" },
-
-        // Calculate the total.
-        { type: "push", symbol: "hundreds_total_value" },
-        { type: "push", symbol: "tens_total_value" },
-        { type: "push", symbol: "ones_total_value" },
-        { type: "add" },
-        { type: "add" },
-        { type: "pop", symbol: "total" },
-
-        // Insist that the total equal the original number.
-        { type: "push", symbol: "total" },
-        { type: "push", symbol: "number" },
-        { type: "equal" },
-        { type: "invariant" },
-
-        // Expose all the things.
-        { type: "variable", symbol: "number" },
-        { type: "variable", symbol: "colors" },
-
-        { type: "variable", symbol: "hundreds_top_left_visible" },
-        { type: "variable", symbol: "hundreds_top_right_visible" },
-        { type: "variable", symbol: "hundreds_middle_left_visible" },
-        { type: "variable", symbol: "hundreds_middle_right_visible" },
-        { type: "variable", symbol: "hundreds_bottom_left_visible" },
-        { type: "variable", symbol: "hundreds_bottom_right_visible" },
-
-        { type: "variable", symbol: "tens_top_left_visible" },
-        { type: "variable", symbol: "tens_top_right_visible" },
-        { type: "variable", symbol: "tens_middle_left_visible" },
-        { type: "variable", symbol: "tens_middle_right_visible" },
-        { type: "variable", symbol: "tens_bottom_left_visible" },
-        { type: "variable", symbol: "tens_bottom_right_visible" },
-
-        { type: "variable", symbol: "ones_top_left_visible" },
-        { type: "variable", symbol: "ones_top_right_visible" },
-        { type: "variable", symbol: "ones_middle_left_visible" },
-        { type: "variable", symbol: "ones_middle_right_visible" },
-        { type: "variable", symbol: "ones_bottom_left_visible" },
-        { type: "variable", symbol: "ones_bottom_right_visible" },
-
-        { type: "variable", symbol: "hundreds_top_left_top_right_visible" },
-        { type: "variable", symbol: "hundreds_middle_left_middle_right_visible" },
-        { type: "variable", symbol: "hundreds_bottom_left_bottom_right_visible" },
-        { type: "variable", symbol: "hundreds_top_left_middle_left_visible" },
-        { type: "variable", symbol: "hundreds_middle_left_bottom_left_visible" },
-        { type: "variable", symbol: "hundreds_top_right_middle_right_visible" },
-        { type: "variable", symbol: "hundreds_middle_right_bottom_right_visible" },
-
-        { type: "variable", symbol: "tens_top_left_top_right_visible" },
-        { type: "variable", symbol: "tens_middle_left_middle_right_visible" },
-        { type: "variable", symbol: "tens_bottom_left_bottom_right_visible" },
-        { type: "variable", symbol: "tens_top_left_middle_left_visible" },
-        { type: "variable", symbol: "tens_middle_left_bottom_left_visible" },
-        { type: "variable", symbol: "tens_top_right_middle_right_visible" },
-        { type: "variable", symbol: "tens_middle_right_bottom_right_visible" },
-
-        { type: "variable", symbol: "ones_top_left_top_right_visible" },
-        { type: "variable", symbol: "ones_middle_left_middle_right_visible" },
-        { type: "variable", symbol: "ones_bottom_left_bottom_right_visible" },
-        { type: "variable", symbol: "ones_top_left_middle_left_visible" },
-        { type: "variable", symbol: "ones_middle_left_bottom_left_visible" },
-        { type: "variable", symbol: "ones_top_right_middle_right_visible" },
-        { type: "variable", symbol: "ones_middle_right_bottom_right_visible" },
-
-        { type: "variable", symbol: "hundreds_top_left_value" },
-        { type: "variable", symbol: "hundreds_top_right_value" },
-        { type: "variable", symbol: "hundreds_middle_left_value" },
-        { type: "variable", symbol: "hundreds_middle_right_value" },
-        { type: "variable", symbol: "hundreds_bottom_left_value" },
-        { type: "variable", symbol: "hundreds_bottom_right_value" },
-
-        { type: "variable", symbol: "tens_top_left_value" },
-        { type: "variable", symbol: "tens_top_right_value" },
-        { type: "variable", symbol: "tens_middle_left_value" },
-        { type: "variable", symbol: "tens_middle_right_value" },
-        { type: "variable", symbol: "tens_bottom_left_value" },
-        { type: "variable", symbol: "tens_bottom_right_value" },
-
-        { type: "variable", symbol: "ones_top_left_value" },
-        { type: "variable", symbol: "ones_top_right_value" },
-        { type: "variable", symbol: "ones_middle_left_value" },
-        { type: "variable", symbol: "ones_middle_right_value" },
-        { type: "variable", symbol: "ones_bottom_left_value" },
-        { type: "variable", symbol: "ones_bottom_right_value" }
-      ]
-    };
-
-    self.machineCode = Sentient.compile(sourceCode);
+    self.machineCode = Sentient.compile("                                                                                                                                   \n\
+      int11 number;                                                                                                                                                         \n\
+      invariant number > 0 && number <= 999;                                                                                                                                \n\
+                                                                                                                                                                            \n\
+      hundreds, remainder =* number.divmod(100);                                                                                                                            \n\
+      tens, ones =* remainder.divmod(10);                                                                                                                                   \n\
+                                                                                                                                                                            \n\
+      hundreds_visible = number >= 100;                                                                                                                                     \n\
+      tens_visible = number >= 10;                                                                                                                                          \n\
+      ones_visible = true;                                                                                                                                                  \n\
+                                                                                                                                                                            \n\
+      hundreds_top_left_visible = hundreds_visible && hundreds != 1;                                                                                                        \n\
+      hundreds_top_right_visible = hundreds_visible;                                                                                                                        \n\
+      hundreds_middle_left_visible = hundreds_visible && hundreds != 1 && hundreds != 7;                                                                                    \n\
+      hundreds_middle_right_visible = hundreds_visible;                                                                                                                     \n\
+      hundreds_bottom_left_visible = hundreds_visible && hundreds != 1 && hundreds != 4 && hundreds != 7;                                                                   \n\
+      hundreds_bottom_right_visible = hundreds_visible;                                                                                                                     \n\
+                                                                                                                                                                            \n\
+      tens_top_left_visible = tens_visible && tens != 1;                                                                                                                    \n\
+      tens_top_right_visible = tens_visible;                                                                                                                                \n\
+      tens_middle_left_visible = tens_visible && tens != 1 && tens != 7;                                                                                                    \n\
+      tens_middle_right_visible = tens_visible;                                                                                                                             \n\
+      tens_bottom_left_visible = tens_visible && tens != 1 && tens != 4 && tens != 7;                                                                                       \n\
+      tens_bottom_right_visible = tens_visible;                                                                                                                             \n\
+                                                                                                                                                                            \n\
+      ones_top_left_visible = ones_visible && ones != 1;                                                                                                                    \n\
+      ones_top_right_visible = ones_visible;                                                                                                                                \n\
+      ones_middle_left_visible = ones_visible && ones != 1 && ones != 7;                                                                                                    \n\
+      ones_middle_right_visible = ones_visible;                                                                                                                             \n\
+      ones_bottom_left_visible = ones_visible && ones != 1 && ones != 4 && ones != 7;                                                                                       \n\
+      ones_bottom_right_visible = ones_visible;                                                                                                                             \n\
+                                                                                                                                                                            \n\
+      hundreds_top_left_top_right_visible = hundreds_visible && hundreds != 1 && hundreds != 4;                                                                             \n\
+      hundreds_middle_left_middle_right_visible = hundreds_visible && hundreds != 1 && hundreds != 7 && hundreds != 0;                                                      \n\
+      hundreds_bottom_left_bottom_right_visible = hundreds_visible && hundreds != 1 && hundreds != 4 && hundreds != 7;                                                      \n\
+      hundreds_top_left_middle_left_visible = hundreds_visible && hundreds != 1 && hundreds != 2 && hundreds != 3 && hundreds != 7;                                         \n\
+      hundreds_middle_left_bottom_left_visible = hundreds_visible && hundreds != 1 && hundreds != 3 && hundreds != 4 && hundreds != 5 && hundreds != 7 && hundreds != 9;    \n\
+      hundreds_top_right_middle_right_visible = hundreds_visible && hundreds != 5 && hundreds != 6;                                                                         \n\
+      hundreds_middle_right_bottom_right_visible = hundreds_visible && hundreds != 2;                                                                                       \n\
+                                                                                                                                                                            \n\
+      tens_top_left_top_right_visible = tens_visible && tens != 1 && tens != 4;                                                                                             \n\
+      tens_middle_left_middle_right_visible = tens_visible && tens != 1 && tens != 7 && tens != 0;                                                                          \n\
+      tens_bottom_left_bottom_right_visible = tens_visible && tens != 1 && tens != 4 && tens != 7;                                                                          \n\
+      tens_top_left_middle_left_visible = tens_visible && tens != 1 && tens != 2 && tens != 3 && tens != 7;                                                                 \n\
+      tens_middle_left_bottom_left_visible = tens_visible && tens != 1 && tens != 3 && tens != 4 && tens != 5 && tens != 7 && tens != 9;                                    \n\
+      tens_top_right_middle_right_visible = tens_visible && tens != 5 && tens != 6;                                                                                         \n\
+      tens_middle_right_bottom_right_visible = tens_visible && tens != 2;                                                                                                   \n\
+                                                                                                                                                                            \n\
+      ones_top_left_top_right_visible = ones_visible && ones != 1 && ones != 4;                                                                                             \n\
+      ones_middle_left_middle_right_visible = ones_visible && ones != 1 && ones != 7 && ones != 0;                                                                          \n\
+      ones_bottom_left_bottom_right_visible = ones_visible && ones != 1 && ones != 4 && ones != 7;                                                                          \n\
+      ones_top_left_middle_left_visible = ones_visible && ones != 1 && ones != 2 && ones != 3 && ones != 7;                                                                 \n\
+      ones_middle_left_bottom_left_visible = ones_visible && ones != 1 && ones != 3 && ones != 4 && ones != 5 && ones != 7 && ones != 9;                                    \n\
+      ones_top_right_middle_right_visible = ones_visible && ones != 5 && ones != 6;                                                                                         \n\
+      ones_middle_right_bottom_right_visible = ones_visible && ones != 2;                                                                                                   \n\
+                                                                                                                                                                            \n\
+      int11 red, yellow, blue;                                                                                                                                              \n\
+      colors = [red, yellow, blue];                                                                                                                                         \n\
+                                                                                                                                                                            \n\
+      invariant red >= 0, yellow >= 0, blue >= 0;                                                                                                                           \n\
+      invariant red != yellow, red != blue, yellow != blue;                                                                                                                 \n\
+                                                                                                                                                                            \n\
+      int3 hundreds_top_left, hundreds_top_right, hundreds_middle_left,                                                                                                     \n\
+           hundreds_middle_right, hundreds_bottom_left, hundreds_bottom_right;                                                                                              \n\
+                                                                                                                                                                            \n\
+      int3 tens_top_left, tens_top_right, tens_middle_left,                                                                                                                 \n\
+           tens_middle_right, tens_bottom_left, tens_bottom_right;                                                                                                          \n\
+                                                                                                                                                                            \n\
+      int3 ones_top_left, ones_top_right, ones_middle_left,                                                                                                                 \n\
+           ones_middle_right, ones_bottom_left, ones_bottom_right;                                                                                                          \n\
+                                                                                                                                                                            \n\
+      invariant hundreds_top_left_top_right_visible ? hundreds_top_left != hundreds_top_right : true;                                                                       \n\
+      invariant hundreds_middle_left_middle_right_visible ? hundreds_middle_left != hundreds_middle_right : true;                                                           \n\
+      invariant hundreds_bottom_left_bottom_right_visible ? hundreds_bottom_left != hundreds_bottom_right : true;                                                           \n\
+      invariant hundreds_top_left_middle_left_visible ? hundreds_top_left != hundreds_middle_left : true;                                                                   \n\
+      invariant hundreds_middle_left_bottom_left_visible ? hundreds_middle_left != hundreds_bottom_left : true;                                                             \n\
+      invariant hundreds_top_right_middle_right_visible ? hundreds_top_right != hundreds_middle_right : true;                                                               \n\
+      invariant hundreds_middle_right_bottom_right_visible ? hundreds_middle_right != hundreds_bottom_right : true;                                                         \n\
+                                                                                                                                                                            \n\
+      invariant tens_top_left_top_right_visible ? tens_top_left != tens_top_right : true;                                                                                   \n\
+      invariant tens_middle_left_middle_right_visible ? tens_middle_left != tens_middle_right : true;                                                                       \n\
+      invariant tens_bottom_left_bottom_right_visible ? tens_bottom_left != tens_bottom_right : true;                                                                       \n\
+      invariant tens_top_left_middle_left_visible ? tens_top_left != tens_middle_left : true;                                                                               \n\
+      invariant tens_middle_left_bottom_left_visible ? tens_middle_left != tens_bottom_left : true;                                                                         \n\
+      invariant tens_top_right_middle_right_visible ? tens_top_right != tens_middle_right : true;                                                                           \n\
+      invariant tens_middle_right_bottom_right_visible ? tens_middle_right != tens_bottom_right : true;                                                                     \n\
+                                                                                                                                                                            \n\
+      invariant ones_top_left_top_right_visible ? ones_top_left != ones_top_right : true;                                                                                   \n\
+      invariant ones_middle_left_middle_right_visible ? ones_middle_left != ones_middle_right : true;                                                                       \n\
+      invariant ones_bottom_left_bottom_right_visible ? ones_bottom_left != ones_bottom_right : true;                                                                       \n\
+      invariant ones_top_left_middle_left_visible ? ones_top_left != ones_middle_left : true;                                                                               \n\
+      invariant ones_middle_left_bottom_left_visible ? ones_middle_left != ones_bottom_left : true;                                                                         \n\
+      invariant ones_top_right_middle_right_visible ? ones_top_right != ones_middle_right : true;                                                                           \n\
+      invariant ones_middle_right_bottom_right_visible ? ones_middle_right != ones_bottom_right : true;                                                                     \n\
+                                                                                                                                                                            \n\
+      hundreds_top_left_value = colors[hundreds_top_left];                                                                                                                  \n\
+      hundreds_top_right_value = colors[hundreds_top_right];                                                                                                                \n\
+      hundreds_middle_left_value = colors[hundreds_middle_left];                                                                                                            \n\
+      hundreds_middle_right_value = colors[hundreds_middle_right];                                                                                                          \n\
+      hundreds_bottom_left_value = colors[hundreds_bottom_left];                                                                                                            \n\
+      hundreds_bottom_right_value = colors[hundreds_bottom_right];                                                                                                          \n\
+                                                                                                                                                                            \n\
+      tens_top_left_value = colors[tens_top_left];                                                                                                                          \n\
+      tens_top_right_value = colors[tens_top_right];                                                                                                                        \n\
+      tens_middle_left_value = colors[tens_middle_left];                                                                                                                    \n\
+      tens_middle_right_value = colors[tens_middle_right];                                                                                                                  \n\
+      tens_bottom_left_value = colors[tens_bottom_left];                                                                                                                    \n\
+      tens_bottom_right_value = colors[tens_bottom_right];                                                                                                                  \n\
+                                                                                                                                                                            \n\
+      ones_top_left_value = colors[ones_top_left];                                                                                                                          \n\
+      ones_top_right_value = colors[ones_top_right];                                                                                                                        \n\
+      ones_middle_left_value = colors[ones_middle_left];                                                                                                                    \n\
+      ones_middle_right_value = colors[ones_middle_right];                                                                                                                  \n\
+      ones_bottom_left_value = colors[ones_bottom_left];                                                                                                                    \n\
+      ones_bottom_right_value = colors[ones_bottom_right];                                                                                                                  \n\
+                                                                                                                                                                            \n\
+      hundreds_total_value = hundreds_top_left_visible ? hundreds_top_left_value : 0;                                                                                       \n\
+      hundreds_total_value += hundreds_top_right_visible ? hundreds_top_right_value : 0;                                                                                    \n\
+      hundreds_total_value += hundreds_middle_left_visible ? hundreds_middle_left_value : 0;                                                                                \n\
+      hundreds_total_value += hundreds_middle_right_visible ? hundreds_middle_right_value : 0;                                                                              \n\
+      hundreds_total_value += hundreds_bottom_left_visible ? hundreds_bottom_left_value : 0;                                                                                \n\
+      hundreds_total_value += hundreds_bottom_right_visible ? hundreds_bottom_right_value : 0;                                                                              \n\
+                                                                                                                                                                            \n\
+      tens_total_value = tens_top_left_visible ? tens_top_left_value : 0;                                                                                                   \n\
+      tens_total_value += tens_top_right_visible ? tens_top_right_value : 0;                                                                                                \n\
+      tens_total_value += tens_middle_left_visible ? tens_middle_left_value : 0;                                                                                            \n\
+      tens_total_value += tens_middle_right_visible ? tens_middle_right_value : 0;                                                                                          \n\
+      tens_total_value += tens_bottom_left_visible ? tens_bottom_left_value : 0;                                                                                            \n\
+      tens_total_value += tens_bottom_right_visible ? tens_bottom_right_value : 0;                                                                                          \n\
+                                                                                                                                                                            \n\
+      ones_total_value = ones_top_left_visible ? ones_top_left_value : 0;                                                                                                   \n\
+      ones_total_value += ones_top_right_visible ? ones_top_right_value : 0;                                                                                                \n\
+      ones_total_value += ones_middle_left_visible ? ones_middle_left_value : 0;                                                                                            \n\
+      ones_total_value += ones_middle_right_visible ? ones_middle_right_value : 0;                                                                                          \n\
+      ones_total_value += ones_bottom_left_visible ? ones_bottom_left_value : 0;                                                                                            \n\
+      ones_total_value += ones_bottom_right_visible ? ones_bottom_right_value : 0;                                                                                          \n\
+                                                                                                                                                                            \n\
+      total = hundreds_total_value + tens_total_value + ones_total_value;                                                                                                   \n\
+                                                                                                                                                                            \n\
+      invariant total == number;                                                                                                                                            \n\
+                                                                                                                                                                            \n\
+      vary number, colors,                                                                                                                                                  \n\
+                                                                                                                                                                            \n\
+        hundreds_top_left_visible,                                                                                                                                          \n\
+        hundreds_top_right_visible,                                                                                                                                         \n\
+        hundreds_middle_left_visible,                                                                                                                                       \n\
+        hundreds_middle_right_visible,                                                                                                                                      \n\
+        hundreds_bottom_left_visible,                                                                                                                                       \n\
+        hundreds_bottom_right_visible,                                                                                                                                      \n\
+                                                                                                                                                                            \n\
+        tens_top_left_visible,                                                                                                                                              \n\
+        tens_top_right_visible,                                                                                                                                             \n\
+        tens_middle_left_visible,                                                                                                                                           \n\
+        tens_middle_right_visible,                                                                                                                                          \n\
+        tens_bottom_left_visible,                                                                                                                                           \n\
+        tens_bottom_right_visible,                                                                                                                                          \n\
+                                                                                                                                                                            \n\
+        ones_top_left_visible,                                                                                                                                              \n\
+        ones_top_right_visible,                                                                                                                                             \n\
+        ones_middle_left_visible,                                                                                                                                           \n\
+        ones_middle_right_visible,                                                                                                                                          \n\
+        ones_bottom_left_visible,                                                                                                                                           \n\
+        ones_bottom_right_visible,                                                                                                                                          \n\
+                                                                                                                                                                            \n\
+        hundreds_top_left_top_right_visible,                                                                                                                                \n\
+        hundreds_middle_left_middle_right_visible,                                                                                                                          \n\
+        hundreds_bottom_left_bottom_right_visible,                                                                                                                          \n\
+        hundreds_top_left_middle_left_visible,                                                                                                                              \n\
+        hundreds_middle_left_bottom_left_visible,                                                                                                                           \n\
+        hundreds_top_right_middle_right_visible,                                                                                                                            \n\
+        hundreds_middle_right_bottom_right_visible,                                                                                                                         \n\
+                                                                                                                                                                            \n\
+        tens_top_left_top_right_visible,                                                                                                                                    \n\
+        tens_middle_left_middle_right_visible,                                                                                                                              \n\
+        tens_bottom_left_bottom_right_visible,                                                                                                                              \n\
+        tens_top_left_middle_left_visible,                                                                                                                                  \n\
+        tens_middle_left_bottom_left_visible,                                                                                                                               \n\
+        tens_top_right_middle_right_visible,                                                                                                                                \n\
+        tens_middle_right_bottom_right_visible,                                                                                                                             \n\
+                                                                                                                                                                            \n\
+        ones_top_left_top_right_visible,                                                                                                                                    \n\
+        ones_middle_left_middle_right_visible,                                                                                                                              \n\
+        ones_bottom_left_bottom_right_visible,                                                                                                                              \n\
+        ones_top_left_middle_left_visible,                                                                                                                                  \n\
+        ones_middle_left_bottom_left_visible,                                                                                                                               \n\
+        ones_top_right_middle_right_visible,                                                                                                                                \n\
+        ones_middle_right_bottom_right_visible,                                                                                                                             \n\
+                                                                                                                                                                            \n\
+        hundreds_top_left_value,                                                                                                                                            \n\
+        hundreds_top_right_value,                                                                                                                                           \n\
+        hundreds_middle_left_value,                                                                                                                                         \n\
+        hundreds_middle_right_value,                                                                                                                                        \n\
+        hundreds_bottom_left_value,                                                                                                                                         \n\
+        hundreds_bottom_right_value,                                                                                                                                        \n\
+                                                                                                                                                                            \n\
+        tens_top_left_value,                                                                                                                                                \n\
+        tens_top_right_value,                                                                                                                                               \n\
+        tens_middle_left_value,                                                                                                                                             \n\
+        tens_middle_right_value,                                                                                                                                            \n\
+        tens_bottom_left_value,                                                                                                                                             \n\
+        tens_bottom_right_value,                                                                                                                                            \n\
+                                                                                                                                                                            \n\
+        ones_top_left_value,                                                                                                                                                \n\
+        ones_top_right_value,                                                                                                                                               \n\
+        ones_middle_left_value,                                                                                                                                             \n\
+        ones_middle_right_value,                                                                                                                                            \n\
+        ones_bottom_left_value,                                                                                                                                             \n\
+        ones_bottom_right_value;                                                                                                                                            \n\
+    ");
   };
 };
 
