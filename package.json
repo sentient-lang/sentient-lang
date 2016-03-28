@@ -1,7 +1,8 @@
 {
   "name": "sentient-lang",
   "version": "0.0.0-alpha.1",
-  "description": "An experimental, declarative programming language.",
+  "description": "Sentient Language Compiler and Runtime",
+  "homepage": "sentient-lang.org",
   "author": "Chris Patuzzo <chris@patuzzo.co.uk>",
   "license": "MIT",
   "main": "lib/sentient",
@@ -9,8 +10,12 @@
     "type": "git",
     "url": "https://github.com/tuzz/sentient.js"
   },
+  "bin": {
+    "sentient": "./lib/sentient/cli.js"
+  },
   "dependencies": {
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "commander": "^2.9.0"
   },
   "devDependencies": {
     "jasmine": "^2.3.2",
