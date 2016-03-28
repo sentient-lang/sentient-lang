@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("statement");
 
 describe("statement", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["statement"]
-    });
-  });
-
   it("parses declarations", function () {
     expect(subject.parse("int6 a")).toEqual(
       { type: "declaration", value: [["int", 6], ["a"]] }

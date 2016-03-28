@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("whitespace");
 
 describe("whitespace", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["whitespace"]
-    });
-  });
-
   it("gathers whitespace to help readability", function () {
     expect(subject.parse(" ")).toEqual(" ");
     expect(subject.parse("   ")).toEqual(" ");

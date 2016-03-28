@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("exprMethod");
 
 describe("exprMethod", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["exprMethod"]
-    });
-  });
-
   it("accepts valid", function () {
     expect(subject.parse("a.abs")).toEqual(["a", [], "abs"]);
     expect(subject.parse("-123.abs")).toEqual([[123, "-"], [], "abs"]);

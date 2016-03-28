@@ -1,15 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("program");
 
 describe("program", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser();
-  });
-
   it("parses programs", function () {
     expect(subject.parse("                \n\
       int6 a, b;                          \n\

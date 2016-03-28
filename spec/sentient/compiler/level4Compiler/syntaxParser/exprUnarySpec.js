@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("exprUnary");
 
 describe("exprUnary", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["exprUnary"]
-    });
-  });
-
   it("accepts valid", function () {
     expect(subject.parse("-0")).toEqual([0, "-"]);
     expect(subject.parse("-1")).toEqual([1, "-"]);

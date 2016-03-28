@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("type");
 
 describe("type", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["type"]
-    });
-  });
-
   it("accepts valid", function () {
     expect(subject.parse("bool")).toEqual(["bool"]);
     expect(subject.parse("int")).toEqual(["int"]);

@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("exprComparative");
 
 describe("exprComparative", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["exprComparative"]
-    });
-  });
-
   it("accepts valid", function () {
     expect(subject.parse("1 < 2")).toEqual([1, [2], "<"]);
     expect(subject.parse("1 + 2 < a")).toEqual([[1, [2], "+"], ["a"], "<"]);

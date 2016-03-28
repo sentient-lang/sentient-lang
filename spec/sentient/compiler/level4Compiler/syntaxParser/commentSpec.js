@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("comment");
 
 describe("comment", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["comment"]
-    });
-  });
-
   it("accepts valid", function () {
     expect(subject.parse("# foo bar")).toEqual("");
     expect(subject.parse("#foo bar")).toEqual("");

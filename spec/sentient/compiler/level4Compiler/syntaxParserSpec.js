@@ -1,11 +1,11 @@
 "use strict";
 
-var compiler = "../../../../lib/sentient/compiler";
-var describedClass = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../specHelper");
+var subject = SpecHelper.parserForRule("program");
 
 describe("SyntaxParser", function () {
   it("parses a simple program", function () {
-    var ast = describedClass.parse(' \n\
+    var ast = subject.parse(' \n\
       int6 a, b;                     \n\
       total = a + b;                 \n\
       vary a, b, total;              \n\

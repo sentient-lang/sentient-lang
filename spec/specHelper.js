@@ -1,6 +1,11 @@
 "use strict";
 
 var _ = require("underscore");
+var PEG = require("pegjs");
+var fs = require("fs");
+
+var grammar, grammarPath = __dirname +
+  "/../lib/sentient/compiler/level4Compiler/grammar.pegjs";
 
 var SpecHelper = {
   stripWhitespace: function (string) {
@@ -24,6 +29,15 @@ var SpecHelper = {
     }
 
     return calls;
+  },
+  parserForRule: function (rule) {
+    if (!grammar) {
+      grammar = fs.readFileSync(grammarPath, "utf8");
+    }
+
+    return PEG.buildParser(grammar, {
+      allowedStartRules: [rule]
+    });
   }
 };
 

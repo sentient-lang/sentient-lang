@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("positiveInteger");
 
 describe("positiveInteger", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["positiveInteger"]
-    });
-  });
-
   it("accepts valid", function () {
     expect(subject.parse("1")).toEqual(1);
     expect(subject.parse("2")).toEqual(2);

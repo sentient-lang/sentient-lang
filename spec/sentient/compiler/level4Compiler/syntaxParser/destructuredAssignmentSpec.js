@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("destructuredAssignment");
 
 describe("destructuredAssignment", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["destructuredAssignment"]
-    });
-  });
-
   it("accepts valid", function () {
     expect(subject.parse("div, mod =* 3.divmod(2)")).toEqual(
       [["div", "mod"], [3, [2], "divmod"]]

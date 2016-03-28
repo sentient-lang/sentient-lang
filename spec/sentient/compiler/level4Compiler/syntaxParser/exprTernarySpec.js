@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("exprTernary");
 
 describe("exprTernary", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["exprTernary"]
-    });
-  });
-
   it("accepts valid", function () {
     expect(subject.parse("a ? b : c")).toEqual(["a", ["b", "c"], "if"]);
     expect(subject.parse("true ? 1 : 2")).toEqual([true, [1, 2], "if"]);

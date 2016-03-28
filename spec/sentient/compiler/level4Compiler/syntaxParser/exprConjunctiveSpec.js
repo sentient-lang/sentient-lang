@@ -1,17 +1,9 @@
 "use strict";
 
-var compiler = "../../../../../lib/sentient/compiler";
-var SyntaxParser = require(compiler + "/level4Compiler/syntaxParser");
+var SpecHelper = require("../../../../specHelper");
+var subject = SpecHelper.parserForRule("exprConjunctive");
 
 describe("exprConjunctive", function () {
-  var subject;
-
-  beforeEach(function () {
-    subject = new SyntaxParser({
-      allowedStartRules: ["exprConjunctive"]
-    });
-  });
-
   it("accepts valid", function () {
     expect(subject.parse("true && false")).toEqual([true, [false], "&&"]);
     expect(subject.parse("a && b")).toEqual(["a", ["b"], "&&"]);
