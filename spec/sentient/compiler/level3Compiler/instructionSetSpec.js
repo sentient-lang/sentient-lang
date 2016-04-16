@@ -7,17 +7,19 @@ var describedClass = require(compiler + "/level3Compiler/instructionSet");
 var Stack = require(compiler + "/common/stack");
 var SymbolTable = require(compiler + "/common/symbolTable");
 var Registry = require(compiler + "/level3Compiler/registry");
+var FunctionRegistry = require(compiler + "/level3Compiler/functionRegistry");
 var CodeWriter = require(compiler + "/level3Compiler/codeWriter");
 
 describe("InstructionSet", function () {
-  var subject, stack, typedefStack, symbolTable, registry, codeWriter,
-    conditionalNils;
+  var subject, stack, typedefStack, symbolTable, registry, functionRegistry,
+    codeWriter, conditionalNils;
 
   beforeEach(function () {
     stack = new Stack();
     typedefStack = new Stack();
     symbolTable = new SymbolTable();
     registry = new Registry();
+    functionRegistry = new FunctionRegistry();
     codeWriter = new CodeWriter();
     conditionalNils = {};
 
@@ -26,6 +28,7 @@ describe("InstructionSet", function () {
       typedefStack: typedefStack,
       symbolTable: symbolTable,
       registry: registry,
+      functionRegistry: functionRegistry,
       codeWriter: codeWriter,
       conditionalNils: conditionalNils
     });
@@ -2775,6 +2778,129 @@ describe("InstructionSet", function () {
       it("throws an error", function () {
         expect(function () {
           subject.equal();
+        }).toThrow();
+      });
+    });
+  });
+
+  describe("define", function () {
+    it("registers the function with the function registry", function () {
+      subject.call({ type: "define", name: "foo", args: ["bar", "baz"] });
+      subject.call({ type: "push", symbol: "bar" });
+      subject.call({ type: "push", symbol: "baz" });
+      subject.call({ type: "add" });
+      subject.call({ type: "return", width: 1 });
+
+      var fn = functionRegistry.get("foo");
+
+      expect(fn.name).toEqual("foo");
+      expect(fn.args).toEqual(["bar", "baz"]);
+      expect(fn.body).toEqual([
+        { type: "push", symbol: "bar" },
+        { type: "push", symbol: "baz" },
+        { type: "add" }
+      ]);
+      expect(fn.returns).toEqual(1);
+    });
+
+    describe("when a name is not specified", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject.call({ type: "define", args: [] });
+        }).toThrow();
+      });
+    });
+
+    describe("when args is not specified", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject.call({ type: "define", name: "foo" });
+        }).toThrow();
+      });
+    });
+
+    describe("recursive definitions", function () {
+      it("tracks the depth and pairs the return correctly", function () {
+        // Define foo
+        subject.call({ type: "define", name: "foo", args: ["a"] });
+
+          // Define bar
+          subject.call({ type: "define", name: "bar", args: ["b"] });
+            subject.call({ type: "push", symbol: "x" });
+          subject.call({ type: "return", width: 1 });
+
+          // Define baz
+          subject.call({ type: "define", name: "baz", args: ["c"] });
+            subject.call({ type: "push", symbol: "y" });
+            subject.call({ type: "call", name: "bar", width: 1 });
+
+            // Define qux
+            subject.call({ type: "define", name: "qux", args: ["d"] });
+              subject.call({ type: "push", symbol: "z" });
+              subject.call({ type: "call", name: "bar", width: 1 });
+            subject.call({ type: "return", width: 2 });
+          subject.call({ type: "return", width: 3 });
+        subject.call({ type: "return", width: 4 });
+
+        var fn = functionRegistry.get("foo");
+
+        expect(fn.name).toEqual("foo");
+        expect(fn.args).toEqual(["a"]);
+        expect(fn.body).toEqual([
+          { type: "define", name: "bar", args: ["b"] },
+          { type: "push", symbol: "x" },
+          { type: "return", width: 1 },
+          { type: "define", name: "baz", args: ["c"] },
+          { type: "push", symbol: "y" },
+          { type: "call", name: "bar", width: 1 },
+          { type: "define", name: "qux", args: ["d"] },
+          { type: "push", symbol: "z" },
+          { type: "call", name: "bar", width: 1 },
+          { type: "return", width: 2 },
+          { type: "return", width: 3 }
+        ]);
+        expect(fn.returns).toEqual(4);
+      });
+    });
+  });
+
+  describe("return", function () {
+    it("registers the recorded function", function () {
+      subject.call({ type: "define", name: "foo", args: ["a"] });
+      subject.call({ type: "constant", value: 5 });
+      subject.call({ type: "return", width: 1 });
+
+      var fn = functionRegistry.get("foo");
+
+      expect(fn.name).toEqual("foo");
+      expect(fn.args).toEqual(["a"]);
+      expect(fn.body).toEqual([{ type: "constant", value: 5 }]);
+      expect(fn.returns).toEqual(1);
+    });
+
+    it("stops the function recording", function () {
+      subject.call({ type: "define", name: "foo", args: ["a"] });
+      subject.call({ type: "constant", value: 5 });
+      subject.call({ type: "return", width: 1 });
+
+      subject.constant(true);
+      expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+    });
+
+    describe("when a width is not specified", function () {
+      it("throws an error", function () {
+        subject.define("foo", []);
+
+        expect(function () {
+          subject._return();
+        }).toThrow();
+      });
+    });
+
+    describe("when a function is not being recorded", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject._return(1);
         }).toThrow();
       });
     });

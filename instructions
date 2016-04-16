@@ -78,3 +78,6 @@ Level 3 Instructions:
 [X] if
 [X] absolute
 [X] invariant
+[.] define
+[.] return
+[ ] call
