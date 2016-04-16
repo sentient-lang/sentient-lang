@@ -2965,6 +2965,241 @@ describe("InstructionSet", function () {
       });
     });
 
+    describe("function with multiple arguments", function () {
+      beforeEach(function () {
+        functionRegistry.register("add", ["a", "b"], [
+          { type: "push", symbol: "a" },
+          { type: "push", symbol: "b" },
+          { type: "add" }
+        ], 1);
+      });
+
+      it("writes instructions for calling the function", function () {
+        spyOn(codeWriter, "instruction");
+
+        subject.constant(123);
+        subject.constant(456);
+        subject._call("add", 2);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "constant", value: 123 },
+          { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" },
+          { type: "constant", value: 456 },
+          { type: "pop", symbol: "$$$_L3_INTEGER2_$$$" },
+
+          // Inside 'add'
+          { type: "push", symbol: "$$$_L3_INTEGER1_$$$" },
+          { type: "push", symbol: "$$$_L3_INTEGER2_$$$" },
+          { type: "add" },
+          { type: "pop", symbol: "$$$_L3_INTEGER3_$$$" },
+        ]);
+      });
+    });
+
+    describe("function with multiple returns", function () {
+      beforeEach(function () {
+        functionRegistry.register("foo", [], [
+          { type: "constant", value: 123 },
+          { type: "constant", value: 456 }
+        ], 2);
+      });
+
+      it("writes instructions for calling the function", function () {
+        spyOn(codeWriter, "instruction");
+        subject._call("foo", 0);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          // Inside 'foo'
+          { type: "constant", value: 123 },
+          { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" },
+          { type: "constant", value: 456 },
+          { type: "pop", symbol: "$$$_L3_INTEGER2_$$$" },
+        ]);
+      });
+
+      it("adds the new symbols to the stack", function () {
+        subject._call("foo", 0);
+
+        var s1 = stack.pop();
+        var s2 = stack.pop();
+
+        expect(s1).toEqual("$$$_L3_TMP3_$$$");
+        expect(s2).toEqual("$$$_L3_TMP4_$$$");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject._call("foo", 0);
+
+        var s1 = stack.pop();
+        var s2 = stack.pop();
+
+        expect(symbolTable.type(s1)).toEqual("integer");
+        expect(symbolTable.symbols(s1)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+
+        expect(symbolTable.type(s2)).toEqual("integer");
+        expect(symbolTable.symbols(s2)).toEqual(["$$$_L3_INTEGER2_$$$"]);
+      });
+    });
+
+    describe("function call with an array argument", function () {
+      beforeEach(function () {
+        functionRegistry.register("first", ["arr"], [
+          { type: "push", symbol: "arr" },
+          { type: "constant", value: 0 },
+          { type: "fetch" }
+        ], 1);
+      });
+
+      it("recursively copies over the array's symbols", function () {
+        subject.constant(10);
+        subject.constant(20);
+        subject.collect(2);
+        subject.constant(30);
+        subject.collect(1);
+        subject.collect(2);
+
+        var instructionSet = subject._call("first", 1);
+        var symbolTable = instructionSet.symbolTable;
+
+        expect(symbolTable.type("arr")).toEqual("array");
+        expect(symbolTable.symbols("arr")).toEqual([
+          "$$$_L3_TMP7_$$$",
+          "$$$_L3_TMP10_$$$"
+        ]);
+
+        expect(symbolTable.type("$$$_L3_TMP7_$$$")).toEqual("array");
+        expect(symbolTable.type("$$$_L3_TMP10_$$$")).toEqual("array");
+
+        expect(symbolTable.symbols("$$$_L3_TMP7_$$$")).toEqual([
+          "$$$_L3_TMP8_$$$",
+          "$$$_L3_TMP9_$$$"
+        ]);
+
+        expect(symbolTable.symbols("$$$_L3_TMP10_$$$")).toEqual([
+          "$$$_L3_TMP11_$$$"
+        ]);
+
+        expect(symbolTable.type("$$$_L3_TMP8_$$$")).toEqual("integer");
+        expect(symbolTable.type("$$$_L3_TMP9_$$$")).toEqual("integer");
+        expect(symbolTable.type("$$$_L3_TMP11_$$$")).toEqual("integer");
+
+        expect(symbolTable.symbols("$$$_L3_TMP8_$$$")).toEqual([
+          "$$$_L3_INTEGER1_$$$"
+        ]);
+
+        expect(symbolTable.symbols("$$$_L3_TMP9_$$$")).toEqual([
+          "$$$_L3_INTEGER2_$$$"
+        ]);
+
+        expect(symbolTable.symbols("$$$_L3_TMP11_$$$")).toEqual([
+          "$$$_L3_INTEGER3_$$$"
+        ]);
+      });
+
+      it("recursively copies over conditional nils", function () {
+        // foo = [[[10]], [[20, 30], [40, 50]]]
+        subject.constant(10);
+        subject.collect(1);
+        subject.collect(1);
+        subject.constant(20);
+        subject.constant(30);
+        subject.collect(2);
+        subject.constant(40);
+        subject.constant(50);
+        subject.collect(2);
+        subject.collect(2);
+        subject.collect(2);
+        subject.pop("foo");
+
+        // bar = foo[x][y]
+        subject.push("foo");
+        subject._integer("x", 6);
+        subject.push("x");
+        subject.fetch();
+        subject._integer("y", 6);
+        subject.push("y");
+        subject.fetch();
+        subject.pop("bar");
+        subject.push("bar");
+
+        var instructionSet = subject._call("first", 1);
+        expect(instructionSet.conditionalNils).toBeDefined();
+
+        // Note: Conditional nils are keyed by level 3 symbols, but their values
+        // are level 2 symbols, so we don't need to do any remapping. Yay!
+        expect(instructionSet.conditionalNils["arr"]).toEqual(
+          conditionalNils["bar"]
+        );
+      });
+    });
+
+    describe("function call with an array return value", function () {
+      beforeEach(function () {
+        functionRegistry.register("pairs", [], [
+          { type: "constant", value: 10 },
+          { type: "collect", width: 1 },
+          { type: "constant", value: 20 },
+          { type: "constant", value: 30 },
+          { type: "collect", width: 2 },
+          { type: "collect", width: 2 }
+        ], 1);
+      });
+
+      it("recursively adds the new symbols to the symbol table", function () {
+        subject._call("pairs", 0);
+        var arraySymbol = stack.pop();
+
+        expect(symbolTable.type(arraySymbol)).toEqual("array");
+        expect(symbolTable.symbols(arraySymbol)).toEqual([
+          "$$$_L3_TMP8_$$$",
+          "$$$_L3_TMP10_$$$"
+        ]);
+
+        expect(symbolTable.type("$$$_L3_TMP8_$$$")).toEqual("array");
+        expect(symbolTable.symbols("$$$_L3_TMP8_$$$")).toEqual([
+          "$$$_L3_TMP9_$$$"
+        ]);
+
+        expect(symbolTable.type("$$$_L3_TMP10_$$$")).toEqual("array");
+        expect(symbolTable.symbols("$$$_L3_TMP10_$$$")).toEqual([
+          "$$$_L3_TMP11_$$$",
+          "$$$_L3_TMP12_$$$"
+        ]);
+
+        expect(symbolTable.type("$$$_L3_TMP9_$$$")).toEqual("integer");
+        expect(symbolTable.type("$$$_L3_TMP11_$$$")).toEqual("integer");
+        expect(symbolTable.type("$$$_L3_TMP12_$$$")).toEqual("integer");
+      });
+
+      describe("when the array has conditional nils", function () {
+        beforeEach(function () {
+          functionRegistry.register("firstArray", [], [
+            { type: "constant", value: 10 },
+            { type: "collect", width: 1 },
+            { type: "constant", value: 20 },
+            { type: "constant", value: 30 },
+            { type: "collect", width: 2 },
+            { type: "collect", width: 2 },
+            { type: "constant", value: 0 },
+            { type: "fetch" },
+            { type: "pop", symbol: "foo" },
+            { type: "push", symbol: "foo" }
+          ], 1);
+        });
+
+        it("recursively copies back the conditional nils", function () {
+          var instructionSet = subject._call("firstArray", 0);
+          var newSymbol = stack.pop();
+
+          expect(conditionalNils).toBeDefined();
+
+          expect(conditionalNils[newSymbol]).toEqual(
+            instructionSet.conditionalNils["foo"]
+          );
+        });
+      });
+    });
+
     describe("when a name isn't specified", function () {
       it("throws an error", function () {
         expect(function () {
