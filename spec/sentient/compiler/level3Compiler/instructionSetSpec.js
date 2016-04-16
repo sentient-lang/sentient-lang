@@ -2905,4 +2905,100 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("_call", function () {
+    it("returns the resultant instruction set, for test purposes", function () {
+      functionRegistry.register("foo", [], [], 0);
+      var instructionSet = subject._call("foo", 0);
+
+      expect(instructionSet.stack).toBeDefined();
+      expect(instructionSet.symbolTable).toBeDefined();
+    });
+
+    describe("simple function", function () {
+      beforeEach(function () {
+        functionRegistry.register("double", ["x"], [
+          { type: "push", symbol: "x" },
+          { type: "push", symbol: "x" },
+          { type: "add" }
+        ], 1);
+      });
+
+      it("writes instructions for calling the function", function () {
+        spyOn(codeWriter, "instruction");
+
+        subject.constant(123);
+        subject._call("double", 1);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "constant", value: 123 },
+          { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" },
+
+          // Inside 'double'
+          { type: "push", symbol: "$$$_L3_INTEGER1_$$$" },
+          { type: "push", symbol: "$$$_L3_INTEGER1_$$$" },
+          { type: "add" },
+          { type: "pop", symbol: "$$$_L3_INTEGER2_$$$" },
+        ]);
+      });
+
+      it("replaces the symbol on the stack", function () {
+        subject.constant(123);
+        subject._call("double", 1);
+
+        var newSymbol = stack.pop();
+        expect(newSymbol).toEqual("$$$_L3_TMP3_$$$");
+
+        expect(function () {
+          stack.pop();
+        }).toThrow();
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.constant(123);
+        subject._call("double", 1);
+
+        var newSymbol = stack.pop();
+
+        expect(symbolTable.type(newSymbol)).toEqual("integer");
+        expect(symbolTable.symbols(newSymbol)).toEqual(["$$$_L3_INTEGER2_$$$"]);
+      });
+    });
+
+    describe("when a name isn't specified", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject._call();
+        }).toThrow();
+      });
+    });
+
+    describe("when a width isn't specified", function () {
+      it("throws an error", function () {
+        functionRegistry.register("foo", [], [], 1);
+
+        expect(function () {
+          subject._call("foo");
+        }).toThrow();
+      });
+    });
+
+    describe("when the function isn't defined", function () {
+      it("throws an error", function () {
+        expect(function () {
+          subject._call("foo", 1);
+        }).toThrow();
+      });
+    });
+
+    describe("when given the wrong number of arguments", function () {
+      it("throws an error", function () {
+        functionRegistry.register("foo", ["bar"], [], 0);
+
+        expect(function () {
+          subject._call("foo", 2);
+        }).toThrow();
+      });
+    });
+  });
 });
