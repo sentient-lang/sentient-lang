@@ -18,15 +18,18 @@ describe("FunctionRegistry", function () {
       { type: "push", symbol: "baz" },
       { type: "call", name: "+" }
     ];
+    var dynamic = true;
     var returns = 1;
 
-    subject.register(name, args, body, returns);
+    subject.register(name, args, body, dynamic, returns);
 
     var fn = subject.get(name);
 
     expect(fn.name).toEqual(name);
     expect(fn.args).toEqual(args);
     expect(fn.body).toEqual(body);
+    expect(fn.dynamic).toEqual(dynamic);
+    expect(fn.returns).toEqual(returns);
   });
 
   it("throws an error if getting a function that doesn't exist", function () {
@@ -40,12 +43,13 @@ describe("FunctionRegistry", function () {
     var args = ["bar", "baz"];
     var oldBody = ["oldBody"];
     var returns = 1;
+    var dynamic = true;
 
-    subject.register(name, args, oldBody, returns);
+    subject.register(name, args, oldBody, dynamic, returns);
 
     var newBody = ["newBody"];
 
-    subject.register(name, args, newBody, returns);
+    subject.register(name, args, newBody, dynamic, returns);
 
     var fn = subject.get(name);
     expect(fn.body).toEqual(newBody);
@@ -59,10 +63,11 @@ describe("FunctionRegistry", function () {
       { type: "push", symbol: "right" },
       { type: "system", call: "add" }
     ];
+    var dynamic = true;
     var returns = 1;
     var builtIn = true;
 
-    subject.register(name, args, body, returns, builtIn);
+    subject.register(name, args, body, dynamic, returns, builtIn);
 
     var fn = subject.get(name);
 
@@ -70,14 +75,14 @@ describe("FunctionRegistry", function () {
   });
 
   it("does not allow builtIn functions to be redefined", function () {
-    subject.register("+", [], [], 1, true);
+    subject.register("+", [], [], true, 1, true);
 
     expect(function () {
-      subject.register("+", [], [], 1);
+      subject.register("+", [], [], true, 1);
     }).toThrow();
 
     expect(function () {
-      subject.register("+", [], [], 1, true);
+      subject.register("+", [], [], true, 1, true);
     }).toThrow();
   });
 });

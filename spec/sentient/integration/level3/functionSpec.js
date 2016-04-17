@@ -212,6 +212,23 @@ describe("Integration: defining and calling functions", function () {
     expect(result).toEqual({ x: 5, function_x: 10 });
   });
 
+  it("does not bleed local variables into the caller", function () {
+    expect(function () {
+      Level3Compiler.compile({
+        instructions: [
+          { type: "define", name: "foo", args: [] },
+          { type: "constant", value: 10 },
+          { type: "pop", symbol: "x" },
+          { type: "push", symbol: "x" },
+          { type: "return", width: 1 },
+
+          // x is not declared in this context so this should error.
+          { type: "push", symbol: "x" }
+        ]
+      });
+    }).toThrow();
+  });
+
   it("allows functions to be defined inside functions", function () {
     var program = Level3Compiler.compile({
       instructions: [
@@ -294,6 +311,411 @@ describe("Integration: defining and calling functions", function () {
     result = Level3Runtime.decode(program, result);
 
     expect(result).toEqual({ quad: 40 });
+  });
+
+  it("tracks conditional nils correctly", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "define", name: "get_1", args: ["arr"] },
+        { type: "push", symbol: "arr" },
+        { type: "constant", value: 1 },
+        { type: "get", checkBounds: true },
+        { type: "return", width: 2 },
+
+        { type: "constant", value: 10 },
+        { type: "collect", width: 1 },
+        { type: "constant", value: 20 },
+        { type: "constant", value: 30 },
+        { type: "collect", width: 2 },
+        { type: "collect", width: 2 },
+        { type: "constant", value: 0 },
+        { type: "fetch" },
+
+        { type: "call", name: "get_1", width: 1 },
+
+        { type: "pop", symbol: "aNil" },
+        { type: "pop", symbol: "a" },
+        { type: "variable", symbol: "aNil" },
+        { type: "variable", symbol: "a" }
+      ]
+    });
+
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level3Runtime.encode(program, {});
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result).toEqual({ a: 0, aNil: true });
+  });
+
+  describe("dynamically scoped functions", function () {
+    it("allows functions to be called with a dynamic scope", function () {
+      var program = Level3Compiler.compile({
+        instructions: [
+          { type: "define", name: "x_add_y", args: ["x"], dynamic: true },
+          { type: "push", symbol: "x" },
+          { type: "push", symbol: "y" },
+          { type: "add" },
+          { type: "return", width: 1 },
+
+          { type: "constant", value: 10 },
+          { type: "pop", symbol: "y" },
+          { type: "constant", value: 20 },
+          { type: "call", name: "x_add_y", width: 1 },
+
+          { type: "pop", symbol: "total" },
+          { type: "variable", symbol: "total" }
+        ]
+      });
+
+      program = Level2Compiler.compile(program);
+      program = Level1Compiler.compile(program);
+
+      var assignments = Level3Runtime.encode(program, {});
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      expect(result).toEqual({ total: 30 });
+    });
+
+    it("does not bleed local variables into the caller", function () {
+      expect(function () {
+        Level3Compiler.compile({
+          instructions: [
+            { type: "define", name: "foo", args: [], dynamic: true },
+            { type: "constant", value: 10 },
+            { type: "pop", symbol: "x" },
+            { type: "return", width: 0 },
+
+            { type: "call", name: "foo", width: 0 },
+
+            // x is not declared in this context so this should error.
+            { type: "push", symbol: "x" }
+          ]
+        });
+      }).toThrow();
+    });
+
+    it("allows variables outside of the closure to be mutated", function () {
+      var program = Level3Compiler.compile({
+        instructions: [
+          { type: "constant", value: 123 },
+          { type: "pop", symbol: "x" },
+
+          { type: "define", name: "foo", args: [], dynamic: true },
+          { type: "constant", value: 456 },
+          { type: "pop", symbol: "x" },
+          { type: "return", width: 0 },
+
+          { type: "call", name: "foo", width: 0 },
+
+          { type: "variable", symbol: "x" }
+        ]
+      });
+
+      program = Level2Compiler.compile(program);
+      program = Level1Compiler.compile(program);
+
+      var assignments = Level3Runtime.encode(program, {});
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      expect(result).toEqual({ x: 456 });
+    });
+
+    it("does not clobber caller variables with local arguments", function () {
+      var program = Level3Compiler.compile({
+        instructions: [
+          { type: "constant", value: 123 },
+          { type: "pop", symbol: "x" },
+
+          { type: "define", name: "foo", args: ["x"], dynamic: true },
+          { type: "constant", value: 456 },
+          { type: "pop", symbol: "x" },
+          { type: "return", width: 0 },
+
+          { type: "constant", value: 789 },
+          { type: "call", name: "foo", width: 1 },
+
+          { type: "variable", symbol: "x" }
+        ]
+      });
+
+      program = Level2Compiler.compile(program);
+      program = Level1Compiler.compile(program);
+
+      var assignments = Level3Runtime.encode(program, {});
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      expect(result).toEqual({ x: 123 });
+    });
+
+    it("allows dynamic function nesting", function () {
+      var program = Level3Compiler.compile({
+        instructions: [
+          { type: "define", name: "foo", args: [], dynamic: true },
+          { type: "constant", value: 20 },
+          { type: "pop", symbol: "y" },
+          { type: "call", name: "bar", width: 0 },
+          { type: "return", width: 1 },
+
+          { type: "define", name: "bar", args: [], dynamic: true },
+          { type: "push", symbol: "x" },
+          { type: "push", symbol: "y" },
+          { type: "add" },
+          { type: "return", width: 1 },
+
+          { type: "constant", value: 10 },
+          { type: "pop", symbol: "x" },
+          { type: "call", name: "foo", width: 0 },
+
+          { type: "pop", symbol: "total" },
+          { type: "variable", symbol: "total" }
+        ]
+      });
+
+      program = Level2Compiler.compile(program);
+      program = Level1Compiler.compile(program);
+
+      var assignments = Level3Runtime.encode(program, {});
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      expect(result).toEqual({ total: 30 });
+    });
+
+    it("inherits scope from the nearest ancestor", function () {
+      var program = Level3Compiler.compile({
+        instructions: [
+          { type: "define", name: "foo", args: ["x"], dynamic: true },
+          { type: "constant", value: 123 },
+          { type: "pop", symbol: "x" },
+          { type: "call", name: "bar", width: 0 },
+          { type: "return", width: 1 },
+
+          { type: "define", name: "bar", args: [], dynamic: true },
+          { type: "push", symbol: "x" },
+          { type: "return", width: 1 },
+
+          { type: "constant", value: 456 },
+          { type: "pop", symbol: "x" },
+          { type: "push", symbol: "x" },
+          { type: "call", name: "foo", width: 1 },
+
+          { type: "pop", symbol: "foo" },
+          { type: "variable", symbol: "foo" },
+        ]
+      });
+
+      program = Level2Compiler.compile(program);
+      program = Level1Compiler.compile(program);
+
+      var assignments = Level3Runtime.encode(program, {});
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      expect(result).toEqual({ foo: 123 });
+    });
+
+    it("inherits scope from locally scoped functions", function () {
+      var program = Level3Compiler.compile({
+        instructions: [
+          { type: "define", name: "foo", args: [] },
+          { type: "constant", value: 123 },
+          { type: "pop", symbol: "x" },
+          { type: "call", name: "bar", width: 0 },
+          { type: "return", width: 1 },
+
+          { type: "define", name: "bar", args: [], dynamic: true },
+          { type: "push", symbol: "x" },
+          { type: "return", width: 1 },
+
+          { type: "call", name: "foo", width: 0 },
+
+          { type: "pop", symbol: "foo" },
+          { type: "variable", symbol: "foo" },
+        ]
+      });
+
+      program = Level2Compiler.compile(program);
+      program = Level1Compiler.compile(program);
+
+      var assignments = Level3Runtime.encode(program, {});
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      expect(result).toEqual({ foo: 123 });
+    });
+
+    it("does not inherit ancestors of a locally scoped function", function () {
+      expect(function () {
+        Level3Compiler.compile({
+          instructions: [
+            { type: "define", name: "foo", args: [] },
+            { type: "call", name: "bar", width: 0 },
+            { type: "return", width: 1 },
+
+            { type: "define", name: "bar", args: [], dynamic: true },
+            { type: "push", symbol: "x" },
+            { type: "return", width: 1 },
+
+            // x is not visible in 'bar' because 'foo' is not dynamic
+            { type: "constant", value: 123 },
+            { type: "pop", symbol: "x" },
+            { type: "call", name: "foo", width: 0 }
+          ]
+        });
+      }).toThrow();
+    });
+
+    it("copies conditional nils to the dynamic function", function () {
+      var program = Level3Compiler.compile({
+        instructions: [
+          { type: "define", name: "foo", args: [], dynamic: true },
+          { type: "push", symbol: "arr" },
+          { type: "constant", value: 1 },
+          { type: "get", checkBounds: true },
+          { type: "return", width: 2 },
+
+          { type: "constant", value: 10 },
+          { type: "collect", width: 1 },
+          { type: "constant", value: 20 },
+          { type: "constant", value: 30 },
+          { type: "collect", width: 2 },
+          { type: "collect", width: 2 },
+          { type: "constant", value: 0 },
+          { type: "fetch" },
+          { type: "pop", symbol: "arr" },
+
+          { type: "call", name: "foo", width: 0 },
+
+          { type: "pop", symbol: "aNil" },
+          { type: "pop", symbol: "a" },
+          { type: "variable", symbol: "aNil" },
+          { type: "variable", symbol: "a" }
+        ]
+      });
+
+      program = Level2Compiler.compile(program);
+      program = Level1Compiler.compile(program);
+
+      var assignments = Level3Runtime.encode(program, {});
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      expect(result).toEqual({ a: 0, aNil: true });
+    });
+
+    it("copies conditional nils back from the dynamic function", function () {
+      var program = Level3Compiler.compile({
+        instructions: [
+          { type: "constant", value: 123 },
+          { type: "collect", width: 1 },
+          { type: "pop", symbol: "arr" },
+
+          { type: "define", name: "foo", args: [], dynamic: true },
+          { type: "constant", value: 10 },
+          { type: "collect", width: 1 },
+          { type: "constant", value: 20 },
+          { type: "constant", value: 30 },
+          { type: "collect", width: 2 },
+          { type: "collect", width: 2 },
+          { type: "constant", value: 0 },
+          { type: "fetch" },
+          { type: "pop", symbol: "arr" },
+          { type: "return", width: 0 },
+
+          { type: "call", name: "foo", width: 0 },
+
+          { type: "push", symbol: "arr" },
+          { type: "constant", value: 1 },
+          { type: "get", checkBounds: true },
+
+          { type: "pop", symbol: "a" },
+          { type: "pop", symbol: "aNil" },
+          { type: "variable", symbol: "a" },
+          { type: "variable", symbol: "aNil" }
+        ]
+      });
+
+      program = Level2Compiler.compile(program);
+      program = Level1Compiler.compile(program);
+
+      var assignments = Level3Runtime.encode(program, {});
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      expect(result).toEqual({ a: 0, aNil: true });
+    });
+
+    it("does not copy conditional nils if not defined locally", function () {
+      expect(true).toEqual(false); // TODO
+    });
+
+    it("does not copy back nils if not defined in the context", function () {
+      expect(true).toEqual(false); // TODO
+    });
+
+    it("does not copy back nils if defined locally and context", function () {
+      expect(true).toEqual(false); // TODO
+    });
   });
 
   describe("recursive function call", function () {

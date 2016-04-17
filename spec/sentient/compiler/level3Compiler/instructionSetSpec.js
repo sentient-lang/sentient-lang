@@ -2803,6 +2803,17 @@ describe("InstructionSet", function () {
         { type: "add" }
       ]);
       expect(fn.returns).toEqual(1);
+      expect(fn.dynamic).toBeUndefined();
+    });
+
+    describe("when a dynamic scope is specified", function () {
+      it("stores the boolean in the function registry", function () {
+        subject.call({ type: "define", name: "foo", args: [], dynamic: true });
+        subject.call({ type: "return", width: 0 });
+
+        var fn = functionRegistry.get("foo");
+        expect(fn.dynamic).toEqual(true);
+      });
     });
 
     describe("when a name is not specified", function () {
@@ -2923,7 +2934,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "x" },
           { type: "push", symbol: "x" },
           { type: "add" }
-        ], 1);
+        ], false, 1);
       });
 
       it("writes instructions for calling the function", function () {
@@ -2973,7 +2984,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "a" },
           { type: "push", symbol: "b" },
           { type: "add" }
-        ], 1);
+        ], false, 1);
       });
 
       it("writes instructions for calling the function", function () {
@@ -3003,7 +3014,7 @@ describe("InstructionSet", function () {
         functionRegistry.register("foo", [], [
           { type: "constant", value: 123 },
           { type: "constant", value: 456 }
-        ], 2);
+        ], false, 2);
       });
 
       it("writes instructions for calling the function", function () {
@@ -3049,7 +3060,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "arr" },
           { type: "constant", value: 0 },
           { type: "fetch" }
-        ], 1);
+        ], false, 1);
       });
 
       it("recursively copies over the array's symbols", function () {
@@ -3144,7 +3155,7 @@ describe("InstructionSet", function () {
           { type: "constant", value: 30 },
           { type: "collect", width: 2 },
           { type: "collect", width: 2 }
-        ], 1);
+        ], false, 1);
       });
 
       it("recursively adds the new symbols to the symbol table", function () {
@@ -3186,7 +3197,7 @@ describe("InstructionSet", function () {
             { type: "fetch" },
             { type: "pop", symbol: "foo" },
             { type: "push", symbol: "foo" }
-          ], 1);
+          ], false, 1);
         });
 
         it("recursively copies back the conditional nils", function () {
@@ -3206,7 +3217,7 @@ describe("InstructionSet", function () {
       it("throws an error on call", function () {
         functionRegistry.register("recursive", [], [
           { type: "call", name: "recursive", width: 0 }
-        ], 0);
+        ], false, 0);
 
         expect(function () {
           subject._call("recursive", 0);
@@ -3218,19 +3229,54 @@ describe("InstructionSet", function () {
       it("throws an error on call", function () {
         functionRegistry.register("a", [], [
           { type: "call", name: "b", width: 0 }
-        ], 0);
+        ], false, 0);
 
         functionRegistry.register("b", [], [
           { type: "call", name: "c", width: 0 }
-        ], 0);
+        ], false, 0);
 
         functionRegistry.register("c", [], [
           { type: "call", name: "a", width: 0 }
-        ], 0);
+        ], false, 0);
 
         expect(function () { subject._call("a", 0); }).toThrow();
         expect(function () { subject._call("b", 0); }).toThrow();
         expect(function () { subject._call("c", 0); }).toThrow();
+      });
+    });
+
+    describe("dynamically scoped functions", function () {
+      beforeEach(function () {
+        functionRegistry.register("foo", ["y"], [
+          { type: "push", symbol: "x" },
+          { type: "push", symbol: "y" },
+          { type: "add" }
+        ], true, 1);
+      });
+
+      it("writes instructions for calling the function", function () {
+        spyOn(codeWriter, "instruction");
+
+        // x is set in the caller's context
+        subject.constant(123);
+        subject.pop("x");
+
+        subject.constant(456);
+        subject._call("foo", 1);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "constant", value: 123 },
+          { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" },
+
+          { type: "constant", value: 456 },
+          { type: "pop", symbol: "$$$_L3_INTEGER2_$$$" },
+
+          // Inside 'foo'
+          { type: "push", symbol: "$$$_L3_INTEGER1_$$$" },
+          { type: "push", symbol: "$$$_L3_INTEGER2_$$$" },
+          { type: "add" },
+          { type: "pop", symbol: "$$$_L3_INTEGER3_$$$" },
+        ]);
       });
     });
 

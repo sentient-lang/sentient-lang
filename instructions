@@ -59,7 +59,7 @@ Level 3 Instructions:
 [X] or
 [X] equal
 [X] constant
-[X] variable
+[X] variable        *
 [X] boolean
 [X] integer
 [X] add
@@ -78,6 +78,6 @@ Level 3 Instructions:
 [X] if
 [X] absolute
 [X] invariant
-[.] define
+[.] define           *
 [.] return
-[ ] call
+[ ] call             *
