@@ -295,4 +295,24 @@ describe("Integration: defining and calling functions", function () {
 
     expect(result).toEqual({ quad: 40 });
   });
+
+  describe("recursive function call", function () {
+    it("throws an error", function () {
+      expect(function () {
+        Level3Compiler.compile({
+          instructions: [
+            { type: "define", name: "foo", args: [] },
+            { type: "call", name: "bar", width: 0 },
+            { type: "return", width: 0 },
+
+            { type: "define", name: "bar", args: [] },
+            { type: "call", name: "foo", width: 0 },
+            { type: "return", width: 0 },
+
+            { type: "call", name: "foo", width: 0 }
+          ]
+        });
+      }).toThrow();
+    });
+  });
 });

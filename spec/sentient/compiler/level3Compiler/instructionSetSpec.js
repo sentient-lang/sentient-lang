@@ -12,7 +12,7 @@ var CodeWriter = require(compiler + "/level3Compiler/codeWriter");
 
 describe("InstructionSet", function () {
   var subject, stack, typedefStack, symbolTable, registry, functionRegistry,
-    codeWriter, conditionalNils;
+    codeWriter, conditionalNils, callStack;
 
   beforeEach(function () {
     stack = new Stack();
@@ -22,6 +22,7 @@ describe("InstructionSet", function () {
     functionRegistry = new FunctionRegistry();
     codeWriter = new CodeWriter();
     conditionalNils = {};
+    callStack = [];
 
     subject = new describedClass({
       stack: stack,
@@ -30,7 +31,8 @@ describe("InstructionSet", function () {
       registry: registry,
       functionRegistry: functionRegistry,
       codeWriter: codeWriter,
-      conditionalNils: conditionalNils
+      conditionalNils: conditionalNils,
+      callStack: callStack
     });
   });
 
@@ -3197,6 +3199,38 @@ describe("InstructionSet", function () {
             instructionSet.conditionalNils["foo"]
           );
         });
+      });
+    });
+
+    describe("directly recursive function", function () {
+      it("throws an error on call", function () {
+        functionRegistry.register("recursive", [], [
+          { type: "call", name: "recursive", width: 0 }
+        ], 0);
+
+        expect(function () {
+          subject._call("recursive", 0);
+        }).toThrow();
+      });
+    });
+
+    describe("indirectly recursive function", function () {
+      it("throws an error on call", function () {
+        functionRegistry.register("a", [], [
+          { type: "call", name: "b", width: 0 }
+        ], 0);
+
+        functionRegistry.register("b", [], [
+          { type: "call", name: "c", width: 0 }
+        ], 0);
+
+        functionRegistry.register("c", [], [
+          { type: "call", name: "a", width: 0 }
+        ], 0);
+
+        expect(function () { subject._call("a", 0); }).toThrow();
+        expect(function () { subject._call("b", 0); }).toThrow();
+        expect(function () { subject._call("c", 0); }).toThrow();
       });
     });
 
