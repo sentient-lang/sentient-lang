@@ -2,7 +2,7 @@
 
 var compiler = "../../../../lib/sentient/compiler";
 var describedClass = require(compiler + "/level3Compiler/dynamicScope");
-var SymbolTable = require(compiler + "/common/symbolTable");
+var SymbolTable = require(compiler + "/level3Compiler/symbolTable");
 var Registry = require(compiler + "/level3Compiler/registry");
 
 describe("DynamicScope", function () {
@@ -61,17 +61,16 @@ describe("DynamicScope", function () {
 
     describe("and the symbol is an array type", function () {
       beforeEach(function () {
-        contextTable.set("foo", "integer", ["q"]);
-        localTable.set("bar", "integer", ["r"]);
-
-        localTable.set("a", "array", ["foo"]);
-        contextTable.set("b", "array", ["bar"]);
-
-        subject.set("x", "array", ["a", "b"]);
+        contextTable.set("x", "array", ["a"]);
+        contextTable.set("y", "array", ["b"]);
       });
 
-      it("recursively copies symbols from either target", function () {
-        expect(contextTable.type("x")).toEqual("array");
+      it("marks the array as having been reassigned", function () {
+        subject.set("x", "array", ["c"]);
+        subject.set("y", "array", ["d"]);
+        subject.set("x", "array", ["e"]);
+
+        expect(subject.reassignedArrays).toEqual(["x", "y"]);
       });
     });
   });
@@ -100,6 +99,21 @@ describe("DynamicScope", function () {
 
       expect(contextTable.contains("x")).toEqual(false);
     });
+
+    describe("and the symbol is an array type", function () {
+      beforeEach(function () {
+        localTable.set("x", "array", ["a"]);
+        localTable.set("y", "array", ["b"]);
+      });
+
+      it("does not mark the array as having been reassigned", function () {
+        subject.set("x", "array", ["c"]);
+        subject.set("y", "array", ["d"]);
+        subject.set("x", "array", ["e"]);
+
+        expect(subject.reassignedArrays).toEqual([]);
+      });
+    });
   });
 
   describe("when the symbol is in both tables", function () {
@@ -115,19 +129,37 @@ describe("DynamicScope", function () {
     });
 
     it("mutates the local table", function () {
-      subject.set("x", "array", ["foo"]);
+      subject.set("x", "anything", ["foo"]);
 
-      expect(localTable.type("x")).toEqual("array");
+      expect(localTable.type("x")).toEqual("anything");
       expect(localTable.symbols("x")).toEqual(["foo"]);
       expect(localTable.contains("x")).toEqual(true);
     });
 
     it("does not mutate the context table", function () {
-      subject.set("x", "array", ["foo"]);
+      subject.set("x", "anything", ["foo"]);
 
       expect(contextTable.type("x")).toEqual("integer");
       expect(contextTable.symbols("x")).toEqual(["a"]);
       expect(contextTable.contains("x")).toEqual(true);
+    });
+
+    describe("and the symbol is an array type", function () {
+      beforeEach(function () {
+        contextTable.set("x", "array", ["a"]);
+        contextTable.set("y", "array", ["b"]);
+
+        localTable.set("x", "array", ["a"]);
+        localTable.set("y", "array", ["b"]);
+      });
+
+      it("does not mark the array as having been reassigned", function () {
+        subject.set("x", "array", ["c"]);
+        subject.set("y", "array", ["d"]);
+        subject.set("x", "array", ["e"]);
+
+        expect(subject.reassignedArrays).toEqual([]);
+      });
     });
   });
 
@@ -144,6 +176,16 @@ describe("DynamicScope", function () {
       subject.set("x", "integer", ["a"]);
 
       expect(contextTable.contains("x")).toEqual(false);
+    });
+
+    describe("and the symbol is an array type", function () {
+      it("does not mark the array as having been reassigned", function () {
+        subject.set("x", "array", ["c"]);
+        subject.set("y", "array", ["d"]);
+        subject.set("x", "array", ["e"]);
+
+        expect(subject.reassignedArrays).toEqual([]);
+      });
     });
   });
 });
