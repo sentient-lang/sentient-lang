@@ -51,20 +51,4 @@ describe("SymbolTable", function () {
     subject.setNilConditions("foo", "some conditions");
     expect(subject.getNilConditions("foo")).toEqual("some conditions");
   });
-
-  it("throws an error if no conditions are given", function () {
-    subject.set("foo", "array", []);
-
-    expect(function () {
-      subject.setNilConditions("foo");
-    }).toThrow();
-  });
-
-  it("throws an error if the type is no an array", function () {
-    subject.set("foo", "integer", []);
-
-    expect(function () {
-      subject.setNilConditions("foo", "some conditions");
-    }).toThrow();
-  });
 });

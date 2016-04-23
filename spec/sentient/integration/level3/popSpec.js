@@ -74,6 +74,43 @@ describe("Integration: 'pop'", function () {
     expect(result.barOutOfBounds).toEqual(true);
   });
 
+  it("replaces conditional invariants when reassigned", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "constant", value: 10 },
+        { type: "collect", width: 1 },
+        { type: "constant", value: 20 },
+        { type: "constant", value: 30 },
+        { type: "collect", width: 2 },
+        { type: "collect", width: 2 },
+        { type: "constant", value: 0 },
+        { type: "fetch" },
+        { type: "pop", symbol: "foo" },
+
+        { type: "constant", value: 1 },
+        { type: "constant", value: 2 },
+        { type: "constant", value: 3 },
+        { type: "collect", width: 3 },
+        { type: "pop", symbol: "foo" },
+
+        { type: "variable", symbol: "foo" }
+      ]
+    });
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level2Runtime.encode(program, {});
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result).toEqual({ foo: [1, 2, 3] });
+  });
+
   it("supports re-assignment of primitives", function () {
     var program = Level3Compiler.compile({
       instructions: [
