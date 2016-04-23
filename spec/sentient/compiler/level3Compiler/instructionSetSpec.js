@@ -5,14 +5,14 @@ var compiler = "../../../../lib/sentient/compiler";
 var SpecHelper = require("../../../specHelper");
 var describedClass = require(compiler + "/level3Compiler/instructionSet");
 var Stack = require(compiler + "/common/stack");
-var SymbolTable = require(compiler + "/common/symbolTable");
+var SymbolTable = require(compiler + "/level3Compiler/symbolTable");
 var Registry = require(compiler + "/level3Compiler/registry");
 var FunctionRegistry = require(compiler + "/level3Compiler/functionRegistry");
 var CodeWriter = require(compiler + "/level3Compiler/codeWriter");
 
 describe("InstructionSet", function () {
   var subject, stack, typedefStack, symbolTable, registry, functionRegistry,
-    codeWriter, conditionalNils, callStack;
+    codeWriter, callStack;
 
   beforeEach(function () {
     stack = new Stack();
@@ -21,7 +21,6 @@ describe("InstructionSet", function () {
     registry = new Registry();
     functionRegistry = new FunctionRegistry();
     codeWriter = new CodeWriter();
-    conditionalNils = {};
     callStack = [];
 
     subject = new describedClass({
@@ -31,7 +30,6 @@ describe("InstructionSet", function () {
       registry: registry,
       functionRegistry: functionRegistry,
       codeWriter: codeWriter,
-      conditionalNils: conditionalNils,
       callStack: callStack
     });
   });
@@ -1437,11 +1435,11 @@ describe("InstructionSet", function () {
 
         symbolTable.set("bottom", "anything", ["anything"]);
 
-        symbolTable.set("arr1", "array", ["foo"]);
-        symbolTable.set("arr2", "array", ["bar"]);
-
         symbolTable.set("foo", "integer", ["a"]);
         symbolTable.set("bar", "integer", ["b"]);
+
+        symbolTable.set("arr1", "array", ["foo"]);
+        symbolTable.set("arr2", "array", ["bar"]);
       });
 
       it("replaces the top N symbols for one symbol on the stack", function () {
@@ -1552,12 +1550,12 @@ describe("InstructionSet", function () {
         stack.push("arr1");
         stack.push("arr2");
 
-        symbolTable.set("arr1", "array", ["a", "b"]);
-        symbolTable.set("arr2", "array", ["c"]);
-
         symbolTable.set("a", "integer", ["a"]);
         symbolTable.set("b", "integer", ["b"]);
         symbolTable.set("c", "integer", ["c"]);
+
+        symbolTable.set("arr1", "array", ["a", "b"]);
+        symbolTable.set("arr2", "array", ["c"]);
       });
 
       it("does not throw an error", function () {
@@ -1573,6 +1571,9 @@ describe("InstructionSet", function () {
       stack.push("bottom");
       stack.push("someArray");
       stack.push("key");
+
+      symbolTable.set("foo", "anything", []);
+      symbolTable.set("bar", "anything", []);
 
       symbolTable.set("someArray", "array", ["foo", "bar"]);
       symbolTable.set("key", "integer", ["k"]);
@@ -1774,12 +1775,12 @@ describe("InstructionSet", function () {
 
     describe("getting from an array of arrays", function () {
       beforeEach(function () {
-        symbolTable.set("foo", "array", ["abc", "def"]);
-        symbolTable.set("bar", "array", ["ghi"]);
-
         symbolTable.set("abc", "integer", ["a"]);
         symbolTable.set("def", "integer", ["b"]);
         symbolTable.set("ghi", "integer", ["c"]);
+
+        symbolTable.set("foo", "array", ["abc", "def"]);
+        symbolTable.set("bar", "array", ["ghi"]);
       });
 
       it("replaces the top two symbols on the stack", function () {
@@ -1841,7 +1842,7 @@ describe("InstructionSet", function () {
         subject.get(true);
 
         var newSymbol = stack.pop();
-        var conditions = conditionalNils[newSymbol];
+        var conditions = symbolTable.getNilConditions(newSymbol);
 
         expect(conditions).toEqual([
           { conditionSymbol: "$$$_L3_BOOLEAN3_$$$", nilIndex: 1 },
@@ -1855,11 +1856,11 @@ describe("InstructionSet", function () {
         symbolTable.set("foo", "integer", ["a"]);
         symbolTable.set("bar", "integer", ["b"]);
 
-        conditionalNils.someArray = [
+        symbolTable.setNilConditions("someArray", [
           { conditionSymbol: "condition1", nilIndex: 1 },
           { conditionSymbol: "condition2", nilIndex: 3 },
           { conditionSymbol: "condition3" }
-        ];
+        ]);
       });
 
       it("writes code for the conditional nils", function () {
@@ -1911,7 +1912,7 @@ describe("InstructionSet", function () {
       it("leaves the conditions untouched for other fetches", function () {
         subject.get(true);
 
-        expect(conditionalNils.someArray).toEqual([
+        expect(symbolTable.getNilConditions("someArray")).toEqual([
           { conditionSymbol: "condition1", nilIndex: 1 },
           { conditionSymbol: "condition2", nilIndex: 3 },
           { conditionSymbol: "condition3" }
@@ -1924,10 +1925,10 @@ describe("InstructionSet", function () {
         symbolTable.set("foo", "integer", ["a"]);
         symbolTable.set("bar", "integer", ["b"]);
 
-        conditionalNils.someArray = [
+        symbolTable.setNilConditions("someArray", [
           { conditionSymbol: "condition1", nilIndex: 1 },
           { conditionSymbol: "condition2", nilIndex: 3 }
-        ];
+        ]);
       });
 
       it("doesn't write any condition checking code", function () {
@@ -1956,23 +1957,23 @@ describe("InstructionSet", function () {
 
     describe("getting a nested array that has conditional nils", function () {
       beforeEach(function () {
-        symbolTable.set("foo", "array", ["a", "b"]);
-        symbolTable.set("bar", "array", ["c"]);
-
-        conditionalNils.foo = [
-          { conditionSymbol: "condition1", nilIndex: 0 }
-        ];
-
         symbolTable.set("a", "integer", ["x"]);
         symbolTable.set("b", "integer", ["y"]);
         symbolTable.set("c", "integer", ["z"]);
+
+        symbolTable.set("foo", "array", ["a", "b"]);
+        symbolTable.set("bar", "array", ["c"]);
+
+        symbolTable.setNilConditions("foo", [
+          { conditionSymbol: "condition1", nilIndex: 0 }
+        ]);
       });
 
       it("adds an additional conditional", function () {
         subject.get();
         var newSymbol = stack.pop();
 
-        expect(conditionalNils[newSymbol]).toEqual([
+        expect(symbolTable.getNilConditions(newSymbol)).toEqual([
           { conditionSymbol: '$$$_L3_BOOLEAN3_$$$', nilIndex: 1 },
           { conditionSymbol: 'condition1', nilIndex: 0 },
           { conditionSymbol: '$$$_L3_BOOLEAN2_$$$' }
@@ -2108,13 +2109,14 @@ describe("InstructionSet", function () {
           stack.push("arr2");
 
           symbolTable.set("bottom", "anything", ["anything"]);
-          symbolTable.set("arr1", "array", ["foo", "bar"]);
-          symbolTable.set("arr2", "array", ["baz", "qux"]);
 
           symbolTable.set("foo", "integer", ["a"]);
           symbolTable.set("bar", "integer", ["b"]);
           symbolTable.set("baz", "integer", ["c"]);
           symbolTable.set("qux", "integer", ["d"]);
+
+          symbolTable.set("arr1", "array", ["foo", "bar"]);
+          symbolTable.set("arr2", "array", ["baz", "qux"]);
         });
 
         it("replaces the top two symbols for one symbol", function () {
@@ -2141,12 +2143,13 @@ describe("InstructionSet", function () {
           stack.push("arr2");
 
           symbolTable.set("bottom", "anything", ["anything"]);
-          symbolTable.set("arr1", "array", ["foo", "bar"]);
-          symbolTable.set("arr2", "array", ["baz"]);
 
           symbolTable.set("foo", "integer", ["a"]);
           symbolTable.set("bar", "integer", ["b"]);
           symbolTable.set("baz", "integer", ["c"]);
+
+          symbolTable.set("arr1", "array", ["foo", "bar"]);
+          symbolTable.set("arr2", "array", ["baz"]);
         });
 
         it("replaces the top two symbols for one symbol", function () {
@@ -2202,13 +2205,14 @@ describe("InstructionSet", function () {
         stack.push("arr2");
 
         symbolTable.set("bottom", "anything", ["anything"]);
-        symbolTable.set("arr1", "array", ["foo", "bar"]);
-        symbolTable.set("arr2", "array", ["baz", "qux"]);
 
         symbolTable.set("foo", "integer", ["a"]);
         symbolTable.set("bar", "integer", ["b"]);
         symbolTable.set("baz", "boolean", ["c"]);
         symbolTable.set("qux", "boolean", ["d"]);
+
+        symbolTable.set("arr1", "array", ["foo", "bar"]);
+        symbolTable.set("arr2", "array", ["baz", "qux"]);
       });
 
       it("throws an error", function () {
@@ -2226,6 +2230,8 @@ describe("InstructionSet", function () {
       stack.push("key");
 
       symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("a", "anything", []);
+      symbolTable.set("b", "anything", []);
       symbolTable.set("array", "array", ["a", "b"]);
       symbolTable.set("key", "integer", ["k"]);
     });
@@ -2279,10 +2285,10 @@ describe("InstructionSet", function () {
 
     describe("when there are conditionalNils for the array", function () {
       beforeEach(function () {
-        conditionalNils.array = [
+        symbolTable.setNilConditions("array", [
           { conditionSymbol: "indexSpecificCondition", nilIndex: 1 },
           { conditionSymbol: "universalCondition" }
-        ];
+        ]);
       });
 
       it("writes instructions for 'bounds'", function () {
@@ -2345,6 +2351,9 @@ describe("InstructionSet", function () {
       stack.push("array");
 
       symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("a", "anything", []);
+      symbolTable.set("b", "anything", []);
+      symbolTable.set("c", "anything", []);
       symbolTable.set("array", "array", ["a", "b", "c"]);
     });
 
@@ -2382,9 +2391,9 @@ describe("InstructionSet", function () {
 
     describe("when there are index specific conditionalNils", function () {
       beforeEach(function () {
-        conditionalNils.array = [
+        symbolTable.setNilConditions("array", [
           { conditionSymbol: "indexSpecificCondition", nilIndex: 1 }
-        ];
+        ]);
       });
 
       it("writes instructions for 'width'", function () {
@@ -2410,9 +2419,9 @@ describe("InstructionSet", function () {
 
     describe("when there is a universal conditionalNil", function () {
       beforeEach(function () {
-        conditionalNils.array = [
+        symbolTable.setNilConditions("array", [
           { conditionSymbol: "universalCondition" }
-        ];
+        ]);
       });
 
       it("writes instructions for 'width'", function () {
@@ -2462,6 +2471,8 @@ describe("InstructionSet", function () {
       stack.push("key");
 
       symbolTable.set("bottom", "anything", ["anything"]);
+      symbolTable.set("foo", "anything", []);
+      symbolTable.set("bar", "anything", []);
       symbolTable.set("array", "array", ["foo", "bar"]);
       symbolTable.set("key", "integer", ["k"]);
     });
@@ -2664,11 +2675,11 @@ describe("InstructionSet", function () {
 
     describe("for a nested array", function () {
       beforeEach(function () {
-        symbolTable.set("foo", "array", ["a"]);
-        symbolTable.set("bar", "array", ["b"]);
-
         symbolTable.set("a", "integer", ["x"]);
         symbolTable.set("b", "integer", ["y"]);
+
+        symbolTable.set("foo", "array", ["a"]);
+        symbolTable.set("bar", "array", ["b"]);
       });
 
       it("does not throw an error for a fetch without a default", function () {
@@ -3136,12 +3147,11 @@ describe("InstructionSet", function () {
         subject.push("bar");
 
         var instructionSet = subject._call("first", 1);
-        expect(instructionSet.conditionalNils).toBeDefined();
 
         // Note: Conditional nils are keyed by level 3 symbols, but their values
         // are level 2 symbols, so we don't need to do any remapping. Yay!
-        expect(instructionSet.conditionalNils["arr"]).toEqual(
-          conditionalNils["bar"]
+        expect(instructionSet.symbolTable.getNilConditions("arr")).toEqual(
+          symbolTable.getNilConditions("bar")
         );
       });
     });
@@ -3204,10 +3214,8 @@ describe("InstructionSet", function () {
           var instructionSet = subject._call("firstArray", 0);
           var newSymbol = stack.pop();
 
-          expect(conditionalNils).toBeDefined();
-
-          expect(conditionalNils[newSymbol]).toEqual(
-            instructionSet.conditionalNils["foo"]
+          expect(symbolTable.getNilConditions(newSymbol)).toEqual(
+            instructionSet.symbolTable.getNilConditions("foo")
           );
         });
       });
