@@ -2962,7 +2962,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "$$$_L3_INTEGER1_$$$" },
           { type: "push", symbol: "$$$_L3_INTEGER1_$$$" },
           { type: "add" },
-          { type: "pop", symbol: "$$$_L3_INTEGER2_$$$" },
+          { type: "pop", symbol: "$$$_L3_INTEGER2_$$$" }
         ]);
       });
 
@@ -3015,7 +3015,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "$$$_L3_INTEGER1_$$$" },
           { type: "push", symbol: "$$$_L3_INTEGER2_$$$" },
           { type: "add" },
-          { type: "pop", symbol: "$$$_L3_INTEGER3_$$$" },
+          { type: "pop", symbol: "$$$_L3_INTEGER3_$$$" }
         ]);
       });
     });
@@ -3037,7 +3037,7 @@ describe("InstructionSet", function () {
           { type: "constant", value: 123 },
           { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" },
           { type: "constant", value: 456 },
-          { type: "pop", symbol: "$$$_L3_INTEGER2_$$$" },
+          { type: "pop", symbol: "$$$_L3_INTEGER2_$$$" }
         ]);
       });
 
@@ -3283,7 +3283,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "$$$_L3_INTEGER1_$$$" },
           { type: "push", symbol: "$$$_L3_INTEGER2_$$$" },
           { type: "add" },
-          { type: "pop", symbol: "$$$_L3_INTEGER3_$$$" },
+          { type: "pop", symbol: "$$$_L3_INTEGER3_$$$" }
         ]);
       });
     });

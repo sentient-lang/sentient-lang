@@ -189,10 +189,10 @@ describe("Integration: defining and calling functions", function () {
         { type: "return", width: 1 },
 
         { type: "call", name: "foo", width: 0 },
-        { type: "pop", symbol: "function_x" },
+        { type: "pop", symbol: "functionX" },
 
         { type: "variable", symbol: "x" },
-        { type: "variable", symbol: "function_x" }
+        { type: "variable", symbol: "functionX" }
       ]
     });
 
@@ -209,7 +209,7 @@ describe("Integration: defining and calling functions", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result).toEqual({ x: 5, function_x: 10 });
+    expect(result).toEqual({ x: 5, functionX: 10 });
   });
 
   it("does not affect array elements outside the function", function () {
@@ -231,11 +231,11 @@ describe("Integration: defining and calling functions", function () {
         { type: "return", width: 1 },
 
         { type: "call", name: "foo", width: 0 },
-        { type: "pop", symbol: "foo_arr" },
+        { type: "pop", symbol: "fooArr" },
 
         { type: "variable", symbol: "x" },
         { type: "variable", symbol: "arr" },
-        { type: "variable", symbol: "foo_arr" }
+        { type: "variable", symbol: "fooArr" }
       ]
     });
 
@@ -252,7 +252,7 @@ describe("Integration: defining and calling functions", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result).toEqual({ x: 5, arr: [5], foo_arr: [10] });
+    expect(result).toEqual({ x: 5, arr: [5], fooArr: [10] });
   });
 
   it("does not bleed local variables into the caller", function () {
@@ -492,19 +492,19 @@ describe("Integration: defining and calling functions", function () {
 
         { type: "push", symbol: "x" },
         { type: "call", name: "foo", width: 1 },
-        { type: "pop", symbol: "out_x" },
+        { type: "pop", symbol: "outX" },
 
         { type: "push", symbol: "y" },
         { type: "call", name: "foo", width: 1 },
-        { type: "pop", symbol: "out_y" },
+        { type: "pop", symbol: "outY" },
 
         { type: "constant", value: 456 },
         { type: "pop", symbol: "x" },
         { type: "constant", value: false },
         { type: "pop", symbol: "y" },
 
-        { type: "variable", symbol: "out_x" },
-        { type: "variable", symbol: "out_y" }
+        { type: "variable", symbol: "outX" },
+        { type: "variable", symbol: "outY" }
       ]
     });
 
@@ -521,7 +521,7 @@ describe("Integration: defining and calling functions", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result).toEqual({ out_x: 123, out_y: true });
+    expect(result).toEqual({ outX: 123, outY: true });
   });
 
   it("passes arbitrarily nested arrays by value (deep copy)", function () {
@@ -746,7 +746,7 @@ describe("Integration: defining and calling functions", function () {
           { type: "call", name: "foo", width: 1 },
 
           { type: "pop", symbol: "foo" },
-          { type: "variable", symbol: "foo" },
+          { type: "variable", symbol: "foo" }
         ]
       });
 
@@ -782,7 +782,7 @@ describe("Integration: defining and calling functions", function () {
           { type: "call", name: "foo", width: 0 },
 
           { type: "pop", symbol: "foo" },
-          { type: "variable", symbol: "foo" },
+          { type: "variable", symbol: "foo" }
         ]
       });
 
@@ -942,7 +942,7 @@ describe("Integration: defining and calling functions", function () {
       result = Level3Runtime.decode(program, result);
 
       expect(result).toEqual({ x: [[456]], y: [[789]] });
-    })
+    });
 
     it("assigns correct element values for a complicated case", function () {
       var program = Level3Compiler.compile({
