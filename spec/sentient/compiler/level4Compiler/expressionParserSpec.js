@@ -25,385 +25,364 @@ describe("ExpressionParser", function () {
       { type: "push", symbol: "foo" }
     ]);
 
-    expect(describedClass.parse([1, [2], "collect"])).toEqual([
+    expect(describedClass.parse(["collect", 1, 2])).toEqual([
       { type: "constant", value: 1 },
       { type: "constant", value: 2 },
       { type: "collect", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", [true], "collect"])).toEqual([
+    expect(describedClass.parse(["collect", "a", true])).toEqual([
       { type: "push", symbol: "a" },
       { type: "constant", value: true },
       { type: "collect", width: 2 }
     ]);
 
-    expect(describedClass.parse([1, [], "collect"])).toEqual([
+    expect(describedClass.parse(["collect", 1])).toEqual([
       { type: "constant", value: 1 },
       { type: "collect", width: 1 }
     ]);
   });
 
   it("generates instructions for fetch expressions", function () {
-    expect(describedClass.parse(["arr", [0], "[]"])).toEqual([
+    expect(describedClass.parse(["[]", "arr", 0])).toEqual([
       { type: "push", symbol: "arr" },
       { type: "constant", value: 0 },
-      { type: "fetch" }
+      { type: "call", name: "[]", width: 2 }
     ]);
 
-    expect(describedClass.parse(["arr", ["a"], "[]"])).toEqual([
+    expect(describedClass.parse(["[]", "arr", "a"])).toEqual([
       { type: "push", symbol: "arr" },
       { type: "push", symbol: "a" },
-      { type: "fetch" }
+      { type: "call", name: "[]", width: 2 }
     ]);
 
-    expect(describedClass.parse(["arr", [1], "[]"])).toEqual([
+    expect(describedClass.parse(["[]", "arr", 1])).toEqual([
       { type: "push", symbol: "arr" },
       { type: "constant", value: 1 },
-      { type: "fetch" }
+      { type: "call", name: "[]", width: 2 }
     ]);
 
-    expect(describedClass.parse(["arr", [[1, "-"]], "[]"])).toEqual([
+    expect(describedClass.parse(["[]", "arr", ["-@", 1]])).toEqual([
       { type: "push", symbol: "arr" },
       { type: "constant", value: 1 },
-      { type: "negate" },
-      { type: "fetch" }
+      { type: "call", name: "-@", width: 1 },
+      { type: "call", name: "[]", width: 2 }
     ]);
 
-    expect(describedClass.parse(["x", [[1, 2, "+"]], "[]"])).toEqual([
+    expect(describedClass.parse(["[]", "x", ["+", 1, 2]])).toEqual([
       { type: "push", symbol: "x" },
       { type: "constant", value: 1 },
       { type: "constant", value: 2 },
-      { type: "add" },
-      { type: "fetch" }
+      { type: "call", name: "+", width: 2 },
+      { type: "call", name: "[]", width: 2 }
     ]);
 
     expect(describedClass.parse(
-      [["arr", [0], "[]"], [[1, 2, "*"]], "[]"]
+      ["[]", ["[]", "arr", 0], ["*", 1, 2]]
     )).toEqual([
       { type: "push", symbol: "arr" },
       { type: "constant", value: 0 },
-      { type: "fetch" },
+      { type: "call", name: "[]", width: 2 },
       { type: "constant", value: 1 },
       { type: "constant", value: 2 },
-      { type: "multiply" },
-      { type: "fetch" }
+      { type: "call", name: "*", width: 2 },
+      { type: "call", name: "[]", width: 2 },
     ]);
   });
 
   it("generates instructions for unary expressions", function () {
-    expect(describedClass.parse([0, "-"])).toEqual([
+    expect(describedClass.parse(["-@", 0])).toEqual([
       { type: "constant", value: 0 },
-      { type: "negate" }
+      { type: "call", name: "-@", width: 1 }
     ]);
 
-    expect(describedClass.parse([123, "-"])).toEqual([
+    expect(describedClass.parse(["-@", 123])).toEqual([
       { type: "constant", value: 123 },
-      { type: "negate" }
+      { type: "call", name: "-@", width: 1 }
     ]);
 
-    expect(describedClass.parse(["foo", "-"])).toEqual([
+    expect(describedClass.parse(["-@", "foo"])).toEqual([
       { type: "push", symbol: "foo" },
-      { type: "negate" }
+      { type: "call", name: "-@", width: 1 }
     ]);
 
-    expect(describedClass.parse([true, "!"])).toEqual([
+    expect(describedClass.parse(["!@", true])).toEqual([
       { type: "constant", value: true },
-      { type: "not" }
+      { type: "call", name: "!@", width: 1 }
     ]);
 
-    expect(describedClass.parse([false, "!"])).toEqual([
+    expect(describedClass.parse(["!@", false])).toEqual([
       { type: "constant", value: false },
-      { type: "not" }
+      { type: "call", name: "!@", width: 1 }
     ]);
 
-    expect(describedClass.parse(["foo", "!"])).toEqual([
+    expect(describedClass.parse(["!@", "foo"])).toEqual([
       { type: "push", symbol: "foo" },
-      { type: "not" }
+      { type: "call", name: "!@", width: 1 }
     ]);
   });
 
   it("generates instructions for method expressions", function () {
-    expect(describedClass.parse(["a", [], "abs"])).toEqual([
+    expect(describedClass.parse(["abs", "a"])).toEqual([
       { type: "push", symbol: "a" },
-      { type: "absolute" }
+      { type: "call", name: "abs", width: 1 }
     ]);
 
-    expect(describedClass.parse([[123, "-"], [], "abs"])).toEqual([
+    expect(describedClass.parse(["abs", ["-@", 123]])).toEqual([
       { type: "constant", value: 123 },
-      { type: "negate" },
-      { type: "absolute" }
+      { type: "call", name: "-@", width: 1 },
+      { type: "call", name: "abs", width: 1 }
     ]);
 
-    expect(describedClass.parse(["arr", [], "length"])).toEqual([
+    expect(describedClass.parse(["length", "arr"])).toEqual([
       { type: "push", symbol: "arr" },
-      { type: "width" }
+      { type: "call", name: "length", width: 1 }
     ]);
 
-    expect(describedClass.parse([[123, "-"], [], "abs"])).toEqual([
+    expect(describedClass.parse(["-@", ["abs", 123]])).toEqual([
       { type: "constant", value: 123 },
-      { type: "negate" },
-      { type: "absolute" }
+      { type: "call", name: "abs", width: 1 },
+      { type: "call", name: "-@", width: 1 }
     ]);
 
-    expect(describedClass.parse(["c", [true, false], "if"])).toEqual([
+    expect(describedClass.parse(["if", "c", true, false])).toEqual([
       { type: "push", symbol: "c" },
       { type: "constant", value: true },
       { type: "constant", value: false },
-      { type: "if" }
+      { type: "call", name: "if", width: 3 }
     ]);
-  });
-
-  it("throws an error if an unknown method is called", function () {
-    expect(function () {
-      describedClass.parse(["a", [], "unknown_method"]);
-    }).toThrow();
   });
 
   it("generates instructions for multiplicative expressions", function () {
-    expect(describedClass.parse([1, [2], "*"])).toEqual([
+    expect(describedClass.parse(["*", 1, 2])).toEqual([
       { type: "constant", value: 1 },
       { type: "constant", value: 2 },
-      { type: "multiply" }
+      { type: "call", name: "*", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", ["b"], "/"])).toEqual([
+    expect(describedClass.parse(["/", "a", "b"])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "divide" }
+      { type: "call", name: "/", width: 2 }
     ]);
 
-    expect(describedClass.parse([123, ["b"], "%"])).toEqual([
+    expect(describedClass.parse(["%", 123, "b"])).toEqual([
       { type: "constant", value: 123 },
       { type: "push", symbol: "b" },
-      { type: "modulo" }
+      { type: "call", name: "%", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", [["b", "-"]], "*"])).toEqual([
+    expect(describedClass.parse(["*", "a", ["-@", "b"]])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "negate" },
-      { type: "multiply" }
+      { type: "call", name: "-@", width: 1 },
+      { type: "call", name: "*", width: 2 }
     ]);
 
-    expect(describedClass.parse([["a", [5], "*"], ["c"], "*"])).toEqual([
+    expect(describedClass.parse(["*", ["*", "a", 5], "c"])).toEqual([
       { type: "push", symbol: "a" },
       { type: "constant", value: 5 },
-      { type: "multiply" },
+      { type: "call", name: "*", width: 2 },
       { type: "push", symbol: "c" },
-      { type: "multiply" }
+      { type: "call", name: "*", width: 2 }
     ]);
 
     expect(describedClass.parse(
-      [[["a", ["b"], "*"], ["c"], "/"], ["d"], "%"]
+      ["%", ["/", ["*", "a", "b"], "c"], "d"]
     )).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "multiply" },
+      { type: "call", name: "*", width: 2 },
       { type: "push", symbol: "c" },
-      { type: "divide" },
+      { type: "call", name: "/", width: 2 },
       { type: "push", symbol: "d" },
-      { type: "modulo" }
+      { type: "call", name: "%", width: 2 }
     ]);
 
-    expect(describedClass.parse([[[3, "-"], [], "abs"], ["a"], "*"])).toEqual([
+    expect(describedClass.parse(["*", ["abs", ["-@", 3]], "a"])).toEqual([
       { type: "constant", value: 3 },
-      { type: "negate" },
-      { type: "absolute" },
+      { type: "call", name: "-@", width: 1 },
+      { type: "call", name: "abs", width: 1 },
       { type: "push", symbol: "a" },
-      { type: "multiply" }
+      { type: "call", name: "*", width: 2 }
     ]);
   });
 
   it("generates instructions for additive expressions", function () {
-    expect(describedClass.parse([1, [2], "+"])).toEqual([
+    expect(describedClass.parse(["+", 1, 2])).toEqual([
       { type: "constant", value: 1 },
       { type: "constant", value: 2 },
-      { type: "add" }
+      { type: "call", name: "+", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", ["b"], "-"])).toEqual([
+    expect(describedClass.parse(["-", "a", "b"])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "subtract" }
+      { type: "call", name: "-", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", [["b", ["c"], "/"]], "+"])).toEqual([
+    expect(describedClass.parse(["+", "a", ["/", "b", "c"]])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
       { type: "push", symbol: "c" },
-      { type: "divide" },
-      { type: "add" }
+      { type: "call", name: "/", width: 2 },
+      { type: "call", name: "+", width: 2 }
     ]);
 
-    expect(describedClass.parse([["a", ["b"], "-"], ["c"], "+"])).toEqual([
+    expect(describedClass.parse(["+", ["-", "a", "b"], "c"])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "subtract" },
+      { type: "call", name: "-", width: 2 },
       { type: "push", symbol: "c" },
-      { type: "add" }
+      { type: "call", name: "+", width: 2 }
     ]);
 
     expect(describedClass.parse(
-      [["a", [["b", "-"]], "-"], ["c"], "-"]
+      ["-", ["-", "a", ["-@", "b"]], "c"]
     )).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "negate" },
-      { type: "subtract" },
+      { type: "call", name: "-@", width: 1 },
+      { type: "call", name: "-", width: 2 },
       { type: "push", symbol: "c" },
-      { type: "subtract" }
+      { type: "call", name: "-", width: 2 }
     ]);
   });
 
   it("generates instructions for comparative expressions", function () {
-    expect(describedClass.parse([1, [2], "<"])).toEqual([
+    expect(describedClass.parse(["<", 1, 2])).toEqual([
       { type: "constant", value: 1 },
       { type: "constant", value: 2 },
-      { type: "lessthan" }
+      { type: "call", name: "<", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", ["b"], ">"])).toEqual([
+    expect(describedClass.parse([">", "a", "b"])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "greaterthan" }
+      { type: "call", name: ">", width: 2 }
     ]);
 
-    expect(describedClass.parse([1, ["b"], "<="])).toEqual([
+    expect(describedClass.parse(["<=", 1, "b"])).toEqual([
       { type: "constant", value: 1 },
       { type: "push", symbol: "b" },
-      { type: "lessequal" }
+      { type: "call", name: "<=", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", [2], ">="])).toEqual([
+    expect(describedClass.parse([">=", "a", 2])).toEqual([
       { type: "push", symbol: "a" },
       { type: "constant", value: 2 },
-      { type: "greaterequal" }
+      { type: "call", name: ">=", width: 2 }
     ]);
 
     expect(describedClass.parse(
-      ["a", [[[1, "-"], [["b", ["c"], "/"]], "+"]], "<"]
+      ["<", "a", ["+", ["-@", 1], ["/", "b", "c"]]]
     )).toEqual([
       { type: "push", symbol: "a" },
       { type: "constant", value: 1 },
-      { type: "negate" },
+      { type: "call", name: "-@", width: 1 },
       { type: "push", symbol: "b" },
       { type: "push", symbol: "c" },
-      { type: "divide" },
-      { type: "add" },
-      { type: "lessthan" }
+      { type: "call", name: "/", width: 2 },
+      { type: "call", name: "+", width: 2 },
+      { type: "call", name: "<", width: 2 }
     ]);
   });
 
   it("generates instructions for equality expressions", function () {
-    expect(describedClass.parse([1, [2], "=="])).toEqual([
+    expect(describedClass.parse(["==", 1, 2])).toEqual([
       { type: "constant", value: 1 },
       { type: "constant", value: 2 },
-      { type: "equal" }
+      { type: "call", name: "==", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", ["b"], "!="])).toEqual([
+    expect(describedClass.parse(["!=", "a", "b"])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "equal" },
-      { type: "not" }
+      { type: "call", name: "!=", width: 2 }
     ]);
 
-    expect(describedClass.parse([["a", ["b"], "<"], ["c"], "=="])).toEqual([
+    expect(describedClass.parse(["==", ["<", "a", "b"], "c"])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "lessthan" },
+      { type: "call", name: "<", width: 2 },
       { type: "push", symbol: "c" },
-      { type: "equal" }
+      { type: "call", name: "==", width: 2 }
     ]);
 
-    expect(describedClass.parse([[1, [2], "=="], [true], "!="])).toEqual([
+    expect(describedClass.parse(["==", ["!=", 1, 2], 3])).toEqual([
       { type: "constant", value: 1 },
       { type: "constant", value: 2 },
-      { type: "equal" },
-      { type: "constant", value: true },
-      { type: "equal" },
-      { type: "not" }
+      { type: "call", name: "!=", width: 2 },
+      { type: "constant", value: 3 },
+      { type: "call", name: "==", width: 2 }
     ]);
 
-    expect(describedClass.parse([[true, "!"], [[false, "!"]], "!="])).toEqual([
+    expect(describedClass.parse(["!=", ["!@", true], ["!@", false]])).toEqual([
       { type: "constant", value: true },
-      { type: "not" },
+      { type: "call", name: "!@", width: 1 },
       { type: "constant", value: false },
-      { type: "not" },
-      { type: "equal" },
-      { type: "not" }
+      { type: "call", name: "!@", width: 1 },
+      { type: "call", name: "!=", width: 2 }
     ]);
   });
 
   it("generates instructions for conjunctive expressions", function () {
-    expect(describedClass.parse([true, [false], "&&"])).toEqual([
+    expect(describedClass.parse(["&&", true, false])).toEqual([
       { type: "constant", value: true },
       { type: "constant", value: false },
-      { type: "and" }
+      { type: "call", name: "&&", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", ["b"], "&&"])).toEqual([
+    expect(describedClass.parse(["&&", "a", "b"])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "and" }
+      { type: "call", name: "&&", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", [["b", ["c"], "=="]], "&&"])).toEqual([
-      { type: "push", symbol: "a" },
-      { type: "push", symbol: "b" },
-      { type: "push", symbol: "c" },
-      { type: "equal" },
-      { type: "and" }
-    ]);
-
-    expect(describedClass.parse(["a", [["b", ["c"], "&&"]], "&&"])).toEqual([
+    expect(describedClass.parse(["&&", "a", ["==", "b", "c"]])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
       { type: "push", symbol: "c" },
-      { type: "and" },
-      { type: "and" }
+      { type: "call", name: "==", width: 2 },
+      { type: "call", name: "&&", width: 2 }
+    ]);
+
+    expect(describedClass.parse(["&&", ["&&", "a", "b"], "c"])).toEqual([
+      { type: "push", symbol: "a" },
+      { type: "push", symbol: "b" },
+      { type: "call", name: "&&", width: 2 },
+      { type: "push", symbol: "c" },
+      { type: "call", name: "&&", width: 2 }
     ]);
   });
 
   it("generates instructions for disjunctive expressions", function () {
-    expect(describedClass.parse([true, [false], "||"])).toEqual([
+    expect(describedClass.parse(["||", true, false])).toEqual([
       { type: "constant", value: true },
       { type: "constant", value: false },
-      { type: "or" }
+      { type: "call", name: "||", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", ["b"], "||"])).toEqual([
+    expect(describedClass.parse(["||", "a", "b"])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
-      { type: "or" }
+      { type: "call", name: "||", width: 2 }
     ]);
 
-    expect(describedClass.parse(["a", [["b", ["c"], "&&"]], "||"])).toEqual([
-      { type: "push", symbol: "a" },
-      { type: "push", symbol: "b" },
-      { type: "push", symbol: "c" },
-      { type: "and" },
-      { type: "or" }
-    ]);
-
-    expect(describedClass.parse(["a", [["b", ["c"], "||"]], "||"])).toEqual([
+    expect(describedClass.parse(["||", "a", ["&&", "b", "c"]])).toEqual([
       { type: "push", symbol: "a" },
       { type: "push", symbol: "b" },
       { type: "push", symbol: "c" },
-      { type: "or" },
-      { type: "or" }
+      { type: "call", name: "&&", width: 2 },
+      { type: "call", name: "||", width: 2 }
+    ]);
+
+    expect(describedClass.parse(["||", ["||", "a", "b"], "c"])).toEqual([
+      { type: "push", symbol: "a" },
+      { type: "push", symbol: "b" },
+      { type: "call", name: "||", width: 2 },
+      { type: "push", symbol: "c" },
+      { type: "call", name: "||", width: 2 }
     ]);
   });
-
-//  // TODO
-//  it("handles methods that return more than one value", function () {
-//    expect(describedClass.parse(["arr", ["i"], "get"])).toEqual([
-//      { type: "push", symbol: "arr" },
-//      { type: "push", symbol: "i" },
-//      { type: "get" }
-//      // TODO ???
-//    ]);
-//
-//    TODO divmod
-//  });
 });

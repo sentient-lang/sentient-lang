@@ -147,16 +147,16 @@ describe("InstructionSet", function () {
 
     it("emits instructions for complex assignments", function () {
       spyOn(codeWriter, "instruction");
-      subject.assignment([["a", "b"], [[1, [2], "/"], [true, ["x"], "||"]]]);
+      subject.assignment([["a", "b"], [["/", 1, 2], ["||", true, "x"]]]);
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
         { type: "constant", value: 1 },
         { type: "constant", value: 2 },
-        { type: "divide" },
+        { type: "call", name: "/", width: 2 },
         { type: "pop", symbol: "a" },
         { type: "constant", value: true },
         { type: "push", symbol: "x" },
-        { type: "or" },
+        { type: "call", name: "||", width: 2 },
         { type: "pop", symbol: "b" }
       ]);
     });
@@ -165,12 +165,12 @@ describe("InstructionSet", function () {
   describe("destructuredAssignment", function () {
     it("emits instructions for divmod", function () {
       spyOn(codeWriter, "instruction");
-      subject.destructuredAssignment([["div", "mod"], [3, [2], "divmod"]]);
+      subject.destructuredAssignment([["div", "mod"], ["divmod", 3, 2]]);
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
         { type: "constant", value: 3 },
         { type: "constant", value: 2 },
-        { type: "divmod" },
+        { type: "call", name: "divmod", width: 2 },
         { type: "pop", symbol: "div" },
         { type: "pop", symbol: "mod" }
       ]);
@@ -180,13 +180,13 @@ describe("InstructionSet", function () {
       spyOn(codeWriter, "instruction");
 
       subject.destructuredAssignment(
-        [["a", "a_present"], ["arr", [3], "get"]]
+        [["a", "a_present"], ["get", "arr", 3]]
       );
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
         { type: "push", symbol: "arr" },
         { type: "constant", value: 3 },
-        { type: "get" },
+        { type: "call", name: "get", width: 2 },
         { type: "pop", symbol: "a" },
         { type: "pop", symbol: "a_present" }
       ]);
@@ -196,12 +196,12 @@ describe("InstructionSet", function () {
   describe("invariant", function () {
     it("emits instructions for simple invariants", function () {
       spyOn(codeWriter, "instruction");
-      subject.invariant([["a", [2], "=="], true]);
+      subject.invariant([["==", "a", 2], true]);
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
         { type: "push", symbol: "a" },
         { type: "constant", value: 2 },
-        { type: "equal" },
+        { type: "call", name: "==", width: 2 },
         { type: "invariant" },
         { type: "constant", value: true },
         { type: "invariant" }

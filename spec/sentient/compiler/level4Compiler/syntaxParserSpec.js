@@ -13,7 +13,7 @@ describe("SyntaxParser", function () {
 
     expect(ast).toEqual([
       { type: "declaration", value: [["int", 6], ["a", "b"]] },
-      { type: "assignment", value: [["total"], [["a", ["b"], "+"]]] },
+      { type: "assignment", value: [["total"], [["+", "a", "b"]]] },
       { type: "vary", value: ["a", "b", "total"] }
     ]);
   });

@@ -27,12 +27,12 @@ describe("statement", function () {
 
   it("parses composite assignments", function () {
     expect(subject.parse("a += 1")).toEqual(
-      { type: "assignment", value: [["a"], ["+", "a", 1]] }
+      { type: "assignment", value: [["a"], [["+", "a", 1]]] }
     );
 
     expect(subject.parse("a %= (1 + 2) / a")).toEqual({
       type: "assignment",
-      value: [["a"], ["%", "a", ["/", ["+", 1, 2], "a"]]]
+      value: [["a"], [["%", "a", ["/", ["+", 1, 2], "a"]]]]
     });
   });
 
