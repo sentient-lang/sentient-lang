@@ -19,9 +19,10 @@ describe("FunctionRegistry", function () {
       { type: "call", name: "+" }
     ];
     var dynamic = true;
+    var immutable = false;
     var returns = 1;
 
-    subject.register(name, args, body, dynamic, returns);
+    subject.register(name, args, body, dynamic, immutable, returns);
 
     var fn = subject.get(name);
 
@@ -29,6 +30,7 @@ describe("FunctionRegistry", function () {
     expect(fn.args).toEqual(args);
     expect(fn.body).toEqual(body);
     expect(fn.dynamic).toEqual(dynamic);
+    expect(fn.immutable).toEqual(immutable);
     expect(fn.returns).toEqual(returns);
   });
 
@@ -42,20 +44,21 @@ describe("FunctionRegistry", function () {
     var name = "foo";
     var args = ["bar", "baz"];
     var oldBody = ["oldBody"];
-    var returns = 1;
     var dynamic = true;
+    var immutable = false;
+    var returns = 1;
 
-    subject.register(name, args, oldBody, dynamic, returns);
+    subject.register(name, args, oldBody, dynamic, immutable, returns);
 
     var newBody = ["newBody"];
 
-    subject.register(name, args, newBody, dynamic, returns);
+    subject.register(name, args, newBody, dynamic, immutable, returns);
 
     var fn = subject.get(name);
     expect(fn.body).toEqual(newBody);
   });
 
-  it("allows functions to be marked as 'builtIn'", function () {
+  it("allows functions to be marked as 'immutable'", function () {
     var name = "+";
     var args = ["left", "right"];
     var body = [
@@ -65,16 +68,16 @@ describe("FunctionRegistry", function () {
     ];
     var dynamic = true;
     var returns = 1;
-    var builtIn = true;
+    var immutable = true;
 
-    subject.register(name, args, body, dynamic, returns, builtIn);
+    subject.register(name, args, body, dynamic, immutable, returns);
 
     var fn = subject.get(name);
 
-    expect(fn.builtIn).toEqual(true);
+    expect(fn.immutable).toEqual(true);
   });
 
-  it("does not allow builtIn functions to be redefined", function () {
+  it("does not allow immutable functions to be redefined", function () {
     subject.register("+", [], [], true, 1, true);
 
     expect(function () {

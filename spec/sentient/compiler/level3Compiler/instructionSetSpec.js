@@ -2817,6 +2817,16 @@ describe("InstructionSet", function () {
       expect(fn.dynamic).toBeUndefined();
     });
 
+    it("prevents immutable functions from being redefined", function () {
+      subject.call({ type: "define", name: "foo", args: [], immutable: true });
+      subject.call({ type: "return", width: 0 });
+
+      expect(function () {
+        subject.call({ type: "define", name: "foo", args: [] });
+        subject.call({ type: "return", width: 0 });
+      }).toThrow();
+    });
+
     describe("when a dynamic scope is specified", function () {
       it("stores the boolean in the function registry", function () {
         subject.call({ type: "define", name: "foo", args: [], dynamic: true });
@@ -2945,7 +2955,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "x" },
           { type: "push", symbol: "x" },
           { type: "add" }
-        ], false, 1);
+        ], false, false, 1);
       });
 
       it("writes instructions for calling the function", function () {
@@ -2995,7 +3005,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "a" },
           { type: "push", symbol: "b" },
           { type: "add" }
-        ], false, 1);
+        ], false, false, 1);
       });
 
       it("writes instructions for calling the function", function () {
@@ -3025,7 +3035,7 @@ describe("InstructionSet", function () {
         functionRegistry.register("foo", [], [
           { type: "constant", value: 123 },
           { type: "constant", value: 456 }
-        ], false, 2);
+        ], false, false, 2);
       });
 
       it("writes instructions for calling the function", function () {
@@ -3071,7 +3081,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "arr" },
           { type: "constant", value: 0 },
           { type: "fetch" }
-        ], false, 1);
+        ], false, false, 1);
       });
 
       it("recursively copies over the array's symbols", function () {
@@ -3165,7 +3175,7 @@ describe("InstructionSet", function () {
           { type: "constant", value: 30 },
           { type: "collect", width: 2 },
           { type: "collect", width: 2 }
-        ], false, 1);
+        ], false, false, 1);
       });
 
       it("recursively adds the new symbols to the symbol table", function () {
@@ -3207,7 +3217,7 @@ describe("InstructionSet", function () {
             { type: "fetch" },
             { type: "pop", symbol: "foo" },
             { type: "push", symbol: "foo" }
-          ], false, 1);
+          ], false, false, 1);
         });
 
         it("recursively copies back the conditional nils", function () {
@@ -3225,7 +3235,7 @@ describe("InstructionSet", function () {
       it("throws an error on call", function () {
         functionRegistry.register("recursive", [], [
           { type: "call", name: "recursive", width: 0 }
-        ], false, 0);
+        ], false, false, 0);
 
         expect(function () {
           subject._call("recursive", 0);
@@ -3237,15 +3247,15 @@ describe("InstructionSet", function () {
       it("throws an error on call", function () {
         functionRegistry.register("a", [], [
           { type: "call", name: "b", width: 0 }
-        ], false, 0);
+        ], false, false, 0);
 
         functionRegistry.register("b", [], [
           { type: "call", name: "c", width: 0 }
-        ], false, 0);
+        ], false, false, 0);
 
         functionRegistry.register("c", [], [
           { type: "call", name: "a", width: 0 }
-        ], false, 0);
+        ], false, false, 0);
 
         expect(function () { subject._call("a", 0); }).toThrow();
         expect(function () { subject._call("b", 0); }).toThrow();
@@ -3259,7 +3269,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "x" },
           { type: "push", symbol: "y" },
           { type: "add" }
-        ], true, 1);
+        ], true, false, 1);
       });
 
       it("writes instructions for calling the function", function () {
