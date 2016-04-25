@@ -5,42 +5,38 @@ var subject = SpecHelper.parserForRule("exprMethod");
 
 describe("exprMethod", function () {
   it("accepts valid", function () {
-    expect(subject.parse("a.abs")).toEqual(["a", [], "abs"]);
-    expect(subject.parse("-123.abs")).toEqual([[123, "-"], [], "abs"]);
+    expect(subject.parse("a.abs")).toEqual(["abs", "a"]);
+    expect(subject.parse("-123.abs")).toEqual(["abs", ["-@", 123]]);
 
-    expect(subject.parse("arr.length")).toEqual(["arr", [], "length"]);
-    expect(subject.parse("arr.get(i)")).toEqual(["arr", ["i"], "get"]);
+    expect(subject.parse("arr.length")).toEqual(["length", "arr"]);
+    expect(subject.parse("arr.get(i)")).toEqual(["get", "arr", "i"]);
 
-    expect(subject.parse("arr.length()")).toEqual(["arr", [], "length"]);
-    expect(subject.parse("-123.abs()")).toEqual([[123, "-"], [], "abs"]);
+    expect(subject.parse("arr.length()")).toEqual(["length", "arr"]);
+    expect(subject.parse("-123.abs()")).toEqual(["abs", ["-@", 123]]);
 
     expect(subject.parse("foo.some_method(1, x, -2, !true)")).toEqual(
-      ["foo", [1, "x", [2, "-"], [true, "!"]], "some_method"]
+      ["some_method", "foo", 1, "x", ["-@", 2], ["!@", true]]
     );
 
     expect(subject.parse("-10.divmod")).toEqual(
-      [[10, "-"], [], "divmod"]
+      ["divmod", ["-@", 10]]
     );
 
     expect(subject.parse("-foo.bar.baz(1).qux(!false, 2)")).toEqual(
-      [[[["foo", "-"], [], "bar"], [1], "baz"], [[false, "!"], 2], "qux"]
+      ["qux", ["baz", ["bar", ["-@", "foo"]], 1], ["!@", false], 2]
     );
 
     expect(subject.parse("a.b(c.d(e), -f)")).toEqual(
-      ["a", [["c", ["e"], "d"], ["f", "-"]], "b"]
+      ["b", "a", ["d", "c", "e"], ["-@", "f"]]
     );
 
-    expect(subject.parse("arr.empty?")).toEqual(["arr", [], "empty?"]);
-    expect(subject.parse("arr.contains?(1)")).toEqual(
-      ["arr", [1], "contains?"]
-    );
-    expect(subject.parse("arr.reverse!")).toEqual(["arr", [], "reverse!"]);
-    expect(subject.parse("arr.cycle!(3)")).toEqual(
-      ["arr", [3], "cycle!"]
-    );
+    expect(subject.parse("arr.empty?")).toEqual(["empty?", "arr"]);
+    expect(subject.parse("arr.contains?(1)")).toEqual(["contains?", "arr", 1]);
+    expect(subject.parse("arr.reverse!")).toEqual(["reverse!", "arr"]);
+    expect(subject.parse("arr.cycle!(3)")).toEqual(["cycle!", "arr", 3]);
 
-    expect(subject.parse("-0")).toEqual([0, "-"]);
-    expect(subject.parse("!true")).toEqual([true, "!"]);
+    expect(subject.parse("-0")).toEqual(["-@", 0]);
+    expect(subject.parse("!true")).toEqual(["!@", true]);
     expect(subject.parse("true")).toEqual(true);
     expect(subject.parse("false")).toEqual(false);
     expect(subject.parse("50")).toEqual(50);

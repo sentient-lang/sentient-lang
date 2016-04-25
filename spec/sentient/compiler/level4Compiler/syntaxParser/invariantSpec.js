@@ -8,10 +8,10 @@ describe("invariant", function () {
     expect(subject.parse("invariant a, b, c")).toEqual(["a", "b", "c"]);
     expect(subject.parse("invariant foo_123")).toEqual(["foo_123"]);
     expect(subject.parse("invariant true")).toEqual([true]);
-    expect(subject.parse("invariant a && b")).toEqual([["a", ["b"], "&&"]]);
+    expect(subject.parse("invariant a && b")).toEqual([["&&", "a", "b"]]);
 
     expect(subject.parse("invariant 1 < 2, !foo, 4 >= 3, bar")).toEqual(
-      [[1, [2], "<"], ["foo", "!"], [4, [3], ">="], "bar"]
+      [["<", 1, 2], ["!@", "foo"], [">=", 4, 3], "bar"]
     );
   });
 

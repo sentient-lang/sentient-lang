@@ -5,33 +5,33 @@ var subject = SpecHelper.parserForRule("exprComparative");
 
 describe("exprComparative", function () {
   it("accepts valid", function () {
-    expect(subject.parse("1 < 2")).toEqual([1, [2], "<"]);
-    expect(subject.parse("1 + 2 < a")).toEqual([[1, [2], "+"], ["a"], "<"]);
+    expect(subject.parse("1 < 2")).toEqual(["<", 1, 2]);
+    expect(subject.parse("1 + 2 < a")).toEqual(["<", ["+", 1, 2], "a"]);
     expect(subject.parse("a < -1 + b / c")).toEqual(
-      ["a", [[[1, "-"], [["b", ["c"], "/"]], "+"]], "<"]
+      ["<", "a", ["+", ["-@", 1], ["/", "b", "c"]]]
     );
 
-    expect(subject.parse("1 >= 2")).toEqual([1, [2], ">="]);
-    expect(subject.parse("1 + 2 >= a")).toEqual([[1, [2], "+"], ["a"], ">="]);
+    expect(subject.parse("1 >= 2")).toEqual([">=", 1, 2]);
+    expect(subject.parse("1 + 2 >= a")).toEqual([">=", ["+", 1, 2], "a"]);
     expect(subject.parse("a >= -1 + b / c")).toEqual(
-      ["a", [[[1, "-"], [["b", ["c"], "/"]], "+"]], ">="]
+      [">=", "a", ["+", ["-@", 1], ["/", "b", "c"]]]
     );
 
-    expect(subject.parse("1 <= 2")).toEqual([1, [2], "<="]);
-    expect(subject.parse("1 + 2 <= a")).toEqual([[1, [2], "+"], ["a"], "<="]);
+    expect(subject.parse("1 <= 2")).toEqual(["<=", 1, 2]);
+    expect(subject.parse("1 + 2 <= a")).toEqual(["<=", ["+", 1, 2], "a"]);
     expect(subject.parse("a <= -1 + b / c")).toEqual(
-      ["a", [[[1, "-"], [["b", ["c"], "/"]], "+"]], "<="]
+      ["<=", "a", ["+", ["-@", 1], ["/", "b", "c"]]]
     );
 
-    expect(subject.parse("1 > 2")).toEqual([1, [2], ">"]);
-    expect(subject.parse("1 + 2 > a")).toEqual([[1, [2], "+"], ["a"], ">"]);
+    expect(subject.parse("1 > 2")).toEqual([">", 1, 2]);
+    expect(subject.parse("1 + 2 > a")).toEqual([">", ["+", 1, 2], "a"]);
     expect(subject.parse("a > -1 + b / c")).toEqual(
-      ["a", [[[1, "-"], [["b", ["c"], "/"]], "+"]], ">"]
+      [">", "a", ["+", ["-@", 1], ["/", "b", "c"]]]
     );
 
-    expect(subject.parse("1 + 2 / 3")).toEqual([1, [[2, [3], "/"]], "+"]);
-    expect(subject.parse("-3")).toEqual([3, "-"]);
-    expect(subject.parse("!foo")).toEqual(["foo", "!"]);
+    expect(subject.parse("1 + 2 / 3")).toEqual(["+", 1, ["/", 2, 3]]);
+    expect(subject.parse("-3")).toEqual(["-@", 3]);
+    expect(subject.parse("!foo")).toEqual(["!@", "foo"]);
     expect(subject.parse("true")).toEqual(true);
     expect(subject.parse("false")).toEqual(false);
     expect(subject.parse("50")).toEqual(50);

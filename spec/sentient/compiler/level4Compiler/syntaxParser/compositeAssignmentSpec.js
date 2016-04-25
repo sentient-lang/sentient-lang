@@ -5,38 +5,38 @@ var subject = SpecHelper.parserForRule("compositeAssignment");
 
 describe("compositeAssignment", function () {
   it("accepts valid", function () {
-    expect(subject.parse("a += b")).toEqual([["a"], [["a", ["b"], "+"]]]);
-    expect(subject.parse("a -= b")).toEqual([["a"], [["a", ["b"], "-"]]]);
-    expect(subject.parse("a *= b")).toEqual([["a"], [["a", ["b"], "*"]]]);
-    expect(subject.parse("a /= b")).toEqual([["a"], [["a", ["b"], "/"]]]);
-    expect(subject.parse("a %= b")).toEqual([["a"], [["a", ["b"], "%"]]]);
-    expect(subject.parse("a &&= b")).toEqual([["a"], [["a", ["b"], "&&"]]]);
-    expect(subject.parse("a ||= b")).toEqual([["a"], [["a", ["b"], "||"]]]);
+    expect(subject.parse("a += b")).toEqual([["a"], ["+", "a", "b"]]);
+    expect(subject.parse("a -= b")).toEqual([["a"], ["-", "a", "b"]]);
+    expect(subject.parse("a *= b")).toEqual([["a"], ["*", "a", "b"]]);
+    expect(subject.parse("a /= b")).toEqual([["a"], ["/", "a", "b"]]);
+    expect(subject.parse("a %= b")).toEqual([["a"], ["%", "a", "b"]]);
+    expect(subject.parse("a &&= b")).toEqual([["a"], ["&&", "a", "b"]]);
+    expect(subject.parse("a ||= b")).toEqual([["a"], ["||", "a", "b"]]);
 
     expect(subject.parse("a += 1 + 2")).toEqual(
-      [["a"], [["a", [[1, [2], "+"]], "+"]]]
+      [["a"], ["+", "a", ["+", 1, 2]]]
     );
     expect(subject.parse("a -= 1 + 2")).toEqual(
-      [["a"], [["a", [[1, [2], "+"]], "-"]]]
+      [["a"], ["-", "a", ["+", 1, 2]]]
     );
     expect(subject.parse("a *= 1 + 2")).toEqual(
-      [["a"], [["a", [[1, [2], "+"]], "*"]]]
+      [["a"], ["*", "a", ["+", 1, 2]]]
     );
     expect(subject.parse("a /= 1 + 2")).toEqual(
-      [["a"], [["a", [[1, [2], "+"]], "/"]]]
+      [["a"], ["/", "a", ["+", 1, 2]]]
     );
     expect(subject.parse("a %= 1 + 2")).toEqual(
-      [["a"], [["a", [[1, [2], "+"]], "%"]]]
+      [["a"], ["%", "a", ["+", 1, 2]]]
     );
     expect(subject.parse("a &&= true == false")).toEqual(
-      [["a"], [["a", [[true, [false], "=="]], "&&"]]]
+      [["a"], ["&&", "a", ["==", true, false]]]
     );
     expect(subject.parse("a ||= true == false")).toEqual(
-      [["a"], [["a", [[true, [false], "=="]], "||"]]]
+      [["a"], ["||", "a", ["==", true, false]]]
     );
 
     expect(subject.parse("a||=true==false")).toEqual(
-      [["a"], [["a", [[true, [false], "=="]], "||"]]]
+      [["a"], ["||", "a", ["==", true, false]]]
     );
   });
 

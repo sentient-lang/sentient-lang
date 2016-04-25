@@ -11,7 +11,7 @@ describe("program", function () {
       vary a, b, total;                   \n\
     ")).toEqual([
       { type: "declaration", value: [["int", 6], ["a", "b"]] },
-      { type: "assignment", value: [["total"], [["a", ["b"], "+"]]] },
+      { type: "assignment", value: [["total"], [["+", "a", "b"]]] },
       { type: "vary", value: ["a", "b", "total"] }
     ]);
 
@@ -27,11 +27,11 @@ describe("program", function () {
     ")).toEqual([
       { type: "declaration", value: [["int", 6], ["a", "b", "c"]] },
 
-      { type: "assignment", value: [["a2"], [["a", ["a"], "*"]]] },
-      { type: "assignment", value: [["b2"], [["b", ["b"], "*"]]] },
-      { type: "assignment", value: [["c2"], [["c", ["c"], "*"]]] },
+      { type: "assignment", value: [["a2"], [["*", "a", "a"]]] },
+      { type: "assignment", value: [["b2"], [["*", "b", "b"]]] },
+      { type: "assignment", value: [["c2"], [["*", "c", "c"]]] },
 
-      { type: "invariant", value: [[["a2", ["b2"], "+"], ["c2"], "=="]] },
+      { type: "invariant", value: [["==", ["+", "a2", "b2"], "c2"]] },
       { type: "vary", value: ["a", "b", "c"] }
     ]);
   });

@@ -5,30 +5,32 @@ var subject = SpecHelper.parserForRule("exprTernary");
 
 describe("exprTernary", function () {
   it("accepts valid", function () {
-    expect(subject.parse("a ? b : c")).toEqual(["a", ["b", "c"], "if"]);
-    expect(subject.parse("true ? 1 : 2")).toEqual([true, [1, 2], "if"]);
+    expect(subject.parse("a ? b : c")).toEqual(["if", "a", "b", "c"]);
+    expect(subject.parse("true ? 1 : 2")).toEqual(["if", true, 1, 2]);
 
     expect(subject.parse("a || b ? !c : d")).toEqual(
-      [["a", ["b"], "||"], [["c", "!"], "d"], "if"]
+      ["if", ["||", "a", "b"], ["!@", "c"], "d"]
     );
 
     expect(subject.parse("a ? b : c ? d : e")).toEqual(
-      ["a", ["b", ["c", ["d", "e"], "if"]], "if"]
+      ["if", "a", "b", ["if", "c", "d", "e"]]
     );
 
     expect(subject.parse("(a ? b : c) ? d : e")).toEqual(
-      [["a", ["b", "c"], "if"], ["d", "e"], "if"]
+      ["if", ["if", "a", "b", "c"], "d", "e"]
     );
 
     expect(subject.parse("a ? b ? c : d : e ? f : g ? h : i")).toEqual(
-      ["a",
-        [["b", ["c", "d"], "if"],
-        ["e", ["f", ["g", ["h", "i"], "if"]], "if"]], "if"
+      ["if", "a",
+        ["if", "b", "c", "d"],
+        ["if", "e", "f",
+          ["if", "g", "h", "i"]
+        ]
       ]
     );
 
     expect(subject.parse("a?b:c?d:e")).toEqual(
-      ["a", ["b", ["c", ["d", "e"], "if"]], "if"]
+      ["if", "a", "b", ["if", "c", "d", "e"]]
     );
   });
 

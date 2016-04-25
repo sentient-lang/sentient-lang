@@ -6,19 +6,19 @@ var subject = SpecHelper.parserForRule("destructuredAssignment");
 describe("destructuredAssignment", function () {
   it("accepts valid", function () {
     expect(subject.parse("div, mod =* 3.divmod(2)")).toEqual(
-      [["div", "mod"], [3, [2], "divmod"]]
+      [["div", "mod"], ["divmod", 3, 2]]
     );
 
     expect(subject.parse("a, a_present =* arr.get(3)")).toEqual(
-      [["a", "a_present"], ["arr", [3], "get"]]
+      [["a", "a_present"], ["get", "arr", 3]]
     );
 
     expect(subject.parse("a, b, c =* foo.returns_three_things")).toEqual(
-      [["a", "b", "c"], ["foo", [], "returns_three_things"]]
+      [["a", "b", "c"], ["returns_three_things", "foo"]]
     );
 
     expect(subject.parse("a,b,c=*foo.returns_three_things")).toEqual(
-      [["a", "b", "c"], ["foo", [], "returns_three_things"]]
+      [["a", "b", "c"], ["returns_three_things", "foo"]]
     );
 
     expect(subject.parse("a =* 123")).toEqual(
