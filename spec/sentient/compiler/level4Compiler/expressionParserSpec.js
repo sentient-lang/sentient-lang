@@ -86,7 +86,7 @@ describe("ExpressionParser", function () {
       { type: "constant", value: 1 },
       { type: "constant", value: 2 },
       { type: "call", name: "*", width: 2 },
-      { type: "call", name: "[]", width: 2 },
+      { type: "call", name: "[]", width: 2 }
     ]);
   });
 

@@ -2,8 +2,23 @@
 
 var compiler = "../../../lib/sentient/compiler";
 var describedClass = require(compiler + "/level4Compiler");
+var StandardLibrary = require(compiler + "/level4Compiler/standardLibrary");
 
 describe("Level4Compiler", function () {
+  var standardLibrary, withStandardLibrary;
+
+  beforeEach(function () {
+    standardLibrary = new StandardLibrary();
+
+    withStandardLibrary = function (expected) {
+      return {
+        instructions: standardLibrary.instructions.concat(
+          expected.instructions
+        )
+      };
+    };
+  });
+
   it("compiles a simple program", function () {
     var code = describedClass.compile("\n\
       int6 a, b;                       \n\
@@ -11,7 +26,7 @@ describe("Level4Compiler", function () {
       vary a, b, total;                \n\
     ");
 
-    expect(code).toEqual({
+    expect(code).toEqual(withStandardLibrary({
       instructions: [
         { type: "integer", symbol: "a", width: 6 },
         { type: "integer", symbol: "b", width: 6 },
@@ -23,7 +38,7 @@ describe("Level4Compiler", function () {
         { type: "variable", symbol: "b" },
         { type: "variable", symbol: "total" }
       ]
-    });
+    }));
   });
 
   it("compiles a program that uses destructuring", function () {
@@ -33,7 +48,7 @@ describe("Level4Compiler", function () {
       vary a, b, div, mod;             \n\
     ");
 
-    expect(code).toEqual({
+    expect(code).toEqual(withStandardLibrary({
       instructions: [
         { type: "integer", symbol: "a", width: 6 },
         { type: "integer", symbol: "b", width: 6 },
@@ -47,7 +62,7 @@ describe("Level4Compiler", function () {
         { type: "variable", symbol: "div" },
         { type: "variable", symbol: "mod" }
       ]
-    });
+    }));
   });
 
   it("compiles a complicated program", function () {
@@ -173,7 +188,7 @@ describe("Level4Compiler", function () {
         money_to_keep;                                                       \n\
     ");
 
-    expect(code).toEqual({
+    expect(code).toEqual(withStandardLibrary({
       instructions: [
         { type: 'constant', value: 1 },
         { type: 'constant', value: 2 },
@@ -524,7 +539,6 @@ describe("Level4Compiler", function () {
         { type: 'variable', symbol: 'shopping_purchased' },
         { type: 'variable', symbol: 'money_to_keep' }
       ]
-    });
+    }));
   });
 });
-
