@@ -30,6 +30,11 @@ describe("exprMethod", function () {
       ["b", "a", ["d", "c", "e"], ["-@", "f"]]
     );
 
+    expect(subject.parse("a.+(b)")).toEqual(["+", "a", "b"]);
+    expect(subject.parse("a.a12?(b)")).toEqual(["a12?", "a", "b"]);
+    expect(subject.parse("a.&&(b)")).toEqual(["&&", "a", "b"]);
+    expect(subject.parse("a.-@")).toEqual(["-@", "a"]);
+
     expect(subject.parse("arr.empty?")).toEqual(["empty?", "arr"]);
     expect(subject.parse("arr.contains?(1)")).toEqual(["contains?", "arr", 1]);
     expect(subject.parse("arr.reverse!")).toEqual(["reverse!", "arr"]);
@@ -50,8 +55,7 @@ describe("exprMethod", function () {
     expect(function () { subject.parse("foo.bar 123"); }).toThrow();
     expect(function () { subject.parse("foo .bar"); }).toThrow();
     expect(function () { subject.parse("foo.a.b."); }).toThrow();
-    expect(function () { subject.parse("foo.bar??"); }).toThrow();
-    expect(function () { subject.parse("foo.bar!!"); }).toThrow();
-    expect(function () { subject.parse("foo.bar?!"); }).toThrow();
+    expect(function () { subject.parse("foo.bar..baz"); }).toThrow();
+    expect(function () { subject.parse("foo.bar("); }).toThrow();
   });
 });
