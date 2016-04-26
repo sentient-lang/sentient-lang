@@ -62,6 +62,17 @@ describe("expression", function () {
     expect(subject.parse("a >= b / c")).toEqual(
       [">=", "a", ["/", "b", "c"]]
     );
+
+    expect(subject.parse("a.b(c)")).toEqual(["b", "a", "c"]);
+    expect(subject.parse("-(1)")).toEqual(["-@", 1]);
+    expect(subject.parse("-(1, 2)")).toEqual(["-", 1, 2]);
+    expect(subject.parse("a.-(b)--c")).toEqual(
+      ["-", ["-", "a", "b"], ["-@", "c"]]
+    );
+
+    expect(subject.parse("a.==(b)")).toEqual(["==", "a", "b"]);
+    expect(subject.parse("1.collect(2)")).toEqual(["collect", 1, 2]);
+
     expect(subject.parse("1 + 2 / 3")).toEqual(["+", 1, ["/", 2, 3]]);
     expect(subject.parse("-3")).toEqual(["-@", 3]);
     expect(subject.parse("!foo")).toEqual(["!@", "foo"]);
