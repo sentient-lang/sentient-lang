@@ -70,6 +70,7 @@ describe("expression", function () {
       ["-", ["-", "a", "b"], ["-@", "c"]]
     );
 
+    expect(subject.parse("A + B.-@")).toEqual(["+", "A", ["-@", "B"]]);
     expect(subject.parse("a.==(b)")).toEqual(["==", "a", "b"]);
     expect(subject.parse("1.collect(2)")).toEqual(["collect", 1, 2]);
 

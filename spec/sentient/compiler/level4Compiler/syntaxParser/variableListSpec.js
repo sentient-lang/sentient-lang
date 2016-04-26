@@ -13,6 +13,7 @@ describe("variableList", function () {
     expect(subject.parse("a_b_0, foo")).toEqual(["a_b_0", "foo"]);
     expect(subject.parse("a \n , \n b")).toEqual(["a", "b"]);
     expect(subject.parse("a # comment\n , \n b")).toEqual(["a", "b"]);
+    expect(subject.parse("A")).toEqual(["A"]);
   });
 
   it("rejects invalid", function () {
@@ -20,7 +21,6 @@ describe("variableList", function () {
     expect(function () { subject.parse(" a"); }).toThrow();
     expect(function () { subject.parse("a "); }).toThrow();
     expect(function () { subject.parse("a b"); }).toThrow();
-    expect(function () { subject.parse("A"); }).toThrow();
     expect(function () { subject.parse("_, b"); }).toThrow();
     expect(function () { subject.parse("_, b c"); }).toThrow();
     expect(function () { subject.parse("a # comment , b"); }).toThrow();

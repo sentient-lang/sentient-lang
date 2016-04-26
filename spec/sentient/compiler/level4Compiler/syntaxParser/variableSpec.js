@@ -14,12 +14,14 @@ describe("variable", function () {
     expect(subject.parse("a_")).toEqual("a_");
     expect(subject.parse("true_x")).toEqual("true_x");
     expect(subject.parse("x_false")).toEqual("x_false");
+    expect(subject.parse("fooBar")).toEqual("fooBar");
+    expect(subject.parse("SHOUTY")).toEqual("SHOUTY");
+    expect(subject.parse("A_bC0")).toEqual("A_bC0");
+    expect(subject.parse("trueA")).toEqual("trueA");
   });
 
   it("rejects invalid", function () {
     expect(function () { subject.parse(""); }).toThrow();
-    expect(function () { subject.parse("A"); }).toThrow();
-    expect(function () { subject.parse("aB"); }).toThrow();
     expect(function () { subject.parse("0a"); }).toThrow();
     expect(function () { subject.parse("_a"); }).toThrow();
     expect(function () { subject.parse("3"); }).toThrow();
