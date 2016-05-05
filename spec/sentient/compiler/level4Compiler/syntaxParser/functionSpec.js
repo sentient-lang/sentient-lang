@@ -57,6 +57,27 @@ describe("function", function () {
       body: [{ type: "assignment", value: [["x"], [["*", "x", 2]]] }],
       ret: [0]
     });
+
+    expect(
+      subject.parse("function x () { function y () {}; }")
+    ).toEqual({
+      name: "x",
+      dynamic: false,
+      args: [],
+      body: [
+        {
+          type: "function",
+          value: {
+            name: "y",
+            dynamic: false,
+            args: [],
+            body: [],
+            ret: [0]
+          }
+        }
+      ],
+      ret: [0]
+    });
   });
 
   it("rejects invalid", function () {
