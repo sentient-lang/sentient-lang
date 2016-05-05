@@ -5,18 +5,21 @@ var compiler = "../../../../lib/sentient/compiler";
 var SpecHelper = require("../../../specHelper");
 var describedClass = require(compiler + "/level4Compiler/instructionSet");
 var CodeWriter = require(compiler + "/level4Compiler/codeWriter");
+var Registry = require(compiler + "/level4Compiler/registry");
 var ExpressionParser = require(compiler + "/level4Compiler/expressionParser");
 
 describe("InstructionSet", function () {
-  var subject, codeWriter, expressionParser;
+  var subject, codeWriter, expressionParser, registry;
 
   beforeEach(function () {
     codeWriter = new CodeWriter();
     expressionParser = new ExpressionParser();
+    registry = new Registry();
 
     subject = new describedClass({
       codeWriter: codeWriter,
-      expressionParser: expressionParser
+      expressionParser: expressionParser,
+      registry: registry
     });
   });
 
@@ -138,9 +141,13 @@ describe("InstructionSet", function () {
       subject.assignment([["a", "b"], [1, true]]);
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-        { type: "constant", value: 1 },
-        { type: "pop", symbol: "a" },
         { type: "constant", value: true },
+        { type: "constant", value: 1 },
+        { type: "pop", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "pop", symbol: "$$$_L4_TMP2_$$$" },
+        { type: "push", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "pop", symbol: "a" },
+        { type: "push", symbol: "$$$_L4_TMP2_$$$" },
         { type: "pop", symbol: "b" }
       ]);
     });
@@ -150,28 +157,34 @@ describe("InstructionSet", function () {
       subject.assignment([["a", "b"], [["/", 1, 2], ["||", true, "x"]]]);
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-        { type: "constant", value: 1 },
-        { type: "constant", value: 2 },
-        { type: "call", name: "/", width: 2 },
-        { type: "pop", symbol: "a" },
         { type: "constant", value: true },
         { type: "push", symbol: "x" },
         { type: "call", name: "||", width: 2 },
+        { type: "constant", value: 1 },
+        { type: "constant", value: 2 },
+        { type: "call", name: "/", width: 2 },
+        { type: "pop", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "pop", symbol: "$$$_L4_TMP2_$$$" },
+        { type: "push", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "pop", symbol: "a" },
+        { type: "push", symbol: "$$$_L4_TMP2_$$$" },
         { type: "pop", symbol: "b" }
       ]);
     });
-  });
 
-  describe("destructuredAssignment", function () {
     it("emits instructions for divmod", function () {
       spyOn(codeWriter, "instruction");
-      subject.destructuredAssignment([["div", "mod"], ["divmod", 3, 2]]);
+      subject.assignment([["div", "mod"], [["divmod", 3, 2]]]);
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
         { type: "constant", value: 3 },
         { type: "constant", value: 2 },
         { type: "call", name: "divmod", width: 2 },
+        { type: "pop", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "pop", symbol: "$$$_L4_TMP2_$$$" },
+        { type: "push", symbol: "$$$_L4_TMP1_$$$" },
         { type: "pop", symbol: "div" },
+        { type: "push", symbol: "$$$_L4_TMP2_$$$" },
         { type: "pop", symbol: "mod" }
       ]);
     });
@@ -179,15 +192,19 @@ describe("InstructionSet", function () {
     it("emits instructions for get", function () {
       spyOn(codeWriter, "instruction");
 
-      subject.destructuredAssignment(
-        [["a", "a_present"], ["get", "arr", 3]]
+      subject.assignment(
+        [["a", "a_present"], [["get", "arr", 3]]]
       );
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
         { type: "push", symbol: "arr" },
         { type: "constant", value: 3 },
         { type: "call", name: "get", width: 2 },
+        { type: "pop", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "pop", symbol: "$$$_L4_TMP2_$$$" },
+        { type: "push", symbol: "$$$_L4_TMP1_$$$" },
         { type: "pop", symbol: "a" },
+        { type: "push", symbol: "$$$_L4_TMP2_$$$" },
         { type: "pop", symbol: "a_present" }
       ]);
     });
@@ -259,6 +276,8 @@ describe("InstructionSet", function () {
         { type: "push", symbol: "x" },
         { type: "constant", value: 2 },
         { type: "call", name: "*", width: 2 },
+        { type: "pop", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "push", symbol: "$$$_L4_TMP1_$$$" },
         { type: "pop", symbol: "x" },
         { type: "return", width: 0 }
       ]);
