@@ -67,4 +67,17 @@ describe("statement", function () {
       { type: "invariant", value: [["&&", "a", "b"], ["==", "b", true]] }
     );
   });
+
+  it("parses functions", function () {
+    expect(subject.parse("function add (x, y) { return x + y; }")).toEqual({
+      type: "function",
+      value: {
+        name: "add",
+        dynamic: false,
+        args: ["x", "y"],
+        body: [],
+        ret: [1, ["+", "x", "y"]]
+      }
+    });
+  });
 });

@@ -221,4 +221,77 @@ describe("InstructionSet", function () {
       ]);
     });
   });
+
+  describe("function", function () {
+    it("emits instructions for function definitions", function () {
+      spyOn(codeWriter, "instruction");
+
+      subject._function({
+        name: "add",
+        dynamic: false,
+        args: ["a", "b"],
+        body: [],
+        ret: [1, ["+", "a", "b"]]
+      });
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "define", name: "add", dynamic: false, args: ["a", "b"] },
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "call", name: "+", width: 2 },
+        { type: "return", width: 1 }
+      ]);
+    });
+
+    it("emits instructions for dynamically scoped functions", function () {
+      spyOn(codeWriter, "instruction");
+
+      subject._function({
+        name: "double_x",
+        dynamic: true,
+        args: [],
+        body: [{ type: "assignment", value: [["x"], [["*", "x", 2]]] }],
+        ret: [0]
+      });
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "define", name: "double_x", dynamic: true, args: [] },
+        { type: "push", symbol: "x" },
+        { type: "constant", value: 2 },
+        { type: "call", name: "*", width: 2 },
+        { type: "pop", symbol: "x" },
+        { type: "return", width: 0 }
+      ]);
+    });
+
+    it("emits instructions for nested function definitions", function () {
+      spyOn(codeWriter, "instruction");
+
+      subject._function({
+        name: "x",
+        dynamic: false,
+        args: [],
+        body: [
+          {
+            type: "function",
+            value: {
+              name: "y",
+              dynamic: false,
+              args: [],
+              body: [],
+              ret: [0]
+            }
+          }
+        ],
+        ret: [0]
+      });
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "define", name: "x", dynamic: false, args: [] },
+        { type: "define", name: "y", dynamic: false, args: [] },
+        { type: "return", width: 0 },
+        { type: "return", width: 0 }
+      ]);
+    });
+  });
 });

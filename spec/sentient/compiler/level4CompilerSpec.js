@@ -65,6 +65,43 @@ describe("Level4Compiler", function () {
     }));
   });
 
+  it("compiles a program that uses functions", function () {
+    var code = describedClass.compile("\n\
+      function double (x) {            \n\
+        return x * 2;                  \n\
+      };                               \n\
+                                       \n\
+      a = 111;                         \n\
+      b = double(a);                   \n\
+      c = double(b);                   \n\
+                                       \n\
+      vary a, b, c;                    \n\
+    ");
+
+    expect(code).toEqual(withStandardLibrary({
+      instructions: [
+        { type: "define", name: "double", dynamic: false, args: ["x"] },
+        { type: "push", symbol: "x" },
+        { type: "constant", value: 2 },
+        { type: "call", name: "*", width: 2 },
+        { type: "return", width: 1 },
+
+        { type: "constant", value: 111 },
+        { type: "pop", symbol: "a" },
+        { type: "push", symbol: "a" },
+        { type: "call", name: "double", width: 1 },
+        { type: "pop", symbol: "b" },
+        { type: "push", symbol: "b" },
+        { type: "call", name: "double", width: 1 },
+        { type: "pop", symbol: "c" },
+
+        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "c" }
+      ]
+    }));
+  });
+
   it("compiles a complicated program", function () {
     var code = describedClass.compile("                                      \n\
       london_edges     = [1, 2, 4];                                          \n\
