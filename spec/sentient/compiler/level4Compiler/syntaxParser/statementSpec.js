@@ -80,4 +80,16 @@ describe("statement", function () {
       }
     });
   });
+
+  // This is so that we can call dynamically scoped functions with side-effects,
+  // without having to assign to a variable.
+  it("parses function expressions", function () {
+    expect(subject.parse("increment!()")).toEqual(
+      { type: "functionExpression", value: ["increment!"] }
+    );
+
+    expect(subject.parse("multiply_x_by(y)")).toEqual(
+      { type: "functionExpression", value: ["multiply_x_by", "y"] }
+    );
+  });
 });

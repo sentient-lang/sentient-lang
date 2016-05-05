@@ -294,4 +294,19 @@ describe("InstructionSet", function () {
       ]);
     });
   });
+
+  describe("functionExpression", function () {
+    it("emits instructions", function () {
+      spyOn(codeWriter, "instruction");
+
+      subject.functionExpression(["increment!"]);
+      subject.functionExpression(["multiply_x_by", "y"]);
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "call", name: "increment!", width: 0 },
+        { type: "push", symbol: "y" },
+        { type: "call", name: "multiply_x_by", width: 1 }
+      ]);
+    });
+  });
 });
