@@ -18,7 +18,7 @@
     "commander": "^2.9.0"
   },
   "devDependencies": {
-    "jasmine": "^2.3.2",
+    "jasmine": "^2.4.1",
     "jshint": "^2.9.1",
     "browserify": "^13.0.0",
     "brfs": "=1.0.2",
