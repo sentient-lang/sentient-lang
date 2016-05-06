@@ -20,4 +20,18 @@ describe("function passing", function () {
 
     expect(result).toEqual({ a: 123 });
   });
+
+  it("can detect recursive function calls", function () {
+    expect(function () {
+      Sentient.compile("function foo (*f) { f(*f); }; foo(*foo);");
+    }).toThrow();
+
+    expect(function () {
+      Sentient.compile("                \n\
+        function foo (*x) { x(*bar); }; \n\
+        function bar (*y) { y(*foo); }; \n\
+        foo(*bar);                      \n\
+      ");
+    }).toThrow();
+  });
 });

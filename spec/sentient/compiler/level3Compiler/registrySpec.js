@@ -29,6 +29,9 @@ describe("Registry", function () {
       "$$$_L3_ARRAY2_ELEMENT1_$$$"
     ]);
 
+    expect(subject.nextFunction()).toEqual(1);
+    expect(subject.nextFunction()).toEqual(2);
+
     expect(function () {
       subject.nextArray();
     }).toThrow();

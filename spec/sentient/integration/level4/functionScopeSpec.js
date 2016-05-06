@@ -56,6 +56,24 @@ describe("function definitions", function () {
     expect(result).toEqual({ x: 444 });
   });
 
+  it("allows functions to be redefined", function () {
+    var program = Sentient.compile("\n\
+      function foo () {             \n\
+        return 10;                  \n\
+      };                            \n\
+                                    \n\
+      function foo () {             \n\
+        return 20;                  \n\
+      };                            \n\
+                                    \n\
+      a = foo();                    \n\
+      vary a;                       \n\
+    ");
+    var result = Sentient.run(program);
+
+    expect(result).toEqual({ a: 20 });
+  });
+
   it("allows functions to be shadowed", function () {
     var program = Sentient.compile("\n\
       function foo () {             \n\
@@ -78,5 +96,22 @@ describe("function definitions", function () {
     var result = Sentient.run(program);
 
     expect(result).toEqual({ a: 10, b: 20, c: 10 });
+  });
+
+  it("allows functions to be redefined privately", function () {
+    var program = Sentient.compile("\n\
+      function foo () {             \n\
+        function foo () {           \n\
+          return 10;                \n\
+        };                          \n\
+        return foo();               \n\
+      };                            \n\
+                                    \n\
+      a = foo();                    \n\
+      vary a;                       \n\
+    ");
+    var result = Sentient.run(program);
+
+    expect(result).toEqual({ a: 10 });
   });
 });

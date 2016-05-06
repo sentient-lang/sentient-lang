@@ -2,12 +2,14 @@
 
 var compiler = "../../../../lib/sentient/compiler";
 var describedClass = require(compiler + "/level3Compiler/functionRegistry");
+var Registry = require(compiler + "/level3Compiler/registry");
 
 describe("FunctionRegistry", function () {
-  var subject;
+  var subject, registry;
 
   beforeEach(function () {
-    subject = new describedClass();
+    registry = new Registry();
+    subject = new describedClass(registry);
   });
 
   it("allows functions to be registered and retrieved", function () {
@@ -87,5 +89,13 @@ describe("FunctionRegistry", function () {
     expect(function () {
       subject.register("+", [], [], true, 1, true);
     }).toThrow();
+  });
+
+  it("assigns a unique id to the function", function () {
+    subject.register("foo", [], [], false, false, 0);
+    expect(subject.get("foo").id).toEqual([1, "foo"]);
+
+    subject.register("bar", [], [], false, false, 0);
+    expect(subject.get("bar").id).toEqual([2, "bar"]);
   });
 });
