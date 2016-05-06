@@ -144,10 +144,10 @@ describe("Integration: defining and calling functions", function () {
         { type: "define", name: "add_sub", args: ["x", "y"] },
         { type: "push", symbol: "x" },
         { type: "push", symbol: "y" },
-        { type: "add" },
+        { type: "subtract" },
         { type: "push", symbol: "x" },
         { type: "push", symbol: "y" },
-        { type: "subtract" },
+        { type: "add" },
         { type: "return", width: 2 },
 
         { type: "constant", value: 10 },
@@ -365,6 +365,7 @@ describe("Integration: defining and calling functions", function () {
         { type: "push", symbol: "arr" },
         { type: "constant", value: 1 },
         { type: "get", checkBounds: true },
+        { type: "swap" },
         { type: "return", width: 2 },
 
         { type: "constant", value: 10 },
@@ -1002,6 +1003,7 @@ describe("Integration: defining and calling functions", function () {
           { type: "push", symbol: "arr" },
           { type: "constant", value: 1 },
           { type: "get", checkBounds: true },
+          { type: "swap" },
           { type: "return", width: 2 },
 
           { type: "constant", value: 10 },
@@ -1046,6 +1048,7 @@ describe("Integration: defining and calling functions", function () {
           { type: "push", symbol: "bar" },
           { type: "constant", value: 1 },
           { type: "get", checkBounds: true },
+          { type: "swap" },
           { type: "return", width: 2 },
 
           { type: "constant", value: 10 },
@@ -1091,6 +1094,7 @@ describe("Integration: defining and calling functions", function () {
           { type: "push", symbol: "arr" },
           { type: "constant", value: 1 },
           { type: "get", checkBounds: true },
+          { type: "swap" },
           { type: "return", width: 2 },
 
           { type: "constant", value: 10 },
@@ -1141,6 +1145,7 @@ describe("Integration: defining and calling functions", function () {
           { type: "fetch" },
           { type: "constant", value: 1 },
           { type: "get", checkBounds: true },
+          { type: "swap" },
           { type: "return", width: 2 },
 
           { type: "constant", value: 10 },

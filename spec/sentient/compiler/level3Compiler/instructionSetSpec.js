@@ -3068,10 +3068,10 @@ describe("InstructionSet", function () {
         var s2 = stack.pop();
 
         expect(symbolTable.type(s1)).toEqual("integer");
-        expect(symbolTable.symbols(s1)).toEqual(["$$$_L3_INTEGER1_$$$"]);
+        expect(symbolTable.symbols(s1)).toEqual(["$$$_L3_INTEGER2_$$$"]);
 
         expect(symbolTable.type(s2)).toEqual("integer");
-        expect(symbolTable.symbols(s2)).toEqual(["$$$_L3_INTEGER2_$$$"]);
+        expect(symbolTable.symbols(s2)).toEqual(["$$$_L3_INTEGER1_$$$"]);
       });
     });
 
