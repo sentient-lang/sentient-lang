@@ -274,30 +274,112 @@ describe("Integration: defining and calling functions", function () {
     }).toThrow();
   });
 
-  it("allows functions to be defined inside functions", function () {
+  it("allows private functions to be defined inside functions", function () {
     var program = Level3Compiler.compile({
       instructions: [
         { type: "define", name: "foo", args: [] },
-        { type: "constant", value: 5 },
         { type: "define", name: "bar", args: [] },
         { type: "constant", value: 10 },
-        { type: "define", name: "baz", args: [] },
-        { type: "constant", value: 15 },
         { type: "return", width: 1 },
-        { type: "return", width: 1 },
+        { type: "call", name: "bar", width: 0 },
         { type: "return", width: 1 },
 
         { type: "call", name: "foo", width: 0 },
         { type: "pop", symbol: "a" },
+        { type: "variable", symbol: "a" }
+      ]
+    });
+
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level3Runtime.encode(program, {});
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result).toEqual({ a: 10 });
+  });
+
+  it("does not allow private functions to be called outside", function () {
+    expect(function () {
+      Level3Compiler.compile({
+        instructions: [
+          { type: "define", name: "foo", args: [] },
+          { type: "define", name: "bar", args: [] },
+          { type: "return", width: 0 },
+          { type: "return", width: 0 },
+
+          { type: "call", name: "bar", width: 0 }
+        ]
+      });
+    }).toThrow();
+  });
+
+  it("can call functions that are defined in the ancestry", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "define", name: "foo", args: [] },
+        { type: "define", name: "bar", args: [] },
+        { type: "constant", value: 10 },
+        { type: "return", width: 1 },
+        { type: "define", name: "baz", args: [] },
+        { type: "call", name: "bar", width: 0 },
+        { type: "return", width: 1 },
+        { type: "call", name: "baz", width: 0 },
+        { type: "return", width: 1 },
+
+        { type: "call", name: "foo", width: 0 },
+        { type: "pop", symbol: "a" },
+        { type: "variable", symbol: "a" }
+      ]
+    });
+
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level3Runtime.encode(program, {});
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments);
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result).toEqual({ a: 10 });
+  });
+
+  it("allows function definition shadowing", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "define", name: "foo", args: [] },
+        { type: "constant", value: 10 },
+        { type: "return", width: 1 },
+
+        { type: "define", name: "bar", args: [] },
+        { type: "define", name: "foo", args: [] },
+        { type: "constant", value: 20 },
+        { type: "return", width: 1 },
+        { type: "call", name: "foo", width: 0 },
+        { type: "return", width: 1 },
+
+        { type: "call", name: "foo", width: 0 },
+        { type: "pop", symbol: "a" },
+        { type: "variable", symbol: "a" },
 
         { type: "call", name: "bar", width: 0 },
         { type: "pop", symbol: "b" },
-
-        { type: "call", name: "baz", width: 0 },
-        { type: "pop", symbol: "c" },
-
-        { type: "variable", symbol: "a" },
         { type: "variable", symbol: "b" },
+
+        { type: "call", name: "foo", width: 0 },
+        { type: "pop", symbol: "c" },
         { type: "variable", symbol: "c" }
       ]
     });
@@ -315,7 +397,26 @@ describe("Integration: defining and calling functions", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result).toEqual({ a: 5, b: 10, c: 15 });
+    expect(result).toEqual({ a: 10, b: 20, c: 10 });
+  });
+
+  it("does not allow immutable function definition shadowing", function () {
+    expect(function () {
+      Level3Compiler.compile({
+        instructions: [
+          { type: "define", name: "foo", args: [], immutable: true },
+          { type: "constant", value: 10 },
+          { type: "return", width: 1 },
+
+          { type: "define", name: "bar", args: [] },
+          { type: "define", name: "foo", args: [] },
+          { type: "return", width: 0 },
+          { type: "return", width: 0 },
+
+          { type: "call", name: "bar", width: 0 }
+        ]
+      });
+    }).toThrow();
   });
 
   it("allows functions to be called inside functions", function () {
