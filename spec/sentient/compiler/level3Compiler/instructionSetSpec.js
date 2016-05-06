@@ -3362,4 +3362,20 @@ describe("InstructionSet", function () {
       });
     });
   });
+
+  describe("pointer", function () {
+    it("adds the pointer to the functionStack", function () {
+      subject.pointer("foo");
+      expect(functionStack.pop()).toEqual("foo");
+
+      subject.pointer("*bar");
+      expect(functionStack.pop()).toEqual("bar");
+    });
+
+    it("throws if a name is not provided", function () {
+      expect(function () {
+        subject.pointer();
+      }).toThrow();
+    });
+  });
 });

@@ -41,6 +41,10 @@ describe("ExpressionParser", function () {
       { type: "constant", value: 1 },
       { type: "collect", width: 1 }
     ]);
+
+    expect(describedClass.parse("*foo")).toEqual([
+      { type: "pointer", name: "*foo" }
+    ]);
   });
 
   it("generates instructions for fetch expressions", function () {

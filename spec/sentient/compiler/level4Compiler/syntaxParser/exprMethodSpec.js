@@ -40,6 +40,9 @@ describe("exprMethod", function () {
     expect(subject.parse("arr.reverse!")).toEqual(["reverse!", "arr"]);
     expect(subject.parse("arr.cycle!(3)")).toEqual(["cycle!", "arr", 3]);
 
+    expect(subject.parse("foo.bar(*baz)")).toEqual(["bar", "foo", "*baz"]);
+    expect(subject.parse("x.y(*z, 123)")).toEqual(["y", "x", "*z", 123]);
+
     expect(subject.parse("-0")).toEqual(["-@", 0]);
     expect(subject.parse("!true")).toEqual(["!@", true]);
     expect(subject.parse("true")).toEqual(true);

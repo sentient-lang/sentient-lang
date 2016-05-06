@@ -78,6 +78,16 @@ describe("function", function () {
       ],
       ret: [0]
     });
+
+    expect(
+      subject.parse("function x (*y, z) { return y(z); }")
+    ).toEqual({
+      name: "x",
+      dynamic: false,
+      args: ["*y", "z"],
+      body: [],
+      ret: [1, ["y", "z"]]
+    });
   });
 
   it("rejects invalid", function () {
