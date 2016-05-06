@@ -11,21 +11,23 @@ var FunctionRegistry = require(compiler + "/level3Compiler/functionRegistry");
 var CodeWriter = require(compiler + "/level3Compiler/codeWriter");
 
 describe("InstructionSet", function () {
-  var subject, stack, typedefStack, symbolTable, registry, functionRegistry,
-    codeWriter, callStack;
+  var subject, stack, typedefStack, functionStack, symbolTable, registry,
+    functionRegistry, codeWriter, callStack;
 
   beforeEach(function () {
     stack = new Stack();
     typedefStack = new Stack();
+    functionStack = new Stack();
     symbolTable = new SymbolTable();
     registry = new Registry();
-    functionRegistry = new FunctionRegistry();
+    functionRegistry = new FunctionRegistry(registry);
     codeWriter = new CodeWriter();
     callStack = [];
 
     subject = new describedClass({
       stack: stack,
       typedefStack: typedefStack,
+      functionStack: functionStack,
       symbolTable: symbolTable,
       registry: registry,
       functionRegistry: functionRegistry,
@@ -3294,6 +3296,32 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "$$$_L3_INTEGER2_$$$" },
           { type: "add" },
           { type: "pop", symbol: "$$$_L3_INTEGER3_$$$" }
+        ]);
+      });
+    });
+
+    describe("function with function arguments", function () {
+      beforeEach(function () {
+        functionRegistry.register("someFunc", ["x"], [
+          { type: "push", symbol: "x" }
+        ], false, false, 1);
+
+        functionRegistry.register("foo", ["*func", "bar"], [
+          { type: "push", symbol: "bar" },
+          { type: "call", name: "func", width: 1 }
+        ], false, false, 1);
+      });
+
+      it("writes instructions for calling the function", function () {
+        spyOn(codeWriter, "instruction");
+
+        subject.pointer("someFunc");
+        subject.constant(123);
+        subject._call("foo", 2);
+
+        expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+          { type: "constant", value: 123 },
+          { type: "pop", symbol: "$$$_L3_INTEGER1_$$$" }
         ]);
       });
     });

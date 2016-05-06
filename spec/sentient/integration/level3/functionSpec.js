@@ -1466,6 +1466,104 @@ describe("Integration: defining and calling functions", function () {
     });
   });
 
+  describe("passing functions as arguments", function () {
+    it("allows functions to be passed to other functions", function () {
+      var program = Level3Compiler.compile({
+        instructions: [
+          { type: "define", name: "foo", args: ["*func", "bar"] },
+          { type: "push", symbol: "bar" },
+          { type: "call", name: "func", width: 1 },
+          { type: "return", width: 1 },
+
+          { type: "define", name: "double", args: ["x"] },
+          { type: "push", symbol: "x" },
+          { type: "constant", value: 2 },
+          { type: "multiply" },
+          { type: "return", width: 1 },
+
+          { type: "define", name: "triple", args: ["x"] },
+          { type: "push", symbol: "x" },
+          { type: "constant", value: 3 },
+          { type: "multiply" },
+          { type: "return", width: 1 },
+
+          { type: "pointer", name: "double" },
+          { type: "constant", value: 123 },
+          { type: "call", name: "foo", width: 2 },
+          { type: "pop", symbol: "a" },
+          { type: "variable", symbol: "a" },
+
+          { type: "pointer", name: "triple" },
+          { type: "constant", value: 123 },
+          { type: "call", name: "foo", width: 2 },
+          { type: "pop", symbol: "b" },
+          { type: "variable", symbol: "b" }
+        ]
+      });
+
+      program = Level2Compiler.compile(program);
+      program = Level1Compiler.compile(program);
+
+      var assignments = Level3Runtime.encode(program, {});
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      expect(result).toEqual({ a: 246, b: 369 });
+    });
+
+    it("uses the latest definition of the function", function () {
+      var program = Level3Compiler.compile({
+        instructions: [
+          { type: "define", name: "foo", args: ["*func", "bar"] },
+          { type: "push", symbol: "bar" },
+          { type: "call", name: "func", width: 1 },
+          { type: "return", width: 1 },
+
+          { type: "define", name: "someFunc", args: ["x"] },
+          { type: "push", symbol: "x" },
+          { type: "return", width: 1 },
+
+          { type: "pointer", name: "someFunc" },
+          { type: "constant", value: 123 },
+          { type: "call", name: "foo", width: 2 },
+          { type: "pop", symbol: "a" },
+          { type: "variable", symbol: "a" },
+
+          { type: "define", name: "someFunc", args: ["x"] },
+          { type: "constant", value: 999 },
+          { type: "return", width: 1 },
+
+          { type: "pointer", name: "someFunc" },
+          { type: "constant", value: 123 },
+          { type: "call", name: "foo", width: 2 },
+          { type: "pop", symbol: "b" },
+          { type: "variable", symbol: "b" }
+        ]
+      });
+
+      program = Level2Compiler.compile(program);
+      program = Level1Compiler.compile(program);
+
+      var assignments = Level3Runtime.encode(program, {});
+      assignments = Level2Runtime.encode(program, assignments);
+      assignments = Level1Runtime.encode(program, assignments);
+
+      var result = Machine.run(program, assignments);
+
+      result = Level1Runtime.decode(program, result);
+      result = Level2Runtime.decode(program, result);
+      result = Level3Runtime.decode(program, result);
+
+      expect(result).toEqual({ a: 123, b: 999 });
+    });
+  });
+
   describe("recursive function call", function () {
     it("throws an error", function () {
       expect(function () {
