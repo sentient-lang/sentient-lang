@@ -3379,4 +3379,64 @@ describe("InstructionSet", function () {
       }).toThrow();
     });
   });
+
+  describe("each", function () {
+    beforeEach(function () {
+      symbolTable.set("a", "boolean", ["x"]);
+      symbolTable.set("b", "boolean", ["y"]);
+
+      symbolTable.set("arr", "array", ["a", "b"]);
+
+      functionRegistry.register(
+        "func", ["element", "index", "isPresent"], [], false, false, 0
+      );
+
+      subject.push("arr");
+      subject.pointer("func");
+    });
+
+    it("throws if the function is not registered", function () {
+      subject.pointer("missing");
+
+      expect(function () {
+        subject.each();
+      }).toThrow();
+    });
+
+    it("throws if array symbol's type is not an array", function () {
+      symbolTable.set("arr", "boolean", ["x"]);
+
+      expect(function () {
+        subject.each();
+      }).toThrow();
+    });
+
+    it("allows functions that take one argument", function () {
+      functionRegistry.register("func", ["e"], [], false, false, 0);
+      expect(function () { subject.each(); }).not.toThrow();
+    });
+
+    it("allows functions that take two arguments", function () {
+      functionRegistry.register("func", ["e", "i"], [], false, false, 0);
+      expect(function () { subject.each(); }).not.toThrow();
+    });
+
+    it("allows functions that take three arguments", function () {
+      functionRegistry.register("func", ["e", "i", "p"], [], false, false, 0);
+      expect(function () { subject.each(); }).not.toThrow();
+    });
+
+    it("does not allow functions that take zero arguments", function () {
+      functionRegistry.register("func", [], [], false, false, 0);
+      expect(function () { subject.each(); }).toThrow();
+    });
+
+    it("does not allow functions that take > 3 arguments", function () {
+      functionRegistry.register(
+        "func", ["e", "i", "p", "x"], [], false, false, 0
+      );
+
+      expect(function () { subject.each(); }).toThrow();
+    });
+  });
 });
