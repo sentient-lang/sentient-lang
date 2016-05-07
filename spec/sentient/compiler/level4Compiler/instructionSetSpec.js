@@ -312,6 +312,56 @@ describe("InstructionSet", function () {
         { type: "return", width: 0 }
       ]);
     });
+
+    it("emits instructions for anonymous functions", function () {
+      spyOn(codeWriter, "instruction");
+
+      subject._function({
+        name: "_anonymous",
+        dynamic: false,
+        args: [],
+        body: [],
+        ret: [1, 123]
+      });
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "define", name: "_anonymous1", dynamic: false, args: [] },
+        { type: "constant", value: 123 },
+        { type: "return", width: 1 }
+      ]);
+    });
+
+    it("returns the name of the defined function", function () {
+      var result = subject._function({
+        name: "_anonymous",
+        dynamic: false,
+        args: [],
+        body: [],
+        ret: [1, 123]
+      });
+
+      expect(result).toEqual("_anonymous1");
+
+      result = subject._function({
+        name: "foo",
+        dynamic: false,
+        args: [],
+        body: [],
+        ret: [1, 123]
+      });
+
+      expect(result).toEqual("foo");
+
+      result = subject._function({
+        name: "_anonymous",
+        dynamic: false,
+        args: [],
+        body: [],
+        ret: [1, 123]
+      });
+
+      expect(result).toEqual("_anonymous2");
+    });
   });
 
   describe("functionExpression", function () {
@@ -325,6 +375,63 @@ describe("InstructionSet", function () {
         { type: "call", name: "increment!", width: 0 },
         { type: "push", symbol: "y" },
         { type: "call", name: "multiply_x_by", width: 1 }
+      ]);
+    });
+  });
+
+  describe("inlining function arguments", function () {
+    it("automatically defines functions in functionExpression", function () {
+      spyOn(codeWriter, "instruction");
+
+      subject.functionExpression(["foo", "a", "*b", {
+        name: "_anonymous",
+        dynamic: true,
+        args: ["c"],
+        body: [
+          { type: "assignment", value: [["x"], [["+", "x", "c"]]] }
+        ],
+        ret: [0]
+      }, "d"]);
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "define", name: "_anonymous1", dynamic: true, args: ["c"] },
+        { type: "push", symbol: "x" },
+        { type: "push", symbol: "c" },
+        { type: "call", name: "+", width: 2 },
+        { type: "pop", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "push", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "pop", symbol: "x" },
+        { type: "return", width: 0 },
+
+        { type: "push", symbol: "a" },
+        { type: "pointer", name: "*b" },
+        { type: "pointer", name: "*_anonymous1" },
+        { type: "push", symbol: "d" },
+        { type: "call", name: "foo", width: 4 }
+      ]);
+    });
+
+    it("automatically defines functions in assignment", function () {
+      spyOn(codeWriter, "instruction");
+
+      subject.assignment([["a"], [["foo", {
+        name: "_anonymous",
+        dynamic: false,
+        args: [],
+        body: [],
+        ret: [1, 123]
+      }]]]);
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "define", name: "_anonymous1", dynamic: false, args: [] },
+        { type: "constant", value: 123 },
+        { type: "return", width: 1 },
+
+        { type: "pointer", name: "*_anonymous1" },
+        { type: "call", name: "foo", width: 1 },
+        { type: "pop", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "push", symbol: "$$$_L4_TMP1_$$$" },
+        { type: "pop", symbol: "a" }
       ]);
     });
   });

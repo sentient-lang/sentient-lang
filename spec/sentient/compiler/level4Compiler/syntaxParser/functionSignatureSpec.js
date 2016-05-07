@@ -22,6 +22,9 @@ describe("functionSignature", function () {
     expect(subject.parse("function +(x, y)")).toEqual(["+", false, ["x", "y"]]);
     expect(subject.parse("function^ incr ()")).toEqual(["incr", true, []]);
     expect(subject.parse("function^ add (x)")).toEqual(["add", true, ["x"]]);
+
+    expect(subject.parse("function (x)")).toEqual(["_anonymous", false, ["x"]]);
+    expect(subject.parse("function^ (x)")).toEqual(["_anonymous", true, ["x"]]);
   });
 
   it("rejects invalid", function () {

@@ -88,12 +88,21 @@ describe("function", function () {
       body: [],
       ret: [1, ["y", "z"]]
     });
+
+    expect(
+      subject.parse("function () { return 123; }")
+    ).toEqual({
+      name: "_anonymous",
+      dynamic: false,
+      args: [],
+      body: [],
+      ret: [1, 123]
+    });
   });
 
   it("rejects invalid", function () {
     expect(function () { subject.parse(""); }).toThrow();
     expect(function () { subject.parse("functionfoo () {}"); }).toThrow();
-    expect(function () { subject.parse("function () {}"); }).toThrow();
     expect(function () { subject.parse("function foo () {};"); }).toThrow();
     expect(function () { subject.parse("function ^ foo () {}"); }).toThrow();
   });
