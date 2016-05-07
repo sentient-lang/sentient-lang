@@ -80,4 +80,23 @@ describe("statement", function () {
       { type: "functionExpression", value: ["multiply_x_by", "y"] }
     );
   });
+
+  it("parses method expressions", function () {
+    expect(subject.parse("a.must_be_zero!")).toEqual(
+      { type: "functionExpression", value: ["must_be_zero!", "a"] }
+    );
+
+    expect(subject.parse("x.add_to_y!")).toEqual(
+      { type: "functionExpression", value: ["add_to_y!", "x"] }
+    );
+  });
+
+  it("does not parse arbitrary expressions", function () {
+    expect(function () { subject.parse("123"); }).toThrow();
+    expect(function () { subject.parse("true"); }).toThrow();
+    expect(function () { subject.parse("a"); }).toThrow();
+    expect(function () { subject.parse("2 + 2"); }).toThrow();
+    expect(function () { subject.parse("2 + foo(2)"); }).toThrow();
+    expect(function () { subject.parse("true.foo && false"); }).toThrow();
+  });
 });
