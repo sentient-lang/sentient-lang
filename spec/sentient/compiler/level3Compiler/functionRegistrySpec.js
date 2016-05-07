@@ -93,9 +93,9 @@ describe("FunctionRegistry", function () {
 
   it("assigns a unique id to the function", function () {
     subject.register("foo", [], [], false, false, 0);
-    expect(subject.get("foo").id).toEqual([1, "foo"]);
+    expect(subject.get("foo").id).toEqual(1);
 
     subject.register("bar", [], [], false, false, 0);
-    expect(subject.get("bar").id).toEqual([2, "bar"]);
+    expect(subject.get("bar").id).toEqual(2);
   });
 });

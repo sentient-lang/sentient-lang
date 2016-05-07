@@ -8,6 +8,7 @@ var Stack = require(compiler + "/common/stack");
 var SymbolTable = require(compiler + "/level3Compiler/symbolTable");
 var Registry = require(compiler + "/level3Compiler/registry");
 var FunctionRegistry = require(compiler + "/level3Compiler/functionRegistry");
+var CallStack = require(compiler + "/level3Compiler/callStack");
 var CodeWriter = require(compiler + "/level3Compiler/codeWriter");
 
 describe("InstructionSet", function () {
@@ -22,7 +23,7 @@ describe("InstructionSet", function () {
     registry = new Registry();
     functionRegistry = new FunctionRegistry(registry);
     codeWriter = new CodeWriter();
-    callStack = [];
+    callStack = new CallStack();
 
     subject = new describedClass({
       stack: stack,
