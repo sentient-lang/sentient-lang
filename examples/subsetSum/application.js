@@ -24,11 +24,9 @@ var Application = function () {
                                                                    \n\
       total = 0;                                                   \n\
                                                                    \n\
-      total += members[0] ? numbers[0] : 0;                        \n\
-      total += members[1] ? numbers[1] : 0;                        \n\
-      total += members[2] ? numbers[2] : 0;                        \n\
-      total += members[3] ? numbers[3] : 0;                        \n\
-      total += members[4] ? numbers[4] : 0;                        \n\
+      numbers.each(function^ (number, index) {                     \n\
+        total += members[index] ? number : 0;                      \n\
+      });                                                          \n\
                                                                    \n\
       vary numbers, members, total;                                \n\
     ");
