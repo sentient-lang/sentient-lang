@@ -21,7 +21,7 @@ describe("standard library: abs", function () {
     expect(result).toEqual({ a: 21 });
   });
 
-  it("can be called as a function instead of a method", function () {
+  it("can be called as a method instead of a function", function () {
     var program = Sentient.compile("a = abs(-5); vary a;");
     var result = Sentient.run(program);
     expect(result).toEqual({ a: 5 });

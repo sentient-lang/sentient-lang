@@ -17,7 +17,7 @@ describe("standard library: >", function () {
     expect(result).toEqual({ a: false });
   });
 
-  it("can be called as a function instead of a method", function () {
+  it("can be called as a method instead of a function", function () {
     var program = Sentient.compile("a = >(9, 4); vary a;");
     var result = Sentient.run(program);
     expect(result).toEqual({ a: true });

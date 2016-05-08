@@ -19,7 +19,7 @@ describe("standard library: divmod", function () {
     expect(result).toEqual({});
   });
 
-  it("can be called as a function instead of a method", function () {
+  it("can be called as a method instead of a function", function () {
     var program = Sentient.compile("div, mod = divmod(9, 4); vary div, mod;");
     var result = Sentient.run(program);
     expect(result).toEqual({ div: 2, mod: 1 });

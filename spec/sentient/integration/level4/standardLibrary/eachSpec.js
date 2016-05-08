@@ -75,7 +75,7 @@ describe("standard library: each", function () {
     expect(result).toEqual({ a: [1, 2, 3] });
   });
 
-  it("can be called as a function instead of a method", function () {
+  it("can be called as a method instead of a function", function () {
     var program = Sentient.compile("        \n\
       total = 0;                            \n\
                                             \n\
