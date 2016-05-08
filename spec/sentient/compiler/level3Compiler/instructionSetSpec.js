@@ -3440,7 +3440,7 @@ describe("InstructionSet", function () {
     });
   });
 
-  describe("each_pair", function () {
+  describe("eachPair", function () {
     beforeEach(function () {
       symbolTable.set("a", "boolean", ["x"]);
       symbolTable.set("b", "boolean", ["y"]);

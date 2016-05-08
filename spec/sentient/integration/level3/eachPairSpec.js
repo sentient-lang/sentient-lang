@@ -12,7 +12,7 @@ var Level3Runtime = require(runtime + "/level3Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-describe("Integration: 'each_pair'", function () {
+describe("Integration: 'eachPair'", function () {
   it("sets the elements, index and isPresent per iteration", function () {
     var program = Level3Compiler.compile({
       instructions: [
@@ -76,7 +76,7 @@ describe("Integration: 'each_pair'", function () {
 
         { type: "push", symbol: "myArray" },
         { type: "pointer", name: "myFn" },
-        { type: "each_pair" },
+        { type: "eachPair" },
         { type: "pop", symbol: "out" },
 
         { type: "variable", symbol: "out" },
@@ -175,7 +175,7 @@ describe("Integration: 'each_pair'", function () {
 
         { type: "push", symbol: "myArray" },
         { type: "pointer", name: "myFn" },
-        { type: "each_pair" },
+        { type: "eachPair" },
         { type: "pop", symbol: "out" },
 
         { type: "variable", symbol: "out" },
@@ -205,7 +205,7 @@ describe("Integration: 'each_pair'", function () {
     });
   });
 
-  it("supports calling each_pair with a four-argument function", function () {
+  it("supports calling eachPair with a four-argument function", function () {
     var program = Level3Compiler.compile({
       instructions: [
         { type: "constant", value: 10 },
@@ -255,7 +255,7 @@ describe("Integration: 'each_pair'", function () {
 
         { type: "push", symbol: "myArray" },
         { type: "pointer", name: "myFn" },
-        { type: "each_pair" },
+        { type: "eachPair" },
         { type: "pop", symbol: "out" },
 
         { type: "variable", symbol: "out" },
@@ -283,7 +283,7 @@ describe("Integration: 'each_pair'", function () {
     });
   });
 
-  it("supports calling each_pair with a two-argument function", function () {
+  it("supports calling eachPair with a two-argument function", function () {
     var program = Level3Compiler.compile({
       instructions: [
         { type: "constant", value: 10 },
@@ -319,7 +319,7 @@ describe("Integration: 'each_pair'", function () {
 
         { type: "push", symbol: "myArray" },
         { type: "pointer", name: "myFn" },
-        { type: "each_pair" },
+        { type: "eachPair" },
         { type: "pop", symbol: "out" },
 
         { type: "variable", symbol: "out" },
@@ -389,7 +389,7 @@ describe("Integration: 'each_pair'", function () {
 
         { type: "push", symbol: "myArray" },
         { type: "pointer", name: "myFn" },
-        { type: "each_pair" },
+        { type: "eachPair" },
         { type: "pop", symbol: "out" },
 
         { type: "variable", symbol: "out" },
