@@ -10,23 +10,6 @@ describe("CallStack", function () {
     subject = new describedClass();
   });
 
-  it("throws an error when a duplicate is added", function () {
-    subject = subject.add(1, "foo");
-    subject = subject.add(2, "bar");
-
-    expect(function () {
-      subject = subject.add(2, "bar");
-    }).toThrow();
-  });
-
-  it("determines duplicates based on id, not by name", function () {
-    expect(function () {
-      subject = subject.add(1, "foo");
-      subject = subject.add(2, "foo");
-      subject = subject.add(3, "foo");
-    }).not.toThrow();
-  });
-
   it("prints an ascii representation of a stack", function () {
     subject = subject.add(1, "a");
     subject = subject.add(3, "bb");
@@ -40,5 +23,36 @@ describe("CallStack", function () {
     expected +=  "\n---------------";
 
     expect(subject.toString()).toEqual(expected);
+  });
+
+  it("throws if the stack size is greater than 1000", function () {
+    for (var i = 0; i < 1000; i += 1) {
+      subject = subject.add(i, "call " + i);
+    }
+
+    expect(function () {
+      subject.add(1000, "call 1000");
+    }).toThrow();
+  });
+
+  it("truncates the call stack to the most recent 20 lines", function () {
+    for (var i = 1; i <= 21; i += 1) {
+      subject = subject.add(i, "call " + i);
+    }
+
+    var result = subject.toString();
+
+    expect(result).toMatch("call 21 ");
+    expect(result).toMatch("call 2 ");
+    expect(result).toMatch("(truncated)");
+    expect(result).not.toMatch("call 1 ");
+  });
+
+  it("does not include '(truncated)' if not truncated", function () {
+    for (var i = 1; i <= 20; i += 1) {
+      subject = subject.add(i, "call " + i);
+    }
+
+    expect(subject.toString()).not.toMatch("(truncated)");
   });
 });
