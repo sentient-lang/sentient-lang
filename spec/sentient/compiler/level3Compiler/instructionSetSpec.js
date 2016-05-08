@@ -3439,4 +3439,75 @@ describe("InstructionSet", function () {
       expect(function () { subject.each(); }).toThrow();
     });
   });
+
+  describe("each_pair", function () {
+    beforeEach(function () {
+      symbolTable.set("a", "boolean", ["x"]);
+      symbolTable.set("b", "boolean", ["y"]);
+
+      symbolTable.set("arr", "array", ["a", "b"]);
+
+      functionRegistry.register(
+        "func", ["e", "f", "i", "j", "p", "q"], [], false, false, 0
+      );
+
+      subject.push("arr");
+      subject.pointer("func");
+    });
+
+    it("throws if the function is not registered", function () {
+      subject.pointer("missing");
+
+      expect(function () {
+        subject.eachPair();
+      }).toThrow();
+    });
+
+    it("throws if array symbol's type is not an array", function () {
+      symbolTable.set("arr", "boolean", ["x"]);
+
+      expect(function () {
+        subject.eachPair();
+      }).toThrow();
+    });
+
+    it("allows functions that take two arguments", function () {
+      functionRegistry.register("func", ["e", "f"], [], false, false, 0);
+      expect(function () { subject.eachPair(); }).not.toThrow();
+    });
+
+    it("allows functions that take four arguments", function () {
+      functionRegistry.register(
+        "func", ["e", "f", "i", "j"], [], false, false, 0
+      );
+
+      expect(function () { subject.eachPair(); }).not.toThrow();
+    });
+
+    it("allows functions that take six arguments", function () {
+      functionRegistry.register(
+        "func", ["e", "f", "i", "j", "p", "q"], [], false, false, 0
+      );
+
+      expect(function () { subject.eachPair(); }).not.toThrow();
+    });
+
+    it("does not allow functions that take zero arguments", function () {
+      functionRegistry.register("func", [], [], false, false, 0);
+      expect(function () { subject.eachPair(); }).toThrow();
+    });
+
+    it("does not allow functions that take > 6 arguments", function () {
+      functionRegistry.register(
+        "func", ["e", "f", "i", "j", "p", "q", "x"], [], false, false, 0
+      );
+
+      expect(function () { subject.eachPair(); }).toThrow();
+    });
+
+    it("does not allow functions that take 1 argument", function () {
+      functionRegistry.register("func", ["e"], [], false, false, 0);
+      expect(function () { subject.eachPair(); }).toThrow();
+    });
+  });
 });
