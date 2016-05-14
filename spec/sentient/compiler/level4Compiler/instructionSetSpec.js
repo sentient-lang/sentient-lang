@@ -245,14 +245,13 @@ describe("InstructionSet", function () {
 
       subject._function({
         name: "add",
-        dynamic: false,
         args: ["a", "b"],
         body: [],
         ret: [1, ["+", "a", "b"]]
       });
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-        { type: "define", name: "add", dynamic: false, args: ["a", "b"] },
+        { type: "define", name: "add", args: ["a", "b"] },
         { type: "push", symbol: "a" },
         { type: "push", symbol: "b" },
         { type: "call", name: "+", width: 2 },
@@ -283,19 +282,34 @@ describe("InstructionSet", function () {
       ]);
     });
 
+    it("emits instructions for immutable functions", function () {
+      spyOn(codeWriter, "instruction");
+
+      subject._function({
+        name: "&&",
+        immutable: true,
+        args: [],
+        body: [],
+        ret: [0]
+      });
+
+      expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
+        { type: "define", name: "&&", immutable: true, args: [] },
+        { type: "return", width: 0 }
+      ]);
+    });
+
     it("emits instructions for nested function definitions", function () {
       spyOn(codeWriter, "instruction");
 
       subject._function({
         name: "x",
-        dynamic: false,
         args: [],
         body: [
           {
             type: "function",
             value: {
               name: "y",
-              dynamic: false,
               args: [],
               body: [],
               ret: [0]
@@ -306,8 +320,8 @@ describe("InstructionSet", function () {
       });
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-        { type: "define", name: "x", dynamic: false, args: [] },
-        { type: "define", name: "y", dynamic: false, args: [] },
+        { type: "define", name: "x", args: [] },
+        { type: "define", name: "y", args: [] },
         { type: "return", width: 0 },
         { type: "return", width: 0 }
       ]);
@@ -318,14 +332,13 @@ describe("InstructionSet", function () {
 
       subject._function({
         name: "_anonymous",
-        dynamic: false,
         args: [],
         body: [],
         ret: [1, 123]
       });
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-        { type: "define", name: "_anonymous1", dynamic: false, args: [] },
+        { type: "define", name: "_anonymous1", args: [] },
         { type: "constant", value: 123 },
         { type: "return", width: 1 }
       ]);
@@ -334,7 +347,6 @@ describe("InstructionSet", function () {
     it("returns the name of the defined function", function () {
       var result = subject._function({
         name: "_anonymous",
-        dynamic: false,
         args: [],
         body: [],
         ret: [1, 123]
@@ -344,7 +356,6 @@ describe("InstructionSet", function () {
 
       result = subject._function({
         name: "foo",
-        dynamic: false,
         args: [],
         body: [],
         ret: [1, 123]
@@ -354,7 +365,6 @@ describe("InstructionSet", function () {
 
       result = subject._function({
         name: "_anonymous",
-        dynamic: false,
         args: [],
         body: [],
         ret: [1, 123]
@@ -416,14 +426,13 @@ describe("InstructionSet", function () {
 
       subject.assignment([["a"], [["foo", {
         name: "_anonymous",
-        dynamic: false,
         args: [],
         body: [],
         ret: [1, 123]
       }]]]);
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
-        { type: "define", name: "_anonymous1", dynamic: false, args: [] },
+        { type: "define", name: "_anonymous1", args: [] },
         { type: "constant", value: 123 },
         { type: "return", width: 1 },
 

@@ -5,26 +5,48 @@ var subject = SpecHelper.parserForRule("functionSignature");
 
 describe("functionSignature", function () {
   it("accepts valid", function () {
-    expect(subject.parse("function foo ()")).toEqual(["foo", false, []]);
-    expect(subject.parse("function foo (a)")).toEqual(["foo", false, ["a"]]);
+    expect(subject.parse("function foo ()")).toEqual(
+      ["foo", false, false, []]
+    );
+    expect(subject.parse("function foo (a)")).toEqual(
+      ["foo", false, false, ["a"]]
+    );
     expect(subject.parse("function foo (a, b)")).toEqual(
-      ["foo", false, ["a", "b"]]
+      ["foo", false, false, ["a", "b"]]
     );
     expect(subject.parse("function double (x)")).toEqual(
-      ["double", false, ["x"]]
+      ["double", false, false, ["x"]]
     );
     expect(subject.parse("function x( a , b )")).toEqual(
-      ["x", false, ["a", "b"]]
+      ["x", false, false, ["a", "b"]]
     );
     expect(subject.parse("function zero? (x)")).toEqual(
-      ["zero?", false, ["x"]]
+      ["zero?", false, false, ["x"]]
     );
-    expect(subject.parse("function +(x, y)")).toEqual(["+", false, ["x", "y"]]);
-    expect(subject.parse("function^ incr ()")).toEqual(["incr", true, []]);
-    expect(subject.parse("function^ add (x)")).toEqual(["add", true, ["x"]]);
-
-    expect(subject.parse("function (x)")).toEqual(["_anonymous", false, ["x"]]);
-    expect(subject.parse("function^ (x)")).toEqual(["_anonymous", true, ["x"]]);
+    expect(subject.parse("function +(x, y)")).toEqual(
+      ["+", false, false, ["x", "y"]]
+    );
+    expect(subject.parse("function^ incr ()")).toEqual(
+      ["incr", true, false, []]
+    );
+    expect(subject.parse("function^ add (x)")).toEqual(
+      ["add", true, false, ["x"]]
+    );
+    expect(subject.parse("function (x)")).toEqual(
+      ["_anonymous", false, false, ["x"]]
+    );
+    expect(subject.parse("function^ (x)")).toEqual(
+      ["_anonymous", true, false, ["x"]]
+    );
+    expect(subject.parse("function foo& (x)")).toEqual(
+      ["foo", false, true, ["x"]]
+    );
+    expect(subject.parse("function^ foo& (x)")).toEqual(
+      ["foo", true, true, ["x"]]
+    );
+    expect(subject.parse("function^ &&& (x)")).toEqual(
+      ["&&", true, true, ["x"]]
+    );
   });
 
   it("rejects invalid", function () {

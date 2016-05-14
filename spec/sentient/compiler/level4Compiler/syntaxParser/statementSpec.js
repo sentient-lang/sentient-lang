@@ -62,6 +62,7 @@ describe("statement", function () {
       value: {
         name: "add",
         dynamic: false,
+        immutable: false,
         args: ["x", "y"],
         body: [],
         ret: [1, ["+", "x", "y"]]

@@ -20,6 +20,7 @@ describe("callList", function () {
     expect(subject.parse("function () { return 123; }")).toEqual([{
       name: "_anonymous",
       dynamic: false,
+      immutable: false,
       args: [],
       body: [],
       ret: [1, 123]
@@ -29,6 +30,7 @@ describe("callList", function () {
       "a", "*b", {
         name: "_anonymous",
         dynamic: true,
+        immutable: false,
         args: ["c"],
         body: [
           { type: "assignment", value: [["x"], [["+", "x", "c"]]] }
