@@ -30,6 +30,30 @@ describe("ExpressionParser", function () {
     ]);
   });
 
+  it("inlines negations/nots of constants", function () {
+    expect(describedClass.parse(["-@", 123])).toEqual([
+      { type: "constant", value: -123 }
+    ]);
+
+    expect(describedClass.parse(["!@", true])).toEqual([
+      { type: "constant", value: false }
+    ]);
+
+    expect(describedClass.parse(["!@", false])).toEqual([
+      { type: "constant", value: true }
+    ]);
+
+    expect(describedClass.parse(["-@", "foo"])).toEqual([
+      { type: "push", symbol: "foo" },
+      { type: "call", name: "-@", width: 1 }
+    ]);
+
+    expect(describedClass.parse(["!@", "foo"])).toEqual([
+      { type: "push", symbol: "foo" },
+      { type: "call", name: "!@", width: 1 }
+    ]);
+  });
+
   it("generates instructions for arbitraty function calls", function () {
     expect(describedClass.parse(["length", "arr"])).toEqual([
       { type: "push", symbol: "arr" },
