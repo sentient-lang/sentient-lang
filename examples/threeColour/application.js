@@ -107,8 +107,8 @@ var Application = function () {
       int11 number;                                                                                                                                                         \n\
       invariant number > 0 && number <= 999;                                                                                                                                \n\
                                                                                                                                                                             \n\
-      hundreds, remainder =* number.divmod(100);                                                                                                                            \n\
-      tens, ones =* remainder.divmod(10);                                                                                                                                   \n\
+      hundreds, remainder = number.divmod(100);                                                                                                                             \n\
+      tens, ones = remainder.divmod(10);                                                                                                                                    \n\
                                                                                                                                                                             \n\
       hundreds_visible = number >= 100;                                                                                                                                     \n\
       tens_visible = number >= 10;                                                                                                                                          \n\
