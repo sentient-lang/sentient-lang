@@ -4,19 +4,35 @@ var Sentient = require("../../../../../lib/sentient");
 
 describe("standard library: get", function () {
   it("gets the element at index and a bounds-check boolean", function () {
-    var program = Sentient.compile("a, aNil = [1, 2].get(1); vary a, aNil;");
+    var program = Sentient.compile("\n\
+      x = 1;                        \n\
+      a, aNil = [1, 2].get(x);      \n\
+      vary a, aNil;                 \n\
+    ");
     var result = Sentient.run(program);
     expect(result).toEqual({ a: 2, aNil: false });
 
-    program = Sentient.compile("a, aNil = [1, 2].get(2); vary a, aNil;");
+    program = Sentient.compile("\n\
+      x = 2;                        \n\
+      a, aNil = [1, 2].get(x);      \n\
+      vary a, aNil;                 \n\
+    ");
     result = Sentient.run(program);
     expect(result).toEqual({ a: 0, aNil: true });
 
-    program = Sentient.compile("a, aNil = [true].get(0); vary a, aNil;");
+    program = Sentient.compile("\n\
+      x = 0;                   \n\
+      a, aNil = [true].get(x); \n\
+      vary a, aNil;            \n\
+    ");
     result = Sentient.run(program);
     expect(result).toEqual({ a: true, aNil: false });
 
-    program = Sentient.compile("a, aNil = [true].get(-1); vary a, aNil;");
+    program = Sentient.compile("\n\
+      x = -1;                  \n\
+      a, aNil = [true].get(x); \n\
+      vary a, aNil;            \n\
+    ");
     result = Sentient.run(program);
     expect(result).toEqual({ a: false, aNil: true });
   });

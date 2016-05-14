@@ -48,15 +48,27 @@ describe("standard library: []", function () {
   });
 
   it("returns no solution if index is out-of-bounds", function () {
-    var program = Sentient.compile("a = [1, 2, 3][-1]; vary a;");
+    var program = Sentient.compile("\n\
+      x = -1;                       \n\
+      a = [1, 2, 3][x];             \n\
+      vary a;                       \n\
+    ");
     var result = Sentient.run(program);
     expect(result).toEqual({});
 
-    program = Sentient.compile("a = [1, 2, 3][3]; vary a;");
+    program = Sentient.compile("\n\
+      x = 3;                    \n\
+      a = [1, 2, 3][x];         \n\
+      vary a;                   \n\
+    ");
     result = Sentient.run(program);
     expect(result).toEqual({});
 
-    program = Sentient.compile("a = [[10], [20, 30]][0][1]; vary a;");
+    program = Sentient.compile("  \n\
+      x, y = 0, 1;                \n\
+      a = [[10], [20, 30]][x][y]; \n\
+      vary a;                     \n\
+    ");
     result = Sentient.run(program);
     expect(result).toEqual({});
   });

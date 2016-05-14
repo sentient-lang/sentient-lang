@@ -198,8 +198,7 @@ describe("InstructionSet", function () {
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
         { type: "push", symbol: "arr" },
-        { type: "constant", value: 3 },
-        { type: "call", name: "get", width: 2 },
+        { type: "getIndex", index: 3, checkBounds: true },
         { type: "pop", symbol: "$$$_L4_TMP1_$$$" },
         { type: "pop", symbol: "$$$_L4_TMP2_$$$" },
         { type: "push", symbol: "$$$_L4_TMP1_$$$" },

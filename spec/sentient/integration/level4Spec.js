@@ -95,9 +95,9 @@ describe("Level 4 Abstraction", function () {
     expect(result).toEqual({
       knapsack_size: 999,
       target_value: 1993,
-      number_of_each_item: [2, 1, 99],
+      number_of_each_item: [0, 2, 99],
       total_weight: 998,
-      total_value: 1993
+      total_value: 1994
     });
   });
 
@@ -163,11 +163,11 @@ describe("Level 4 Abstraction", function () {
     result = Level4Runtime.decode(program, result);
 
     expect(result).toEqual({
-      knapsack_size: 1003,
+      knapsack_size: 1545,
       target_value: 1700,
-      number_of_each_item: [34, 16, 87],
-      total_weight: 1002,
-      total_value: 1954
+      number_of_each_item: [151, 9, 115],
+      total_weight: 1488,
+      total_value: 2816
     });
   });
 
@@ -185,9 +185,9 @@ describe("Level 4 Abstraction", function () {
     result = Level4Runtime.decode(program, result);
 
     expect(result).toEqual({
-      knapsack_size: 1086,
-      target_value: 1835,
-      number_of_each_item: [29, 20, 87],
+      knapsack_size: 1688,
+      target_value: 859,
+      number_of_each_item: [34, 15, 88],
       total_weight: 1008,
       total_value: 1967
     });

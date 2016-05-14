@@ -241,4 +241,76 @@ describe("ExpressionParser", function () {
       }).toThrow();
     });
   });
+
+  describe("get", function () {
+    it("directly calls getIndex if the index is a known constant", function () {
+      expect(describedClass.parse(["get", "array", 3])).toEqual([
+        { type: "push", symbol: "array" },
+        { type: "getIndex", index: 3, checkBounds: true }
+      ]);
+
+      expect(describedClass.parse(["get", "array", ["-@", 3]])).toEqual([
+        { type: "push", symbol: "array" },
+        { type: "getIndex", index: -3, checkBounds: true }
+      ]);
+    });
+
+    it("calls get if the index is not a constant", function () {
+      expect(describedClass.parse(["get", "array", "x"])).toEqual([
+        { type: "push", symbol: "array" },
+        { type: "push", symbol: "x" },
+        { type: "call", name: "get", width: 2 }
+      ]);
+    });
+
+    it("throws an error if wrong number of args", function () {
+      expect(function () {
+        describedClass.parse(["get"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["get", "array"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["get", "array", 1, "x"]);
+      }).toThrow();
+    });
+  });
+
+  describe("fetch", function () {
+    it("directly calls fetchIndex if the index is known", function () {
+      expect(describedClass.parse(["[]", "array", 3])).toEqual([
+        { type: "push", symbol: "array" },
+        { type: "fetchIndex", index: 3 }
+      ]);
+
+      expect(describedClass.parse(["[]", "array", ["-@", 3]])).toEqual([
+        { type: "push", symbol: "array" },
+        { type: "fetchIndex", index: -3 }
+      ]);
+    });
+
+    it("calls fetch if the index is not a constant", function () {
+      expect(describedClass.parse(["[]", "array", "x"])).toEqual([
+        { type: "push", symbol: "array" },
+        { type: "push", symbol: "x" },
+        { type: "call", name: "[]", width: 2 }
+      ]);
+    });
+
+    it("throws an error if wrong number of args", function () {
+      expect(function () {
+        describedClass.parse(["[]"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["[]", "array"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["[]", "array", 1, "x"]);
+      }).toThrow();
+    });
+  });
 });
