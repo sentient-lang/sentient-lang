@@ -105,4 +105,140 @@ describe("ExpressionParser", function () {
       { type: "collect", width: 1 }
     ]);
   });
+
+  describe("upto", function () {
+    it("generates a function call per constant", function () {
+      expect(describedClass.parse(["upto", 2, 4, "*foo"])).toEqual([
+        { type: "constant", value: 2 },
+        { type: "call", name: "foo", width: 1 },
+        { type: "constant", value: 3 },
+        { type: "call", name: "foo", width: 1 },
+        { type: "constant", value: 4 },
+        { type: "call", name: "foo", width: 1 }
+      ]);
+
+      expect(describedClass.parse(["upto", -1, 1, "*foo"])).toEqual([
+        { type: "constant", value: -1 },
+        { type: "call", name: "foo", width: 1 },
+        { type: "constant", value: 0 },
+        { type: "call", name: "foo", width: 1 },
+        { type: "constant", value: 1 },
+        { type: "call", name: "foo", width: 1 }
+      ]);
+
+      expect(describedClass.parse(["upto", 3, 3, "*foo"])).toEqual([
+        { type: "constant", value: 3 },
+        { type: "call", name: "foo", width: 1 }
+      ]);
+    });
+
+    it("throws an error if wrong number of args", function () {
+      expect(function () {
+        describedClass.parse(["upto"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["upto", 1]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["upto", 1, 2]);
+      }).toThrow();
+    });
+
+    it("throws an error if 'start' is greater than 'stop'", function () {
+      expect(function () {
+        describedClass.parse(["upto", 4, 2, "*foo"]);
+      }).toThrow();
+    });
+  });
+
+  describe("downto", function () {
+    it("generates a function call per constant", function () {
+      expect(describedClass.parse(["downto", 4, 2, "*foo"])).toEqual([
+        { type: "constant", value: 4 },
+        { type: "call", name: "foo", width: 1 },
+        { type: "constant", value: 3 },
+        { type: "call", name: "foo", width: 1 },
+        { type: "constant", value: 2 },
+        { type: "call", name: "foo", width: 1 }
+      ]);
+
+      expect(describedClass.parse(["downto", 1, -1, "*foo"])).toEqual([
+        { type: "constant", value: 1 },
+        { type: "call", name: "foo", width: 1 },
+        { type: "constant", value: 0 },
+        { type: "call", name: "foo", width: 1 },
+        { type: "constant", value: -1 },
+        { type: "call", name: "foo", width: 1 }
+      ]);
+
+      expect(describedClass.parse(["downto", 3, 3, "*foo"])).toEqual([
+        { type: "constant", value: 3 },
+        { type: "call", name: "foo", width: 1 }
+      ]);
+    });
+
+    it("throws an error if wrong number of args", function () {
+      expect(function () {
+        describedClass.parse(["downto"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["downto", 1]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["downto", 2, 1]);
+      }).toThrow();
+    });
+
+    it("throws an error if 'start' is less than 'stop'", function () {
+      expect(function () {
+        describedClass.parse(["downto", 2, 4, "*foo"]);
+      }).toThrow();
+    });
+  });
+
+  describe("times", function () {
+    it("generates a function call per constant", function () {
+      expect(describedClass.parse(["times", 3, "*foo"])).toEqual([
+        { type: "constant", value: 0 },
+        { type: "call", name: "foo", width: 1 },
+        { type: "constant", value: 1 },
+        { type: "call", name: "foo", width: 1 },
+        { type: "constant", value: 2 },
+        { type: "call", name: "foo", width: 1 }
+      ]);
+
+      expect(describedClass.parse(["times", 1, "*foo"])).toEqual([
+        { type: "constant", value: 0 },
+        { type: "call", name: "foo", width: 1 }
+      ]);
+    });
+
+    it("throws an error if wrong number of args", function () {
+      expect(function () {
+        describedClass.parse(["times"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["times", 1]);
+      }).toThrow();
+    });
+
+    it("throws an error if not a positive integer", function () {
+      expect(function () {
+        describedClass.parse(["times", 0, "foo"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["times", -1, "foo"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["times", -2, "foo"]);
+      }).toThrow();
+    });
+  });
 });

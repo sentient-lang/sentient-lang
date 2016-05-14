@@ -11,6 +11,6 @@ describe("Level4Compiler", function () {
       vary a, b, total;                \n\
     ");
 
-    expect(code.instructions.length).toEqual(149);
+    expect(code.instructions.length).toEqual(151);
   });
 });
