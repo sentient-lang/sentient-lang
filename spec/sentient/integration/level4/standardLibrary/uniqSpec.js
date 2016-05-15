@@ -20,14 +20,6 @@ describe("standard library: uniq?", function () {
     result = Sentient.run(program);
     expect(result).toEqual({ a: false });
 
-    program = Sentient.compile("a = uniq?([-1, 0, 1]); vary a;");
-    result = Sentient.run(program);
-    expect(result).toEqual({ a: true });
-
-    program = Sentient.compile("a = uniq?([true, false]); vary a;");
-    result = Sentient.run(program);
-    expect(result).toEqual({ a: true });
-
     program = Sentient.compile("a = uniq?([true, true]); vary a;");
     result = Sentient.run(program);
     expect(result).toEqual({ a: false });
