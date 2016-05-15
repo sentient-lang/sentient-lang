@@ -24,7 +24,7 @@ build: parser
 parser: $(PARSER)
 
 $(PARSER): $(GRAMMAR)
-	pegjs $(GRAMMAR) $(PARSER)
+	pegjs --optimize size $(GRAMMAR) $(PARSER)
 
 clean:
 	rm -rf node_modules
