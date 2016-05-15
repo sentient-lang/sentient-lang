@@ -29,3 +29,4 @@ $(PARSER): $(GRAMMAR)
 clean:
 	rm -rf node_modules
 	rm -rf bin
+	rm $(PARSER)
