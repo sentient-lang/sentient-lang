@@ -22,9 +22,6 @@
     "jshint": "^2.9.2",
     "browserify": "^13.0.0",
     "uglify-js": "^2.6.2",
-    "ws": "^1.1.0",
-    "bufferutil": "^1.2.1",
-    "utf-8-validate": "^1.2.1",
     "pegjs": "^0.9.0"
   }
 }
