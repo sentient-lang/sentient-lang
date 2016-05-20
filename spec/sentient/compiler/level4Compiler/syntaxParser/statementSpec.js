@@ -36,13 +36,13 @@ describe("statement", function () {
     });
   });
 
-  it("parses vary statements", function () {
-    expect(subject.parse("vary a")).toEqual(
-      { type: "vary", value: ["a"] }
+  it("parses expose statements", function () {
+    expect(subject.parse("expose a")).toEqual(
+      { type: "expose", value: ["a"] }
     );
 
-    expect(subject.parse("vary x0, x1, foo_bar")).toEqual(
-      { type: "vary", value: ["x0", "x1", "foo_bar"] }
+    expect(subject.parse("expose x0, x1, foo_bar")).toEqual(
+      { type: "expose", value: ["x0", "x1", "foo_bar"] }
     );
   });
 

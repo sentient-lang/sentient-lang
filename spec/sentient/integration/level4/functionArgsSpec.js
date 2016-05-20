@@ -9,7 +9,7 @@ describe("function arguments", function () {
       function bar (a) { return 2; };            \n\
       function baz (a, b) { return 3; };         \n\
       a, b, c = foo(), bar(123), baz(456, 789);  \n\
-      vary a, b, c;                              \n\
+      expose a, b, c;                            \n\
     ");
     var result = Sentient.run(program);
 
@@ -25,7 +25,7 @@ describe("function arguments", function () {
       a = 123.eq(123);              \n\
       b = 123.eq(456);              \n\
                                     \n\
-      vary a, b;                    \n\
+      expose a, b;                  \n\
     ");
     var result = Sentient.run(program);
 

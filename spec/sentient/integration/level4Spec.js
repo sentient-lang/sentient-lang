@@ -39,7 +39,7 @@ describe("Level 4 Abstraction", function () {
        total_value += item_values[2] * number_of_each_item[2];               \n\
        total_weight += item_weights[2] * number_of_each_item[2];             \n\
                                                                              \n\
-       vary number_of_each_item, total_weight, total_value;                  \n\
+       expose number_of_each_item, total_weight, total_value;                \n\
                                                                              \n\
        int12 knapsack_size;                                                  \n\
        invariant total_weight <= knapsack_size;                              \n\
@@ -49,7 +49,7 @@ describe("Level 4 Abstraction", function () {
        invariant total_value >= target_value;                                \n\
        invariant target_value > 0;                                           \n\
                                                                              \n\
-       vary knapsack_size, target_value;                                     \n\
+       expose knapsack_size, target_value;                                   \n\
     ");
 
     level2Code = Level3Compiler.compile(level3Code);

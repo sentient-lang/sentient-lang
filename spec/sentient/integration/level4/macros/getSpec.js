@@ -9,7 +9,7 @@ describe("macro: get", function () {
     var instructions = Level4Compiler.compile("\n\
       array4<int> n;                           \n\
       total = n.get(2) + n.get(3);             \n\
-      vary n, total;                           \n\
+      expose n, total;                         \n\
     ").instructions;
 
     var getIndexInstructions = _.select(instructions, function (i) {

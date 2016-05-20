@@ -9,7 +9,7 @@ describe("macro: fetch", function () {
     var instructions = Level4Compiler.compile("\n\
       array4<int> n;                           \n\
       total = n[2] + n[3];                     \n\
-      vary n, total;                           \n\
+      expose n, total;                         \n\
     ").instructions;
 
     var fetchIndexInstructions = _.select(instructions, function (i) {

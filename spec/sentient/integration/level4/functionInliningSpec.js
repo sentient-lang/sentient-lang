@@ -13,7 +13,7 @@ describe("inline function definitions", function () {
         return 123;                      \n\
       });                                \n\
                                          \n\
-      vary a;                            \n\
+      expose a;                          \n\
     ");
     var result = Sentient.run(program);
 
@@ -32,7 +32,7 @@ describe("inline function definitions", function () {
         function () { return 789; }  \n\
       );                             \n\
                                      \n\
-      vary a, b, c;                  \n\
+      expose a, b, c;                \n\
     ");
     var result = Sentient.run(program);
 
@@ -51,7 +51,7 @@ describe("inline function definitions", function () {
                                      \n\
       b = x();                       \n\
                                      \n\
-      vary a, b;                     \n\
+      expose a, b;                   \n\
     ");
     var result = Sentient.run(program);
 
@@ -68,7 +68,7 @@ describe("inline function definitions", function () {
         return x + 1;                    \n\
       });                                \n\
                                          \n\
-      vary a;                            \n\
+      expose a;                          \n\
     ");
     var result = Sentient.run(program);
 
@@ -88,7 +88,7 @@ describe("inline function definitions", function () {
         global -= x;                     \n\
       });                                \n\
                                          \n\
-      vary global;                       \n\
+      expose global;                     \n\
     ");
     var result = Sentient.run(program);
 

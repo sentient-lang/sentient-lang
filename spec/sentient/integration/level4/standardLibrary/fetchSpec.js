@@ -11,7 +11,7 @@ describe("standard library: []", function () {
       b = array[1];                 \n\
       c = array[2];                 \n\
                                     \n\
-      vary a, b, c;                 \n\
+      expose a, b, c;               \n\
     ");
     var result = Sentient.run(program);
 
@@ -25,7 +25,7 @@ describe("standard library: []", function () {
       a = array[0];                 \n\
       b = array[1];                 \n\
                                     \n\
-      vary a, b;                    \n\
+      expose a, b;                  \n\
     ");
     var result = Sentient.run(program);
 
@@ -40,7 +40,7 @@ describe("standard library: []", function () {
       b = array[1][0];              \n\
       c = array[1][1];              \n\
                                     \n\
-      vary a, b, c;                 \n\
+      expose a, b, c;               \n\
     ");
     var result = Sentient.run(program);
 
@@ -51,7 +51,7 @@ describe("standard library: []", function () {
     var program = Sentient.compile("\n\
       x = -1;                       \n\
       a = [1, 2, 3][x];             \n\
-      vary a;                       \n\
+      expose a;                     \n\
     ");
     var result = Sentient.run(program);
     expect(result).toEqual({});
@@ -59,7 +59,7 @@ describe("standard library: []", function () {
     program = Sentient.compile("\n\
       x = 3;                    \n\
       a = [1, 2, 3][x];         \n\
-      vary a;                   \n\
+      expose a;                 \n\
     ");
     result = Sentient.run(program);
     expect(result).toEqual({});
@@ -67,14 +67,14 @@ describe("standard library: []", function () {
     program = Sentient.compile("  \n\
       x, y = 0, 1;                \n\
       a = [[10], [20, 30]][x][y]; \n\
-      vary a;                     \n\
+      expose a;                   \n\
     ");
     result = Sentient.run(program);
     expect(result).toEqual({});
   });
 
   it("can be called as a method instead of a function", function () {
-    var program = Sentient.compile("a = []([1, 2, 3], 1); vary a;");
+    var program = Sentient.compile("a = []([1, 2, 3], 1); expose a;");
     var result = Sentient.run(program);
     expect(result).toEqual({ a: 2 });
   });

@@ -244,7 +244,7 @@ var Application = function () {
                                                                                                                                                                             \n\
       invariant total == number;                                                                                                                                            \n\
                                                                                                                                                                             \n\
-      vary number, colors,                                                                                                                                                  \n\
+      expose number, colors,                                                                                                                                                \n\
                                                                                                                                                                             \n\
         hundreds_top_left_visible,                                                                                                                                          \n\
         hundreds_top_right_visible,                                                                                                                                         \n\

@@ -225,10 +225,10 @@ describe("InstructionSet", function () {
     });
   });
 
-  describe("vary", function () {
+  describe("expose", function () {
     it("emits instructions", function () {
       spyOn(codeWriter, "instruction");
-      subject.vary(["a", "b", "c"]);
+      subject.expose(["a", "b", "c"]);
 
       expect(SpecHelper.calls(codeWriter.instruction)).toEqual([
         { type: "variable", symbol: "a" },

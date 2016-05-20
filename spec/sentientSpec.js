@@ -14,7 +14,7 @@ describe("Sentient", function () {
       int10 target;                                \n\
       invariant p1 * p2 == target;                 \n\
                                                    \n\
-      vary p1, p2, target;                         \n\
+      expose p1, p2, target;                       \n\
     ");
 
     var result = Sentient.run(program, { target: 21 });
@@ -35,7 +35,7 @@ describe("Sentient", function () {
       int a, b;                                    \n\
       invariant a > 0, b > 0;                      \n\
       total = a + b;                               \n\
-      vary a, b, total;                            \n\
+      expose a, b, total;                          \n\
     ");
 
     var result = Sentient.run(program, { total: 100 }, "minisat");

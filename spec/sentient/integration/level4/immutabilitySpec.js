@@ -9,7 +9,7 @@ describe("immutability", function () {
       function foo () { return 2; }; \n\
                                      \n\
       a = foo();                     \n\
-      vary a;                        \n\
+      expose a;                      \n\
     ");
     var result = Sentient.run(program);
 

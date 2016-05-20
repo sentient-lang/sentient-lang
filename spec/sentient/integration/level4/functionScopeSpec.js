@@ -14,7 +14,7 @@ describe("function definitions", function () {
       b = 456;                      \n\
       c = foo(b);                   \n\
                                     \n\
-      vary a, b, c;                 \n\
+      expose a, b, c;               \n\
     ");
     var result = Sentient.run(program);
 
@@ -32,7 +32,7 @@ describe("function definitions", function () {
       a = 456;                      \n\
       c = foo();                    \n\
                                     \n\
-      vary a, b, c;                 \n\
+      expose a, b, c;               \n\
     ");
     var result = Sentient.run(program);
 
@@ -49,7 +49,7 @@ describe("function definitions", function () {
       double_x();                   \n\
       double_x();                   \n\
                                     \n\
-      vary x;                       \n\
+      expose x;                     \n\
     ");
     var result = Sentient.run(program);
 
@@ -67,7 +67,7 @@ describe("function definitions", function () {
       };                            \n\
                                     \n\
       a = foo();                    \n\
-      vary a;                       \n\
+      expose a;                     \n\
     ");
     var result = Sentient.run(program);
 
@@ -91,7 +91,7 @@ describe("function definitions", function () {
       b = bar();                    \n\
       c = foo();                    \n\
                                     \n\
-      vary a, b, c;                 \n\
+      expose a, b, c;               \n\
     ");
     var result = Sentient.run(program);
 
@@ -108,7 +108,7 @@ describe("function definitions", function () {
       };                            \n\
                                     \n\
       a = foo();                    \n\
-      vary a;                       \n\
+      expose a;                     \n\
     ");
     var result = Sentient.run(program);
 

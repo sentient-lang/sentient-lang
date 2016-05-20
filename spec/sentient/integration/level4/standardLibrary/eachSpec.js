@@ -11,7 +11,7 @@ describe("standard library: each", function () {
         total += element;                   \n\
       });                                   \n\
                                             \n\
-      vary total;                           \n\
+      expose total;                         \n\
     ");
     var result = Sentient.run(program);
 
@@ -26,7 +26,7 @@ describe("standard library: each", function () {
         invariant elements[index] == element;      \n\
       });                                          \n\
                                                    \n\
-      vary elements;                               \n\
+      expose elements;                             \n\
     ");
     var result = Sentient.run(program);
 
@@ -41,7 +41,7 @@ describe("standard library: each", function () {
         invariant presence[index] == isPresent;                         \n\
       });                                                               \n\
                                                                         \n\
-      vary presence;                                                    \n\
+      expose presence;                                                  \n\
     ");
     var result = Sentient.run(program);
 
@@ -58,7 +58,7 @@ describe("standard library: each", function () {
                                             \n\
       each([1, 2, 3], *add_to_total);       \n\
                                             \n\
-      vary total;                           \n\
+      expose total;                         \n\
     ");
     var result = Sentient.run(program);
 
@@ -68,7 +68,7 @@ describe("standard library: each", function () {
   it("returns the original array", function () {
     var program = Sentient.compile("        \n\
       a = each([1, 2, 3], function (e) {}); \n\
-      vary a;                               \n\
+      expose a;                             \n\
     ");
     var result = Sentient.run(program);
 
@@ -83,7 +83,7 @@ describe("standard library: each", function () {
         total += element;                   \n\
       });                                   \n\
                                             \n\
-      vary total;                           \n\
+      expose total;                         \n\
     ");
     var result = Sentient.run(program);
 
@@ -102,7 +102,7 @@ describe("standard library: each", function () {
         function^ (e) { total += e; }       \n\
       );                                    \n\
                                             \n\
-      vary total;                           \n\
+      expose total;                         \n\
     ");
     var result = Sentient.run(program);
 

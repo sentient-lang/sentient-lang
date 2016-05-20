@@ -8,7 +8,7 @@ describe("function return", function () {
       function^ double_x () { x *= 2; }; \n\
       x = 123;                           \n\
       double_x();                        \n\
-      vary x;                            \n\
+      expose x;                          \n\
     ");
     var result = Sentient.run(program);
 
@@ -19,7 +19,7 @@ describe("function return", function () {
     var program = Sentient.compile("       \n\
       function foo () { return 1, true; }; \n\
       a, b = foo();                        \n\
-      vary a, b;                           \n\
+      expose a, b;                         \n\
     ");
     var result = Sentient.run(program);
 
@@ -31,7 +31,7 @@ describe("function return", function () {
       function foo () { return 1, true; }; \n\
       function bar () { return2 foo(); };  \n\
       a, b = bar();                        \n\
-      vary a, b;                           \n\
+      expose a, b;                         \n\
     ");
     var result = Sentient.run(program);
 

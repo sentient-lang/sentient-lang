@@ -8,13 +8,13 @@ describe("SyntaxParser", function () {
     var ast = subject.parse(' \n\
       int6 a, b;                     \n\
       total = a + b;                 \n\
-      vary a, b, total;              \n\
+      expose a, b, total;            \n\
     ');
 
     expect(ast).toEqual([
       { type: "declaration", value: [["int", 6], ["a", "b"]] },
       { type: "assignment", value: [["total"], [["+", "a", "b"]]] },
-      { type: "vary", value: ["a", "b", "total"] }
+      { type: "expose", value: ["a", "b", "total"] }
     ]);
   });
 });

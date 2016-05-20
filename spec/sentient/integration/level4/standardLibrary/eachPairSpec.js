@@ -8,12 +8,12 @@ describe("standard library: eachPair", function () {
       leftTotal = 0;                                     \n\
       rightTotal = 0;                                    \n\
                                                          \n\
-      eachPair([1, 2, 3, 4], function^ (left, right) {  \n\
+      eachPair([1, 2, 3, 4], function^ (left, right) {   \n\
         leftTotal += left;                               \n\
         rightTotal += right;                             \n\
       });                                                \n\
                                                          \n\
-      vary leftTotal, rightTotal;                        \n\
+      expose leftTotal, rightTotal;                      \n\
     ");
     var result = Sentient.run(program);
 
@@ -31,7 +31,7 @@ describe("standard library: eachPair", function () {
         rightIndexTotal += rIndex;                               \n\
       });                                                        \n\
                                                                  \n\
-      vary leftIndexTotal, rightIndexTotal;                      \n\
+      expose leftIndexTotal, rightIndexTotal;                    \n\
     ");
     var result = Sentient.run(program);
 
@@ -50,7 +50,7 @@ describe("standard library: eachPair", function () {
                                                          \n\
       eachPair([1, 2, 3, 4], *add_to_total);             \n\
                                                          \n\
-      vary total;                                        \n\
+      expose total;                                      \n\
     ");
     var result = Sentient.run(program);
 
@@ -60,7 +60,7 @@ describe("standard library: eachPair", function () {
   it("returns the original array", function () {
     var program = Sentient.compile("                  \n\
       a = eachPair([1, 2, 3, 4], function (l, r) {}); \n\
-      vary a;                                         \n\
+      expose a;                                       \n\
     ");
     var result = Sentient.run(program);
 
@@ -77,7 +77,7 @@ describe("standard library: eachPair", function () {
         rightTotal += right;                           \n\
       });                                              \n\
                                                        \n\
-      vary leftTotal, rightTotal;                      \n\
+      expose leftTotal, rightTotal;                    \n\
     ");
     var result = Sentient.run(program);
 
@@ -95,7 +95,7 @@ describe("standard library: eachPair", function () {
         function^ (l, r) { total += r; }    \n\
       );                                    \n\
                                             \n\
-      vary total;                           \n\
+      expose total;                         \n\
     ");
     var result = Sentient.run(program);
 

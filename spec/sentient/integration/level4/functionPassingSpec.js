@@ -14,7 +14,7 @@ describe("function passing", function () {
       };                                 \n\
                                          \n\
       a = foo(*bar);                     \n\
-      vary a;                            \n\
+      expose a;                          \n\
     ");
     var result = Sentient.run(program);
 
@@ -63,7 +63,7 @@ describe("function passing", function () {
       };                              \n\
                                       \n\
       a = foo(111, *double, *double); \n\
-      vary a;                         \n\
+      expose a;                       \n\
     ");
     var result = Sentient.run(program);
 
@@ -83,7 +83,7 @@ describe("function passing", function () {
       a = setContext(*context1, *foo);        \n\
       b = setContext(*context2, *foo);        \n\
                                               \n\
-      vary a, b;                              \n\
+      expose a, b;                            \n\
     ");
     var result = Sentient.run(program);
 
@@ -107,7 +107,7 @@ describe("function passing", function () {
       z.fixedPoint(*cube);              \n\
                                         \n\
       invariant x != y, x != z, y != z; \n\
-      vary x, y, z;                     \n\
+      expose x, y, z;                   \n\
     ");
     var result = Sentient.run(program);
 
@@ -126,7 +126,7 @@ describe("function passing", function () {
       };                               \n\
                                        \n\
       a, b, c = foo(*f), f();          \n\
-      vary a, b, c;                    \n\
+      expose a, b, c;                  \n\
     ");
     var result = Sentient.run(program);
 

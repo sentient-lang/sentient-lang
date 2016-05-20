@@ -9,7 +9,7 @@ describe("Level4Compiler", function () {
       describedClass.compile("\n\
         int6 a, b;            \n\
         total = a + b;        \n\
-        vary a, b, total;     \n\
+        expose a, b, total;   \n\
       ");
     }).not.toThrow();
   });

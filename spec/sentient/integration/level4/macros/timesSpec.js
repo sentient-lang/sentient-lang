@@ -11,7 +11,7 @@ describe("macro: times", function () {
         invariant numbers[i] == i;  \n\
       });                           \n\
                                     \n\
-      vary numbers;                 \n\
+      expose numbers;               \n\
     ");
     var result = Sentient.run(program);
 
@@ -26,7 +26,7 @@ describe("macro: times", function () {
         invariant numbers[i] == i;  \n\
       });                           \n\
                                     \n\
-      vary numbers;                 \n\
+      expose numbers;               \n\
     ");
     var result = Sentient.run(program);
 

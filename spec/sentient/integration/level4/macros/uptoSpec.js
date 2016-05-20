@@ -11,7 +11,7 @@ describe("macro: upto", function () {
         total += i;                 \n\
       });                           \n\
                                     \n\
-      vary total;                   \n\
+      expose total;                 \n\
     ");
     var result = Sentient.run(program);
 
@@ -26,7 +26,7 @@ describe("macro: upto", function () {
         total += i;                 \n\
       });                           \n\
                                     \n\
-      vary total;                   \n\
+      expose total;                 \n\
     ");
     var result = Sentient.run(program);
 
@@ -41,7 +41,7 @@ describe("macro: upto", function () {
         total += i;                 \n\
       });                           \n\
                                     \n\
-      vary total;                   \n\
+      expose total;                 \n\
     ");
     var result = Sentient.run(program);
 

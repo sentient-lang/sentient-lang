@@ -28,7 +28,7 @@ var Application = function () {
         total += members[index] ? number : 0;                      \n\
       });                                                          \n\
                                                                    \n\
-      vary numbers, members, total;                                \n\
+      expose numbers, members, total;                              \n\
     ");
 
     self.update();

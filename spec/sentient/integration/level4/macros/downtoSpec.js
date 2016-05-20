@@ -7,11 +7,11 @@ describe("macro: downto", function () {
     var program = Sentient.compile("\n\
       total = 0;                    \n\
                                     \n\
-      downto(4, 2, function^ (i) {    \n\
+      downto(4, 2, function^ (i) {  \n\
         total += i;                 \n\
       });                           \n\
                                     \n\
-      vary total;                   \n\
+      expose total;                 \n\
     ");
     var result = Sentient.run(program);
 
@@ -22,11 +22,11 @@ describe("macro: downto", function () {
     var program = Sentient.compile("\n\
       total = 0;                    \n\
                                     \n\
-      downto(-1, -3, function^ (i) {  \n\
+      downto(-1, -3, function^ (i) {\n\
         total += i;                 \n\
       });                           \n\
                                     \n\
-      vary total;                   \n\
+      expose total;                 \n\
     ");
     var result = Sentient.run(program);
 
@@ -37,11 +37,11 @@ describe("macro: downto", function () {
     var program = Sentient.compile("\n\
       total = 0;                    \n\
                                     \n\
-      4.downto(2, function^ (i) {     \n\
+      4.downto(2, function^ (i) {   \n\
         total += i;                 \n\
       });                           \n\
                                     \n\
-      vary total;                   \n\
+      expose total;                 \n\
     ");
     var result = Sentient.run(program);
 
