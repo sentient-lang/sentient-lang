@@ -17,8 +17,8 @@ describe("exprFunction", function () {
       ["some_method", "foo", 1, "x", ["-@", 2], ["!@", true]]
     );
 
-    expect(subject.parse("seven?(array[3] + 1)")).toEqual(
-      ["seven?", ["+", ["[]", "array", 3], 1]]
+    expect(subject.parse("seven?(arr[3] + 1)")).toEqual(
+      ["seven?", ["+", ["[]", "arr", 3], 1]]
     );
 
     expect(subject.parse("+(1, 2)")).toEqual(["+", 1, 2]);

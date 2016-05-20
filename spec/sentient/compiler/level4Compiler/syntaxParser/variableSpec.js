@@ -26,7 +26,16 @@ describe("variable", function () {
     expect(function () { subject.parse("_a"); }).toThrow();
     expect(function () { subject.parse("3"); }).toThrow();
     expect(function () { subject.parse("_"); }).toThrow();
+
+    // Reserved words.
     expect(function () { subject.parse("true"); }).toThrow();
     expect(function () { subject.parse("false"); }).toThrow();
+    expect(function () { subject.parse("expose"); }).toThrow();
+    expect(function () { subject.parse("invariant"); }).toThrow();
+    expect(function () { subject.parse("function"); }).toThrow();
+    expect(function () { subject.parse("return"); }).toThrow();
+    expect(function () { subject.parse("bool"); }).toThrow();
+    expect(function () { subject.parse("int"); }).toThrow();
+    expect(function () { subject.parse("array"); }).toThrow();
   });
 });

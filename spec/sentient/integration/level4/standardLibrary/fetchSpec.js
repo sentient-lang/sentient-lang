@@ -5,11 +5,11 @@ var Sentient = require("../../../../../lib/sentient");
 describe("standard library: []", function () {
   it("fetches elements from an integer array", function () {
     var program = Sentient.compile("\n\
-      array = [1, 2, 3];            \n\
+      arr = [1, 2, 3];              \n\
                                     \n\
-      a = array[0];                 \n\
-      b = array[1];                 \n\
-      c = array[2];                 \n\
+      a = arr[0];                   \n\
+      b = arr[1];                   \n\
+      c = arr[2];                   \n\
                                     \n\
       expose a, b, c;               \n\
     ");
@@ -20,10 +20,10 @@ describe("standard library: []", function () {
 
   it("fetches elements from a boolean array", function () {
     var program = Sentient.compile("\n\
-      array = [true, false];        \n\
+      arr = [true, false];          \n\
                                     \n\
-      a = array[0];                 \n\
-      b = array[1];                 \n\
+      a = arr[0];                   \n\
+      b = arr[1];                   \n\
                                     \n\
       expose a, b;                  \n\
     ");
@@ -34,11 +34,11 @@ describe("standard library: []", function () {
 
   it("fetches elements from nested arrays", function () {
     var program = Sentient.compile("\n\
-      array = [[10], [20, 30]];     \n\
+      arr = [[10], [20, 30]];       \n\
                                     \n\
-      a = array[0][0];              \n\
-      b = array[1][0];              \n\
-      c = array[1][1];              \n\
+      a = arr[0][0];                \n\
+      b = arr[1][0];                \n\
+      c = arr[1][1];                \n\
                                     \n\
       expose a, b, c;               \n\
     ");
