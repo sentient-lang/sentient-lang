@@ -44,7 +44,6 @@ describe("exprMethod", function () {
     expect(subject.parse("x.y(*z, 123)")).toEqual(["y", "x", "*z", 123]);
 
     expect(subject.parse("-0")).toEqual(["-@", 0]);
-    expect(subject.parse("!true")).toEqual(["!@", true]);
     expect(subject.parse("true")).toEqual(true);
     expect(subject.parse("false")).toEqual(false);
     expect(subject.parse("50")).toEqual(50);

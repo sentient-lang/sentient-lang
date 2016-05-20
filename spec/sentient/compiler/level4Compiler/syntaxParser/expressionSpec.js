@@ -69,6 +69,7 @@ describe("expression", function () {
     expect(subject.parse("a.-(b)--c")).toEqual(
       ["-", ["-", "a", "b"], ["-@", "c"]]
     );
+    expect(subject.parse("!foo.bar")).toEqual(["!@", ["bar", "foo"]]);
 
     expect(subject.parse("A + B.-@")).toEqual(["+", "A", ["-@", "B"]]);
     expect(subject.parse("a.==(b)")).toEqual(["==", "a", "b"]);
