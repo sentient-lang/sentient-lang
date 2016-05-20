@@ -2,7 +2,7 @@ PATH  := node_modules/.bin:$(PATH)
 SHELL := /bin/bash
 
 GRAMMAR := lib/sentient/compiler/level4Compiler/grammar.pegjs
-PARSER := lib/sentient/compiler/level4Compiler/syntaxParser.js
+PARSER := lib/sentient/compiler/level4Compiler/pegParser.js
 
 .PHONY: all test lint build clean
 

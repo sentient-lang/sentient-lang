@@ -1,20 +1,45 @@
 "use strict";
 
-var SpecHelper = require("../../../specHelper");
-var subject = SpecHelper.parserForRule("program");
+var compiler = "../../../../lib/sentient/compiler";
+var describedClass = require(compiler + "/level4Compiler/syntaxParser");
 
 describe("SyntaxParser", function () {
-  it("parses a simple program", function () {
-    var ast = subject.parse(' \n\
-      int6 a, b;                     \n\
-      total = a + b;                 \n\
-      expose a, b, total;            \n\
-    ');
+  var captureError = function (fn) {
+    var capturedError;
 
-    expect(ast).toEqual([
-      { type: "declaration", value: [["int", 6], ["a", "b"]] },
-      { type: "assignment", value: [["total"], [["+", "a", "b"]]] },
-      { type: "expose", value: ["a", "b", "total"] }
-    ]);
+    try {
+      fn();
+    } catch (error) {
+      capturedError = error;
+    }
+
+    return capturedError;
+  };
+
+  it("parses programs", function () {
+    var ast = describedClass.parse("a = 123;");
+    expect(ast).toEqual([ { type: "assignment", value: [["a"], [123]] } ]);
+  });
+
+  it("throws on an unexpected end-of-input", function () {
+    var error = captureError(function () {
+      describedClass.parse("a = 123");
+    });
+
+    var message = error.message.substring(0, 37);
+
+    expect(error.name).toEqual("sentient:1:8");
+    expect(message).toEqual("syntax error, unexpected end-of-input");
+  });
+
+  it("throws on an unexpected symbol", function () {
+    var error = captureError(function () {
+      describedClass.parse("a = 123 @");
+    });
+
+    var message = error.message.substring(0, 28);
+
+    expect(error.name).toEqual("sentient:1:9");
+    expect(message).toEqual("syntax error, unexpected '@'");
   });
 });

@@ -1,4 +1,4 @@
 node_modules
 vendor
 bin
-lib/sentient/compiler/level4Compiler/syntaxParser.js
+lib/sentient/compiler/level4Compiler/pegParser.js
