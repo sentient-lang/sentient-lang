@@ -38,10 +38,10 @@ describe("Sentient", function () {
       expose a, b, total;                          \n\
     ");
 
-    var result = Sentient.run(program, { total: 100 }, 1, "minisat");
+    var result = Sentient.run(program, { total: 100 }, 1, undefined, "minisat");
     expect(result).toEqual([{ a: 38, b: 62, total: 100 }]);
 
-    result = Sentient.run(program, { total: 100 }, 1, "lingeling");
+    result = Sentient.run(program, { total: 100 }, 1, undefined, "lingeling");
     expect(result).toEqual([{ a: 39, b: 61, total: 100 }]);
   });
 
@@ -53,7 +53,7 @@ describe("Sentient", function () {
       expose a, b, total;                          \n\
     ");
 
-    var result = Sentient.run(program, { total: 100 }, 5, "minisat");
+    var result = Sentient.run(program, { total: 100 }, 5, undefined, "minisat");
 
     expect(result).toEqual([
       { a: 38, b: 62, total: 100 },
@@ -63,7 +63,7 @@ describe("Sentient", function () {
       { a: 45, b: 55, total: 100 }
     ]);
 
-    result = Sentient.run(program, { total: 100 }, 5, "lingeling");
+    result = Sentient.run(program, { total: 100 }, 5, undefined, "lingeling");
 
     expect(result).toEqual([
       { a: 39, b: 61, total: 100 },
@@ -72,5 +72,32 @@ describe("Sentient", function () {
       { a: 96, b: 4,  total: 100 },
       { a: 51, b: 49, total: 100 }
     ]);
+  });
+
+  it("can find solutions asynchronously", function (done) {
+    var program = Sentient.compile("               \n\
+      int a, b;                                    \n\
+      invariant a > 0, b > 0;                      \n\
+      total = a + b;                               \n\
+      expose a, b, total;                          \n\
+    ");
+
+    var results = [];
+
+    Sentient.run(program, { total: 100 }, 5, function (result) {
+      results.push(result);
+
+      if (results.length === 5) {
+        expect(results).toEqual([
+          { a: 38, b: 62, total: 100 },
+          { a: 80, b: 20, total: 100 },
+          { a: 41, b: 59, total: 100 },
+          { a: 37, b: 63, total: 100 },
+          { a: 45, b: 55, total: 100 }
+        ]);
+
+        done();
+      }
+    });
   });
 });

@@ -102,6 +102,69 @@ describe("Machine", function () {
     ]);
   });
 
+  describe("when provided with a callback function", function () {
+    var program = "\n\
+      p cnf 3 3    \n\
+      -1 -2 3 0    \n\
+      1 -3 0       \n\
+      2 -3 0       \n\
+    ";
+
+    it("returns the timer that's running the asynchronous code", function () {
+      var result = describedClass.run(program, {}, 1, function () {});
+      expect(result._onTimeout).toBeDefined();
+    });
+
+    it("passes the result to the callback function", function (done) {
+      describedClass.run(program, {}, 1, function (result) {
+        expect(result).toEqual({ 1: true, 2: false, 3: false });
+        done();
+      });
+    });
+
+    it("passes each result to the callback function", function (done) {
+      var results = [];
+
+      describedClass.run(program, {}, 3, function (result) {
+        results.push(result);
+
+        if (results.length === 3) {
+          expect(results).toEqual([
+            { 1: true, 2: false, 3: false },
+            { 1: false, 2: true, 3: false },
+            { 1: false, 2: false, 3: false }
+          ]);
+
+          done();
+        }
+      });
+    });
+
+    it("it stops running if the solutions are exhausted", function (done) {
+      var results = [];
+
+      describedClass.run(program, {}, 99, function (result) {
+        results.push(result);
+
+        if (results.length === 5) {
+          expect(results).toEqual([
+            { 1: true, 2: false, 3: false },
+            { 1: false, 2: true, 3: false },
+            { 1: false, 2: false, 3: false },
+            { 1: true, 2: true, 3: true },
+            {}
+          ]);
+        }
+      });
+
+      // It stops callbacks after 5 results.
+      setTimeout(function () {
+        expect(results.length).toEqual(5);
+        done();
+      }, 100);
+    });
+  });
+
   it("throws an error if the header is missing", function () {
     expect(function () {
       describedClass.run("                   \n\
