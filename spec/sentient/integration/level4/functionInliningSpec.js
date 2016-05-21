@@ -17,7 +17,7 @@ describe("inline function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 123 });
+    expect(result).toEqual([{ a: 123 }]);
   });
 
   it("supports passing multiple inline functions", function () {
@@ -36,7 +36,7 @@ describe("inline function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 123, b: 456, c: 789 });
+    expect(result).toEqual([{ a: 123, b: 456, c: 789 }]);
   });
 
   it("registers the function if a name is provided", function () {
@@ -55,7 +55,7 @@ describe("inline function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 123, b: 123 });
+    expect(result).toEqual([{ a: 123, b: 123 }]);
   });
 
   it("allows inline function definitions for method calls", function () {
@@ -72,7 +72,7 @@ describe("inline function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 7 });
+    expect(result).toEqual([{ a: 7 }]);
   });
 
   it("allows dynamically scoped inline functions", function () {
@@ -92,6 +92,6 @@ describe("inline function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ global: 103 });
+    expect(result).toEqual([{ global: 103 }]);
   });
 });

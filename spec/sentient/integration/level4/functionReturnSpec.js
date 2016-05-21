@@ -12,7 +12,7 @@ describe("function return", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ x: 246 });
+    expect(result).toEqual([{ x: 246 }]);
   });
 
   it("supports functions that return multiple values", function () {
@@ -23,7 +23,7 @@ describe("function return", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 1, b: true });
+    expect(result).toEqual([{ a: 1, b: true }]);
   });
 
   it("supports explicitly setting the return width", function () {
@@ -35,7 +35,7 @@ describe("function return", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 1, b: true });
+    expect(result).toEqual([{ a: 1, b: true }]);
   });
 
   it("throws an error if the return width is too small", function () {

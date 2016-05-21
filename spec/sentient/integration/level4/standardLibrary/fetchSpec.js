@@ -15,7 +15,7 @@ describe("standard library: []", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 1, b: 2, c: 3 });
+    expect(result).toEqual([{ a: 1, b: 2, c: 3 }]);
   });
 
   it("fetches elements from a boolean array", function () {
@@ -29,7 +29,7 @@ describe("standard library: []", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: true, b: false });
+    expect(result).toEqual([{ a: true, b: false }]);
   });
 
   it("fetches elements from nested arrays", function () {
@@ -44,7 +44,7 @@ describe("standard library: []", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 10, b: 20, c: 30 });
+    expect(result).toEqual([{ a: 10, b: 20, c: 30 }]);
   });
 
   it("returns no solution if index is out-of-bounds", function () {
@@ -54,7 +54,7 @@ describe("standard library: []", function () {
       expose a;                     \n\
     ");
     var result = Sentient.run(program);
-    expect(result).toEqual({});
+    expect(result).toEqual([{}]);
 
     program = Sentient.compile("\n\
       x = 3;                    \n\
@@ -62,7 +62,7 @@ describe("standard library: []", function () {
       expose a;                 \n\
     ");
     result = Sentient.run(program);
-    expect(result).toEqual({});
+    expect(result).toEqual([{}]);
 
     program = Sentient.compile("  \n\
       x, y = 0, 1;                \n\
@@ -70,12 +70,12 @@ describe("standard library: []", function () {
       expose a;                   \n\
     ");
     result = Sentient.run(program);
-    expect(result).toEqual({});
+    expect(result).toEqual([{}]);
   });
 
   it("can be called as a method instead of a function", function () {
     var program = Sentient.compile("a = []([1, 2, 3], 1); expose a;");
     var result = Sentient.run(program);
-    expect(result).toEqual({ a: 2 });
+    expect(result).toEqual([{ a: 2 }]);
   });
 });

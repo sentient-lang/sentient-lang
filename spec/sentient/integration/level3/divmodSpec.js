@@ -41,7 +41,7 @@ describe("Integration: 'divmod'", function () {
         assignments = Level2Runtime.encode(program, assignments);
         assignments = Level1Runtime.encode(program, assignments);
 
-        var result = Machine.run(program, assignments);
+        var result = Machine.run(program, assignments)[0];
 
         result = Level1Runtime.decode(program, result);
         result = Level2Runtime.decode(program, result);

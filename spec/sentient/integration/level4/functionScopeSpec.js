@@ -18,7 +18,7 @@ describe("function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 123, b: 456, c: 456 });
+    expect(result).toEqual([{ a: 123, b: 456, c: 456 }]);
   });
 
   it("supports functions with dynamic scope", function () {
@@ -36,7 +36,7 @@ describe("function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 456, b: 123, c: 456 });
+    expect(result).toEqual([{ a: 456, b: 123, c: 456 }]);
   });
 
   it("allows variables from the context to be reassigned", function () {
@@ -53,7 +53,7 @@ describe("function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ x: 444 });
+    expect(result).toEqual([{ x: 444 }]);
   });
 
   it("allows functions to be redefined", function () {
@@ -71,7 +71,7 @@ describe("function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 20 });
+    expect(result).toEqual([{ a: 20 }]);
   });
 
   it("allows functions to be shadowed", function () {
@@ -95,7 +95,7 @@ describe("function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 10, b: 20, c: 10 });
+    expect(result).toEqual([{ a: 10, b: 20, c: 10 }]);
   });
 
   it("allows functions to be redefined privately", function () {
@@ -112,6 +112,6 @@ describe("function definitions", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 10 });
+    expect(result).toEqual([{ a: 10 }]);
   });
 });

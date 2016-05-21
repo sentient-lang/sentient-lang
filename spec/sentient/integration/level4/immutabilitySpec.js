@@ -13,7 +13,7 @@ describe("immutability", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 2 });
+    expect(result).toEqual([{ a: 2 }]);
   });
 
   it("does not allow standard library functions to be redefined", function () {

@@ -32,7 +32,7 @@ describe("Integration: 'if'", function () {
     var assignments = Level3Runtime.encode(program, { conditional: true });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -42,7 +42,7 @@ describe("Integration: 'if'", function () {
     assignments = Level3Runtime.encode(program, { conditional: false });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    result = Machine.run(program, assignments);
+    result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -69,7 +69,7 @@ describe("Integration: 'if'", function () {
     var assignments = Level3Runtime.encode(program, { conditional: true });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -79,7 +79,7 @@ describe("Integration: 'if'", function () {
     assignments = Level3Runtime.encode(program, { conditional: false });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    result = Machine.run(program, assignments);
+    result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -108,7 +108,7 @@ describe("Integration: 'if'", function () {
     var assignments = Level3Runtime.encode(program, { conditional: true });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -118,7 +118,7 @@ describe("Integration: 'if'", function () {
     assignments = Level3Runtime.encode(program, { conditional: false });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    result = Machine.run(program, assignments);
+    result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -148,7 +148,7 @@ describe("Integration: 'if'", function () {
     var assignments = Level3Runtime.encode(program, { conditional: true });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -158,7 +158,7 @@ describe("Integration: 'if'", function () {
     assignments = Level3Runtime.encode(program, { conditional: false });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    result = Machine.run(program, assignments);
+    result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -199,7 +199,7 @@ describe("Integration: 'if'", function () {
     var assignments = Level3Runtime.encode(program, { conditional: true });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -209,7 +209,7 @@ describe("Integration: 'if'", function () {
     assignments = Level3Runtime.encode(program, { conditional: false });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    result = Machine.run(program, assignments);
+    result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -259,7 +259,7 @@ describe("Integration: 'if'", function () {
     });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -273,7 +273,7 @@ describe("Integration: 'if'", function () {
     });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    result = Machine.run(program, assignments);
+    result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -287,7 +287,7 @@ describe("Integration: 'if'", function () {
     });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    result = Machine.run(program, assignments);
+    result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -301,7 +301,7 @@ describe("Integration: 'if'", function () {
     });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    result = Machine.run(program, assignments);
+    result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
@@ -315,7 +315,7 @@ describe("Integration: 'if'", function () {
     });
     assignments = Level2Runtime.encode(program, assignments);
     assignments = Level1Runtime.encode(program, assignments);
-    result = Machine.run(program, assignments);
+    result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);

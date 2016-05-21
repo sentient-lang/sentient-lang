@@ -15,7 +15,7 @@ describe("macro: times", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ numbers: [0, 1, 2] });
+    expect(result).toEqual([{ numbers: [0, 1, 2] }]);
   });
 
   it("can be called as a method instead of a function", function () {
@@ -30,6 +30,6 @@ describe("macro: times", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ numbers: [0, 1, 2] });
+    expect(result).toEqual([{ numbers: [0, 1, 2] }]);
   });
 });

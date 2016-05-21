@@ -40,7 +40,7 @@ describe("Level 1 Abstraction", function () {
     var assignments = { d: true };
     assignments = Level1Runtime.encode(program, assignments);
 
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
 
     expect(result).toEqual({
@@ -55,7 +55,7 @@ describe("Level 1 Abstraction", function () {
     var assignments = { c: true, d: true };
     assignments = Level1Runtime.encode(program, assignments);
 
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
 
     expect(result).toEqual({});

@@ -23,13 +23,13 @@ describe("Integration: 'if'", function () {
     });
 
     var assignments = Level1Runtime.encode(program, { conditional: true });
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
 
     expect(result.out).toEqual(false);
 
     assignments = Level1Runtime.encode(program, { conditional: false });
-    result = Machine.run(program, assignments);
+    result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
 
     expect(result.out).toEqual(true);

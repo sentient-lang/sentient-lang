@@ -15,7 +15,7 @@ describe("macro: downto", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ total: 9 });
+    expect(result).toEqual([{ total: 9 }]);
   });
 
   it("works with negative numbers", function () {
@@ -30,7 +30,7 @@ describe("macro: downto", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ total: -6 });
+    expect(result).toEqual([{ total: -6 }]);
   });
 
   it("can be called as a method instead of a function", function () {
@@ -45,6 +45,6 @@ describe("macro: downto", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ total: 9 });
+    expect(result).toEqual([{ total: 9 }]);
   });
 });

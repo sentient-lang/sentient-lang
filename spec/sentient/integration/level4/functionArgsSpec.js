@@ -13,7 +13,7 @@ describe("function arguments", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 1, b: 2, c: 3 });
+    expect(result).toEqual([{ a: 1, b: 2, c: 3 }]);
   });
 
   it("passes self as the first argument if called as a method", function () {
@@ -29,7 +29,7 @@ describe("function arguments", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: true, b: false });
+    expect(result).toEqual([{ a: true, b: false }]);
   });
 
   it("throws an error if calling with wrong number of arguments", function () {

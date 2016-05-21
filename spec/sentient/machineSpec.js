@@ -14,7 +14,7 @@ describe("Machine", function () {
       2 -3 0                               \n\
     ", { 3: true });
 
-    expect(result).toEqual({ 1: true, 2: true, 3: true });
+    expect(result).toEqual([{ 1: true, 2: true, 3: true }]);
   });
 
   it("can be run with an empty set of assignments", function () {
@@ -28,7 +28,7 @@ describe("Machine", function () {
       2 -3 0                               \n\
     ", {});
 
-    expect(result).toEqual({ 1: true, 2: false, 3: false });
+    expect(result).toEqual([{ 1: true, 2: false, 3: false }]);
   });
 
   it("returns an empty object if there are no solutions", function () {
@@ -41,7 +41,7 @@ describe("Machine", function () {
       -1 0                                 \n\
     ", {});
 
-    expect(result).toEqual({});
+    expect(result).toEqual([{}]);
   });
 
   it("can be run more than once to find multiple solutions", function () {
@@ -100,19 +100,6 @@ describe("Machine", function () {
       { 1: true, 2: true, 3: true },
       {}
     ]);
-  });
-
-  it("always returns an array if count is not equal to 1", function () {
-    var result = describedClass.run("      \n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c }                                  \n\
-      p cnf 1 2                            \n\
-      1 0                                  \n\
-      -1 0                                 \n\
-    ", {}, 2);
-
-    expect(result).toEqual([{}]);
   });
 
   it("throws an error if the header is missing", function () {

@@ -15,7 +15,7 @@ describe("standard library: each", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ total: 6 });
+    expect(result).toEqual([{ total: 6 }]);
   });
 
   it("can optionally take the current index", function () {
@@ -30,7 +30,7 @@ describe("standard library: each", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ elements: [1, 2, 3] });
+    expect(result).toEqual([{ elements: [1, 2, 3] }]);
   });
 
   it("can optionally take the 'isPresent' argument", function () {
@@ -45,7 +45,7 @@ describe("standard library: each", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ presence: [true, false] });
+    expect(result).toEqual([{ presence: [true, false] }]);
   });
 
   it("can take a predefined function", function () {
@@ -62,7 +62,7 @@ describe("standard library: each", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ total: 6 });
+    expect(result).toEqual([{ total: 6 }]);
   });
 
   it("returns the original array", function () {
@@ -72,7 +72,7 @@ describe("standard library: each", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: [1, 2, 3] });
+    expect(result).toEqual([{ a: [1, 2, 3] }]);
   });
 
   it("can be called as a method instead of a function", function () {
@@ -87,7 +87,7 @@ describe("standard library: each", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ total: 6 });
+    expect(result).toEqual([{ total: 6 }]);
   });
 
   it("provides a reasonable interface to allow chaining", function () {
@@ -106,6 +106,6 @@ describe("standard library: each", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ total: 18 });
+    expect(result).toEqual([{ total: 18 }]);
   });
 });

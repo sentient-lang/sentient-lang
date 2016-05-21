@@ -18,7 +18,7 @@ describe("function passing", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 123 });
+    expect(result).toEqual([{ a: 123 }]);
   });
 
   it("can detect recursive function calls", function () {
@@ -67,7 +67,7 @@ describe("function passing", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 444 });
+    expect(result).toEqual([{ a: 444 }]);
   });
 
   it("allows function calls that use different contexts", function () {
@@ -87,7 +87,7 @@ describe("function passing", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 123, b: 456 });
+    expect(result).toEqual([{ a: 123, b: 456 }]);
   });
 
   it("allows for unusual, expressive ways to write programs", function () {
@@ -111,7 +111,7 @@ describe("function passing", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ x: 0, y: 1, z: -1 });
+    expect(result).toEqual([{ x: 0, y: 1, z: -1 }]);
   });
 
   it("allows passed functions to be privately redefined", function () {
@@ -130,6 +130,6 @@ describe("function passing", function () {
     ");
     var result = Sentient.run(program);
 
-    expect(result).toEqual({ a: 123, b: 456, c: 123 });
+    expect(result).toEqual([{ a: 123, b: 456, c: 123 }]);
   });
 });

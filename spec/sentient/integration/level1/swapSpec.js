@@ -23,7 +23,7 @@ describe("Integration: 'swap'", function () {
     });
 
     var assignments = Level1Runtime.encode(program, {});
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
 
     expect(result.a).toEqual(true);

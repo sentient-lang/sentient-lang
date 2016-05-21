@@ -21,7 +21,7 @@ describe("Integration: 'push'", function () {
 
     var assignments = Level1Runtime.encode(program, {});
 
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
 
     expect(_.keys(result)).toEqual(["a"]);
@@ -40,7 +40,7 @@ describe("Integration: 'push'", function () {
       a: true
     });
 
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
 
     expect(result).toEqual({ a: true });
@@ -58,7 +58,7 @@ describe("Integration: 'push'", function () {
       a: false
     });
 
-    var result = Machine.run(program, assignments);
+    var result = Machine.run(program, assignments)[0];
     result = Level1Runtime.decode(program, result);
 
     expect(result).toEqual({ a: false });
