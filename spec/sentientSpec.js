@@ -18,16 +18,16 @@ describe("Sentient", function () {
     ");
 
     var result = Sentient.run(program, { target: 21 });
-    expect(result).toEqual({ p1: 7, p2: 3, target: 21 });
+    expect(result).toEqual([{ p1: 7, p2: 3, target: 21 }]);
 
     result = Sentient.run(program, { target: 65 });
-    expect(result).toEqual({ p1: 5, p2: 13, target: 65 });
+    expect(result).toEqual([{ p1: 5, p2: 13, target: 65 }]);
 
     result = Sentient.run(program, { target: 221 });
-    expect(result).toEqual({ p1: 13, p2: 17, target: 221 });
+    expect(result).toEqual([{ p1: 13, p2: 17, target: 221 }]);
 
     result = Sentient.run(program, { p1: 19 });
-    expect(result).toEqual({ p1: 19, p2: 2, target: 38 });
+    expect(result).toEqual([{ p1: 19, p2: 2, target: 38 }]);
   });
 
   it("can run against different SAT solvers", function () {
@@ -38,10 +38,39 @@ describe("Sentient", function () {
       expose a, b, total;                          \n\
     ");
 
-    var result = Sentient.run(program, { total: 100 }, "minisat");
-    expect(result).toEqual({ a: 38, b: 62, total: 100 });
+    var result = Sentient.run(program, { total: 100 }, 1, "minisat");
+    expect(result).toEqual([{ a: 38, b: 62, total: 100 }]);
 
-    result = Sentient.run(program, { total: 100 }, "lingeling");
-    expect(result).toEqual({ a: 39, b: 61, total: 100 });
+    result = Sentient.run(program, { total: 100 }, 1, "lingeling");
+    expect(result).toEqual([{ a: 39, b: 61, total: 100 }]);
+  });
+
+  it("can find multiple solutions", function () {
+    var program = Sentient.compile("               \n\
+      int a, b;                                    \n\
+      invariant a > 0, b > 0;                      \n\
+      total = a + b;                               \n\
+      expose a, b, total;                          \n\
+    ");
+
+    var result = Sentient.run(program, { total: 100 }, 5, "minisat");
+
+    expect(result).toEqual([
+      { a: 38, b: 62, total: 100 },
+      { a: 80, b: 20, total: 100 },
+      { a: 41, b: 59, total: 100 },
+      { a: 37, b: 63, total: 100 },
+      { a: 45, b: 55, total: 100 }
+    ]);
+
+    result = Sentient.run(program, { total: 100 }, 5, "lingeling");
+
+    expect(result).toEqual([
+      { a: 39, b: 61, total: 100 },
+      { a: 52, b: 48, total: 100 },
+      { a: 32, b: 68, total: 100 },
+      { a: 96, b: 4,  total: 100 },
+      { a: 51, b: 49, total: 100 }
+    ]);
   });
 });
