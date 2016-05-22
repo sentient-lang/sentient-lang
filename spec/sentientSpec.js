@@ -1,6 +1,8 @@
 "use strict";
 
 var Sentient = require("../lib/sentient");
+var MinisatAdapter = require("../lib/sentient/machine/minisatAdapter");
+var LingelingAdapter = require("../lib/sentient/machine/lingelingAdapter");
 
 describe("Sentient", function () {
   it("can compile and run programs", function () {
@@ -38,10 +40,14 @@ describe("Sentient", function () {
       expose a, b, total;                          \n\
     ");
 
-    var result = Sentient.run(program, { total: 100 }, 1, undefined, "minisat");
+    var result = Sentient.run(
+      program, { total: 100 }, 1, undefined, MinisatAdapter
+    );
     expect(result).toEqual([{ a: 38, b: 62, total: 100 }]);
 
-    result = Sentient.run(program, { total: 100 }, 1, undefined, "lingeling");
+    result = Sentient.run(
+      program, { total: 100 }, 1, undefined, LingelingAdapter
+    );
     expect(result).toEqual([{ a: 39, b: 61, total: 100 }]);
   });
 
@@ -53,7 +59,9 @@ describe("Sentient", function () {
       expose a, b, total;                          \n\
     ");
 
-    var result = Sentient.run(program, { total: 100 }, 5, undefined, "minisat");
+    var result = Sentient.run(
+      program, { total: 100 }, 5, undefined, MinisatAdapter
+    );
 
     expect(result).toEqual([
       { a: 38, b: 62, total: 100 },
@@ -63,7 +71,9 @@ describe("Sentient", function () {
       { a: 45, b: 55, total: 100 }
     ]);
 
-    result = Sentient.run(program, { total: 100 }, 5, undefined, "lingeling");
+    result = Sentient.run(
+      program, { total: 100 }, 5, undefined, LingelingAdapter
+    );
 
     expect(result).toEqual([
       { a: 39, b: 61, total: 100 },
