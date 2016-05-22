@@ -19,7 +19,8 @@ node_modules:
 
 build: parser
 	mkdir -p bin
-	browserify --ignore-missing lib/sentient.js | uglifyjs --mangle --compress > bin/sentient.js
+	browserify --standalone Sentient --ignore-missing lib/sentient.js | \
+		uglifyjs --mangle --compress > bin/sentient.js
 
 parser: $(PARSER)
 
