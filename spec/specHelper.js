@@ -7,9 +7,9 @@ var fs = require("fs");
 var grammar, grammarPath = __dirname +
   "/../lib/sentient/compiler/level4Compiler/grammar.pegjs";
 
-// Setup Minisat with 20MB of heap and 10MB of stack.
+// Setup Minisat with 32MB of heap and 16MB of stack.
 var MinisatAdapter = require("../lib/sentient/machine/minisatAdapter");
-MinisatAdapter.setup(20000000, 10000000);
+MinisatAdapter.setup(33554432, 16777216);
 
 var SpecHelper = {
   stripWhitespace: function (string) {
