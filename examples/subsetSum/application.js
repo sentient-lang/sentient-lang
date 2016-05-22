@@ -52,7 +52,7 @@ var Application = function () {
       assignments.total = parseInt(totalInput.value, 10);
     }
 
-    var result = Sentient.run(program, assignments);
+    var result = Sentient.run(program, assignments)[0];
 
     for (i = 0; i < numberInputs.length; i += 1) {
       var input = numberInputs[i];
