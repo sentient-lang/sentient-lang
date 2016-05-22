@@ -19,8 +19,11 @@ node_modules:
 
 build: parser
 	mkdir -p bin
-	browserify --standalone Sentient --ignore-missing lib/sentient.js | \
-		uglifyjs --mangle --compress > bin/sentient.js
+	browserify --standalone SentientCLI --node lib/sentient/cli.js > tmp.js
+	cat lib/sentient/cli/shim.before.js >> tmp.js
+	browserify --standalone Sentient --ignore-missing -t brfs lib/sentient.js >> tmp.js
+	cat lib/sentient/cli/shim.after.js >> tmp.js
+	uglifyjs tmp.js --mangle --compress > bin/sentient.js && rm tmp.js
 
 parser: $(PARSER)
 
