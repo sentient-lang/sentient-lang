@@ -110,4 +110,9 @@ describe("Sentient", function () {
       }
     });
   });
+
+  it("holds information from the package", function () {
+    expect(Sentient.info.name).toEqual("sentient-lang");
+    expect(Sentient.info.license).toEqual("MIT");
+  });
 });
