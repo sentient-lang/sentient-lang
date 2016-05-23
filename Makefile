@@ -16,13 +16,11 @@ lint: node_modules
 
 build: node_modules parser
 	mkdir -p bin
-	echo "#!/usr/bin/env node" > tmp.js
-	browserify --standalone SentientCLI --node lib/sentient/cli.js >> tmp.js
+	browserify --standalone SentientCLI --node lib/sentient/cli.js > tmp.js
 	cat lib/sentient/cli/shim.before.js >> tmp.js
 	browserify --standalone Sentient --ignore-missing lib/sentient.js >> tmp.js
 	cat lib/sentient/cli/shim.after.js >> tmp.js
 	uglifyjs tmp.js --mangle --compress > bin/sentient.js && rm tmp.js
-	chmod a+x bin/sentient.js
 
 parser: $(PARSER)
 
