@@ -19,7 +19,8 @@ node_modules:
 
 build: parser
 	mkdir -p bin
-	browserify --standalone SentientCLI --node lib/sentient/cli.js > tmp.js
+	echo "#!/usr/bin/env node" > tmp.js
+	browserify --standalone SentientCLI --node lib/sentient/cli.js >> tmp.js
 	cat lib/sentient/cli/shim.before.js >> tmp.js
 	browserify --standalone Sentient --ignore-missing -t brfs lib/sentient.js >> tmp.js
 	cat lib/sentient/cli/shim.after.js >> tmp.js
