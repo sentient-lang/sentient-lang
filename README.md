@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tuzz/sentient.js.svg?branch=gh-pages)](https://travis-ci.org/tuzz/sentient.js)
+
 ## Sentient
 
 Sentient is a work-in-progress experimental programming language.

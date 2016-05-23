@@ -1,0 +1,15 @@
+language: node_js
+
+install:
+  - make lingeling TARGET=.
+
+script:
+  - PATH=$PATH:. make
+
+node_js:
+  - "4"
+  - "5"
+
+branches:
+  only:
+    - gh-pages
