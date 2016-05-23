@@ -3,6 +3,7 @@ SHELL := /bin/bash
 
 GRAMMAR := lib/sentient/compiler/level4Compiler/grammar.pegjs
 PARSER := lib/sentient/compiler/level4Compiler/pegParser.js
+TARGET := /usr/local/bin/
 
 .PHONY: all test lint build clean
 
@@ -34,3 +35,10 @@ clean:
 	rm -rf node_modules
 	rm -rf bin
 	rm -f $(PARSER)
+
+lingeling:
+	wget http://fmv.jku.at/lingeling/lingeling-bal-2293bef-151109.tar.gz && \
+	tar xfz lingeling-bal-2293bef-151109.tar.gz && \
+	pushd lingeling-bal-2293bef-151109 && ./configure.sh && make && popd && \
+	cp lingeling-bal-2293bef-151109/lingeling $(TARGET) && \
+	rm -rf lingeling-bal-2293bef-151109*
