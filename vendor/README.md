@@ -23,6 +23,7 @@ other SAT solvers that are based on Minisat.
 - Add Boilerplate B immediately after `DYNAMICTOP+15&-16;`
 - Add Boilerplace C immediately after `if(DYNAMICTOP>=TOTAL_MEMORY){`
 - Add Boilerplace D immediately after `i+15&-16;` (in the `eb` function)
+- Remove any process["on"] bindings
 - Set `DEBUG: true` in `minisatAdapter.js`
 - Run `make`
 - Run `./lib/sentient/cli.js something.snt -n 0`
