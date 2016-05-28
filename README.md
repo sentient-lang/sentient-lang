@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/tuzz/sentient.js.svg?branch=gh-pages)](https://travis-ci.org/tuzz/sentient.js)
+[![Build Status](https://travis-ci.org/sentient-lang/sentient-lang.svg?branch=gh-pages)](https://travis-ci.org/sentient-lang/sentient-lang)
 
 ## Sentient
 
