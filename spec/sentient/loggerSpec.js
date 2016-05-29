@@ -8,6 +8,10 @@ describe("Logger", function () {
     spyOn(console, "log");
   });
 
+  afterEach(function () {
+    describedClass.reset();
+  });
+
   it("defaults to the 'silent' log level", function () {
     expect(describedClass.level).toEqual("silent");
   });
@@ -39,7 +43,7 @@ describe("Logger", function () {
 
       expect(SpecHelper.calls(console.log)).toEqual([
         "debug message",
-        "info message",
+        "info message"
       ]);
     });
   });

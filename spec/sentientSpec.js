@@ -1,5 +1,6 @@
 "use strict";
 
+var SpecHelper = require("./specHelper");
 var Sentient = require("../lib/sentient");
 var MinisatAdapter = require("../lib/sentient/machine/minisatAdapter");
 var LingelingAdapter = require("../lib/sentient/machine/lingelingAdapter");
@@ -116,6 +117,84 @@ describe("Sentient", function () {
       expect(machineCode.substring(0, 10)).toEqual("c Sentient");
       done();
     });
+  });
+
+  it("logs info output", function (done) {
+    spyOn(console, "log");
+
+    Sentient.logger.level = "info";
+
+    Sentient.compile("a = 123; expose a;", function (machineCode) {
+      Sentient.run(machineCode, {}, 0, function () {});
+    });
+
+    setInterval(function () {
+      var calls = SpecHelper.calls(console.log);
+
+      if (calls.length === 4) {
+        expect(calls).toEqual([
+          "Compiling program...",
+          "Finished compiling",
+          "Running program...",
+          "Finished running"
+        ]);
+
+        Sentient.logger.reset();
+        done();
+      }
+    }, 10);
+  });
+
+  it("logs debug output", function (done) {
+    spyOn(console, "log");
+
+    Sentient.logger.level = "debug";
+
+    Sentient.compile("int a; expose a;", function (machineCode) {
+      Sentient.run(machineCode, { a: 123 }, 0, function () {});
+    });
+
+    setInterval(function () {
+      var calls = SpecHelper.calls(console.log);
+
+      if (calls.length === 30) {
+        expect(calls).toEqual([
+          "Compiling program...",
+          "Program characters: 16",
+          "Level 3 instructions: 152",
+          "Level 2 instructions: 2",
+          "Level 1 instructions: 24",
+          "Machine code characters: 1012",
+          "Finished compiling",
+          "Running program...",
+          "Encoding level 4 assignments",
+          "Encoding level 3 assignments",
+          "Encoding level 2 assignments",
+          "Encoding level 1 assignments",
+          "Solving SAT problem",
+          "Decoding SAT result",
+          "Passing result to runtime",
+          "Decoding level 1 result",
+          "Decoding level 2 result",
+          "Decoding level 3 result",
+          "Decoding level 4 result",
+          "Passing result to callback",
+          "Excluding result from subsequent solves",
+          "Solving SAT problem",
+          "Decoding SAT result",
+          "Passing result to runtime",
+          "Decoding level 1 result",
+          "Decoding level 2 result",
+          "Decoding level 3 result",
+          "Decoding level 4 result",
+          "Passing result to callback",
+          "Finished running"
+        ]);
+
+        Sentient.logger.reset();
+        done();
+      }
+    }, 10);
   });
 
   it("holds information from the package", function () {
