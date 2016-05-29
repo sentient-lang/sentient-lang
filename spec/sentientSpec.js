@@ -111,6 +111,13 @@ describe("Sentient", function () {
     });
   });
 
+  it("can compile programs asynchronously", function (done) {
+    Sentient.compile("a = 123;", function (machineCode) {
+      expect(machineCode.substring(0, 10)).toEqual("c Sentient");
+      done();
+    });
+  });
+
   it("holds information from the package", function () {
     expect(Sentient.info.name).toEqual("sentient-lang");
     expect(Sentient.info.license).toEqual("MIT");
