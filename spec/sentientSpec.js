@@ -120,7 +120,7 @@ describe("Sentient", function () {
   });
 
   it("logs info output", function (done) {
-    spyOn(console, "log");
+    spyOn(console, "warn");
 
     Sentient.logger.level = "info";
 
@@ -129,7 +129,7 @@ describe("Sentient", function () {
     });
 
     setInterval(function () {
-      var calls = SpecHelper.calls(console.log);
+      var calls = SpecHelper.calls(console.warn);
 
       if (calls.length === 4) {
         expect(calls).toEqual([
@@ -146,7 +146,7 @@ describe("Sentient", function () {
   });
 
   it("logs debug output", function (done) {
-    spyOn(console, "log");
+    spyOn(console, "warn");
 
     Sentient.logger.level = "debug";
 
@@ -155,7 +155,7 @@ describe("Sentient", function () {
     });
 
     setInterval(function () {
-      var calls = SpecHelper.calls(console.log);
+      var calls = SpecHelper.calls(console.warn);
 
       if (calls.length === 30) {
         expect(calls).toEqual([
