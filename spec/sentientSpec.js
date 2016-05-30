@@ -66,10 +66,10 @@ describe("Sentient", function () {
 
     expect(result).toEqual([
       { a: 38, b: 62, total: 100 },
-      { a: 80, b: 20, total: 100 },
-      { a: 41, b: 59, total: 100 },
-      { a: 37, b: 63, total: 100 },
-      { a: 45, b: 55, total: 100 }
+      { a: 32, b: 68, total: 100 },
+      { a: 36, b: 64, total: 100 },
+      { a: 68, b: 32, total: 100 },
+      { a: 4, b: 96, total: 100 }
     ]);
 
     result = Sentient.run(
@@ -78,10 +78,10 @@ describe("Sentient", function () {
 
     expect(result).toEqual([
       { a: 39, b: 61, total: 100 },
-      { a: 52, b: 48, total: 100 },
-      { a: 32, b: 68, total: 100 },
-      { a: 96, b: 4,  total: 100 },
-      { a: 51, b: 49, total: 100 }
+      { a: 63, b: 37, total: 100 },
+      { a: 31, b: 69, total: 100 },
+      { a: 95, b: 5, total: 100 },
+      { a: 47, b: 53, total: 100 }
     ]);
   });
 
@@ -101,10 +101,10 @@ describe("Sentient", function () {
       if (results.length === 5) {
         expect(results).toEqual([
           { a: 38, b: 62, total: 100 },
-          { a: 80, b: 20, total: 100 },
-          { a: 41, b: 59, total: 100 },
-          { a: 37, b: 63, total: 100 },
-          { a: 45, b: 55, total: 100 }
+          { a: 32, b: 68, total: 100 },
+          { a: 36, b: 64, total: 100 },
+          { a: 68, b: 32, total: 100 },
+          { a: 4, b: 96, total: 100 }
         ]);
 
         done();
