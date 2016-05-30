@@ -1,6 +1,7 @@
 "use strict";
 
-var describedClass = require("../../../lib/sentient/optimiser/mappingParser");
+var optimiser = "../../../../lib/sentient/optimiser";
+var describedClass = require(optimiser + "/coprocessorAdapter/mappingParser");
 
 describe("MappingParser", function () {
   it("does not include mappings where the number is 1", function () {
@@ -31,5 +32,9 @@ describe("MappingParser", function () {
     expect(describedClass.parse("\n1 9 0\n")).toEqual({});
     expect(describedClass.parse("\n3 1 5 0\n")).toEqual({ 2: 1 });
     expect(describedClass.parse("\n3 5 1 9 0\n")).toEqual({ 2: 1, 4: 2 });
+  });
+
+  it("returns an empty object on an empty input", function () {
+    expect(describedClass.parse("")).toEqual({});
   });
 });
