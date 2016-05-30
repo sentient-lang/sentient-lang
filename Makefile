@@ -42,3 +42,11 @@ lingeling:
 	pushd lingeling-bal-2293bef-151109 && ./configure.sh && make && popd && \
 	cp lingeling-bal-2293bef-151109/lingeling $(TARGET) && \
 	rm -rf lingeling-bal-2293bef-151109*
+
+riss:
+	wget http://tools.computational-logic.org/content/riss/Riss.tar.gz && \
+	tar xzf Riss.tar.gz && pushd Riss && \
+	wget https://git.io/vrQxX -O riss-427-mac-os-x.patch && \
+	patch -p1 < riss-427-mac-os-x.patch && make && make coprocessorRS && \
+	cp riss $(TARGET) && cp coprocessor $(TARGET) && popd && \
+	rm -rf Riss Riss.tar.gz
