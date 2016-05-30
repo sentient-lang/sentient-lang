@@ -318,4 +318,10 @@ describe("CoprocessorAdapter", function () {
       Sentient.logger.reset();
     });
   });
+
+  it("throws an error if the binary cannot be found", function () {
+    expect(function () {
+      new describedClass("does_not_exist", "p cnf 1 1\n1 0").optimise();
+    }).toThrow();
+  });
 });
