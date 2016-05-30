@@ -34,7 +34,9 @@ node_modules:
 clean:
 	rm -rf node_modules
 	rm -rf bin
-	rm -f $(PARSER)
+	rm -rf $(PARSER)
+	rm -rf riss-427 Riss.tar.gz*
+	rm -rf lingeling-bal-2293bef-151109*
 
 lingeling:
 	wget http://fmv.jku.at/lingeling/lingeling-bal-2293bef-151109.tar.gz && \
@@ -43,10 +45,17 @@ lingeling:
 	cp lingeling-bal-2293bef-151109/lingeling $(TARGET) && \
 	rm -rf lingeling-bal-2293bef-151109*
 
+# Apply a patch to Riss if run on Mac.
+ifeq ($(shell uname),Darwin)
+PATCH = wget https://git.io/vrQxX -O riss-427-mac-os-x.patch && \
+  patch -p1 < riss-427-mac-os-x.patch &&
+endif
+
 riss:
 	wget http://tools.computational-logic.org/content/riss/Riss.tar.gz && \
-	tar xzf Riss.tar.gz && pushd Riss && \
-	wget https://git.io/vrQxX -O riss-427-mac-os-x.patch && \
-	patch -p1 < riss-427-mac-os-x.patch && make && make coprocessorRS && \
-	cp riss $(TARGET) && cp coprocessor $(TARGET) && popd && \
-	rm -rf Riss Riss.tar.gz
+	tar xzf Riss.tar.gz && mv Riss riss-427 && pushd riss-427 && \
+	$(PATCH) \
+	make && make coprocessorRS && popd && \
+	cp riss-427/riss $(TARGET) && \
+	cp riss-427/coprocessor $(TARGET) && \
+	rm -rf riss-427 Riss.tar.gz
