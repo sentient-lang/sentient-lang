@@ -28,6 +28,10 @@ var SpecHelper = {
   calls: function (spy) {
     var calls = [];
 
+    if (typeof spy.calls === "undefined") {
+      return 0;
+    }
+
     for (var i = 0; i < spy.calls.count(); i += 1) {
       calls.push(spy.calls.argsFor(i)[0]);
     }
