@@ -16,11 +16,13 @@ lint: node_modules
 	jshint .
 
 build: node_modules parser
-	mkdir -p bin
-	browserify --standalone SentientCLI --node lib/sentient/cli.js > tmp.js
-	cat lib/sentient/cli/shim.before.js >> tmp.js
+	rm -rf bin && mkdir bin
+	browserify --standalone SentientCLI --node lib/sentient/cli.js >> tmp.js
+	cat lib/sentient/build/shim.cli.js >> tmp.js
+	browserify --standalone SentientOptimiser --node lib/sentient/optimiser.js >> tmp.js
+	cat lib/sentient/build/shim.optimiser.js >> tmp.js
 	browserify --standalone Sentient --ignore-missing lib/sentient.js >> tmp.js
-	cat lib/sentient/cli/shim.after.js >> tmp.js
+	cat lib/sentient/build/shim.sentient.js >> tmp.js
 	uglifyjs tmp.js --mangle --compress > bin/sentient.js && rm tmp.js
 
 parser: $(PARSER)
