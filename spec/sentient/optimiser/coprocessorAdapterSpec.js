@@ -35,6 +35,40 @@ describe("CoprocessorAdapter", function () {
     '));
   });
 
+  it("does not remove redundant literals that are variables", function () {
+    var result = describedClass.optimise(' \n\
+      c Sentient Machine Code, Version 1.0 \n\
+      c {                                  \n\
+      c   "level1Variables": {             \n\
+      c     "a": 1,                        \n\
+      c     "b": 3,                        \n\
+      c     "c": 4,                        \n\
+      c     "d": 5                         \n\
+      c   }                                \n\
+      c }                                  \n\
+      p cnf 4 4                            \n\
+      1 -1 0                               \n\
+      4 -4 0                               \n\
+      3 5 0                                \n\
+    ');
+
+    expect(result).toEqual(SpecHelper.stripWhitespace('\n\
+      c Sentient Machine Code, Version 1.0 \n\
+      c {                                  \n\
+      c   "level1Variables": {             \n\
+      c     "a": 1,                        \n\
+      c     "b": 2,                        \n\
+      c     "c": 3,                        \n\
+      c     "d": 4                         \n\
+      c   }                                \n\
+      c }                                  \n\
+      p cnf 4 3                            \n\
+      2 4 0                                \n\
+      1 -1 0                               \n\
+      3 -3 0                               \n\
+    '));
+  });
+
   it("makes use of the coprocessor's 'dense' option", function () {
     var result = describedClass.optimise(' \n\
       c Sentient Machine Code, Version 1.0 \n\
@@ -207,8 +241,9 @@ describe("CoprocessorAdapter", function () {
       c     "b": 1                         \n\
       c   }                                \n\
       c }                                  \n\
-      p cnf 0 1                            \n\
+      p cnf 0 2                            \n\
       0                                    \n\
+      1 -1 0                               \n\
     '));
   });
 
@@ -263,6 +298,22 @@ describe("CoprocessorAdapter", function () {
     var result = Sentient.run(optimisedProgram, {});
 
     expect(result).toEqual([{}]);
+  });
+
+  it("ensures consistency when optimising (3)", function () {
+    var program = Sentient.compile("\n\
+      int1 a;                       \n\
+      expose a;                     \n\
+    ");
+
+    var optimisedProgram = describedClass.optimise(program);
+    var result = Sentient.run(optimisedProgram, {}, 0);
+
+    expect(result).toEqual([
+      { a: 0 },
+      { a: -1 },
+      {}
+    ]);
   });
 
   describe("logging", function () {
