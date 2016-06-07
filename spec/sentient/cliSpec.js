@@ -1,3 +1,5 @@
+/* jshint evil:true */
+
 "use strict";
 
 var SpecHelper = require("../specHelper");
@@ -284,6 +286,49 @@ describe("CLI", function () {
       if (calls.length === 1) {
         expect(calls[0]).toEqual({ a: 123 });
         expect(SpecHelper.calls(console.warn).length).toBeGreaterThan(10);
+        done();
+      }
+    }, 10);
+  });
+
+  it("can wrap a program in JavaScript boilerplate", function (done) {
+    run("a = 123; expose a;", ["--wrap", "foo"]);
+
+    setInterval(function () {
+      var calls = SpecHelper.calls(console.log);
+
+      if (calls.length === 1) {
+        var wrappedProgram = calls[0];
+        eval(wrappedProgram);
+
+        var exportedProgram = module.exports.foo;
+        expect(exportedProgram).toBeDefined();
+
+        var compiledProgram = Sentient.compile(exportedProgram);
+        var result = Sentient.run(compiledProgram)[0];
+
+        expect(result).toEqual({ a: 123 });
+        done();
+      }
+    }, 10);
+  });
+
+  it("can wrap a compiled program in JavaScript boilerplate", function (done) {
+    run("a = 123; expose a;", ["--wrap", "foo", "--compile"]);
+
+    setInterval(function () {
+      var calls = SpecHelper.calls(console.log);
+
+      if (calls.length === 1) {
+        var wrappedProgram = calls[0];
+        eval(wrappedProgram);
+
+        var exportedProgram = module.exports.foo;
+        expect(exportedProgram).toBeDefined();
+
+        var result = Sentient.run(exportedProgram)[0];
+
+        expect(result).toEqual({ a: 123 });
         done();
       }
     }, 10);
