@@ -12,7 +12,7 @@ describe("Wrapper", function () {
     var module;
 
     beforeEach(function () {
-      module = {};
+      module = { exports: {} };
     });
 
     it("adds the program to module.exports", function () {
