@@ -1,8 +1,8 @@
 language: node_js
 
 install:
-  - make lingeling TARGET=.
-  - make riss TARGET=.
+  - make lingeling-linux TARGET=.
+  - make riss-linux TARGET=.
 
 script:
   - PATH=$PATH:. make
@@ -10,6 +10,7 @@ script:
 node_js:
   - "4"
   - "5"
+  - "6"
 
 branches:
   only:
