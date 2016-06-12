@@ -5,7 +5,7 @@
   "homepage": "sentient-lang.org",
   "author": "Chris Patuzzo <chris@patuzzo.co.uk>",
   "license": "MIT",
-  "main": "./bin/sentient.js",
+  "main": "./lib/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/sentient-lang/sentient-lang"
@@ -14,12 +14,14 @@
     "sentient": "sentient"
   },
   "devDependencies": {
-    "underscore": "^1.8.3",
-    "commander": "^2.9.0",
     "jasmine": "^2.4.1",
     "jshint": "^2.9.2",
     "browserify": "^13.0.1",
     "uglify-js": "^2.6.2",
     "pegjs": "^0.9.0"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "commander": "^2.9.0"
   }
 }

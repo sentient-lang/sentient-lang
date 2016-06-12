@@ -4,16 +4,13 @@
 
 var SpecHelper = require("../specHelper");
 var describedClass = require("../../lib/sentient/cli");
-var Sentient = require("../../lib/sentient");
+var Sentient = require("../../lib/main");
 var Readable = require("stream").Readable;
 var fs = require("fs");
 
 var MinisatAdapter = require("../../lib/sentient/machine/minisatAdapter");
 var LingelingAdapter = require("../../lib/sentient/machine/lingelingAdapter");
 var RissAdapter = require("../../lib/sentient/machine/rissAdapter");
-
-// This happens during the build process.
-Sentient.optimise = require("../../lib/sentient/optimiser").optimise;
 
 describe("CLI", function () {
   var subject;
@@ -43,7 +40,7 @@ describe("CLI", function () {
       exit: function () {}
     };
 
-    subject = new describedClass(Sentient, mockProcess);
+    subject = new describedClass(mockProcess);
     subject.run();
   };
 

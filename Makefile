@@ -17,13 +17,7 @@ lint: node_modules
 
 build: node_modules parser
 	rm -rf bin && mkdir bin
-	browserify --standalone SentientCLI --node lib/sentient/cli.js >> tmp.js
-	cat lib/sentient/build/shim.cli.js >> tmp.js
-	browserify --standalone SentientOptimiser --node lib/sentient/optimiser.js >> tmp.js
-	cat lib/sentient/build/shim.optimiser.js >> tmp.js
-	browserify --standalone Sentient --ignore-missing lib/sentient.js >> tmp.js
-	cat lib/sentient/build/shim.sentient.js >> tmp.js
-	uglifyjs tmp.js --mangle --compress > bin/sentient.js && rm tmp.js
+	browserify --standalone Sentient lib/sentient.js | uglifyjs --mangle --compress > bin/sentient.js
 
 parser: $(PARSER)
 
