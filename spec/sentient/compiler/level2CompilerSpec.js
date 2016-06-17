@@ -47,4 +47,35 @@ describe("Level2Compiler", function () {
 
     expect(code.instructions.length).toEqual(341);
   });
+
+  it("can optionally take a callback object", function () {
+    var instructions = [], metadata, written;
+
+    var callbackObject = {
+      call: function (instruction) {
+        instructions.push(instruction);
+      },
+      metadata: function (object) {
+        metadata = object;
+      },
+      write: function () {
+        written = true;
+      }
+    };
+
+    var result = describedClass.compile({
+      metadata: {
+        foo: "bar"
+      },
+      instructions: [
+        { type: "constant", value: 5 },
+        { type: "pop", symbol: "a" }
+      ]
+    }, callbackObject);
+
+    expect(result).toBeUndefined();
+    expect(instructions.length).toBeGreaterThan(0);
+    expect(metadata).toBeDefined();
+    expect(written).toEqual(true);
+  });
 });

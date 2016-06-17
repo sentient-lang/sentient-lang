@@ -135,4 +135,38 @@ describe("Compiler", function () {
       -5 -8 9 0                                                          \n\
     '));
   });
+
+  it("can optionally take a callback object", function () {
+    var program;
+
+    var callbackObject = {
+      write: function (output) {
+        program = output;
+      }
+    };
+
+    var result = describedClass.compile({
+      metadata: {
+        title: "Three-Way AND",
+        description: "A simple 3-bit AND gate",
+        author: "Chris Patuzzo",
+        date: "2015-11-25"
+      },
+      instructions: [
+        { type: "push", symbol: "a" },
+        { type: "push", symbol: "b" },
+        { type: "push", symbol: "c" },
+        { type: "and" },
+        { type: "and" },
+        { type: "pop", symbol: "out" },
+        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "c" },
+        { type: "variable", symbol: "out" }
+      ]
+    }, callbackObject);
+
+    expect(result).toBeUndefined();
+    expect(program).toBeDefined();
+  });
 });

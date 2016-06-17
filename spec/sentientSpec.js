@@ -119,6 +119,27 @@ describe("Sentient", function () {
     });
   });
 
+  it("logs debug output", function (done) {
+    spyOn(console, "warn");
+
+    Sentient.logger.level = "debug";
+
+    Sentient.compile("int a; expose a;", function (machineCode) {
+      Sentient.run(machineCode, { a: 123 }, 0, function () {});
+    });
+
+    setInterval(function () {
+      var calls = SpecHelper.calls(console.warn);
+
+      if (calls.length === 27) {
+        expect(calls[0]).toEqual("Compiling program...");
+
+        Sentient.logger.reset();
+        done();
+      }
+    }, 10);
+  });
+
   it("logs info output", function (done) {
     spyOn(console, "warn");
 
@@ -132,27 +153,6 @@ describe("Sentient", function () {
       var calls = SpecHelper.calls(console.warn);
 
       if (calls.length === 4) {
-        expect(calls[0]).toEqual("Compiling program...");
-
-        Sentient.logger.reset();
-        done();
-      }
-    }, 10);
-  });
-
-  it("logs debug output", function (done) {
-    spyOn(console, "warn");
-
-    Sentient.logger.level = "debug";
-
-    Sentient.compile("int a; expose a;", function (machineCode) {
-      Sentient.run(machineCode, { a: 123 }, 0, function () {});
-    });
-
-    setInterval(function () {
-      var calls = SpecHelper.calls(console.warn);
-
-      if (calls.length === 30) {
         expect(calls[0]).toEqual("Compiling program...");
 
         Sentient.logger.reset();

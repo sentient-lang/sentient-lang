@@ -13,4 +13,27 @@ describe("Level4Compiler", function () {
       ");
     }).not.toThrow();
   });
+
+  it("can optionally take a callback object", function () {
+    var instructions = [], written;
+
+    var callbackObject = {
+      call: function (instruction) {
+        instructions.push(instruction);
+      },
+      write: function () {
+        written = true;
+      }
+    };
+
+    var result = describedClass.compile("\n\
+      int6 a, b;            \n\
+      total = a + b;        \n\
+      expose a, b, total;   \n\
+    ", callbackObject);
+
+    expect(result).toBeUndefined();
+    expect(instructions.length).toBeGreaterThan(0);
+    expect(written).toEqual(true);
+  });
 });
