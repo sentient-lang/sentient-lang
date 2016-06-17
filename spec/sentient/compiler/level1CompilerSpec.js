@@ -169,4 +169,22 @@ describe("Compiler", function () {
     expect(result).toBeUndefined();
     expect(program).toBeDefined();
   });
+
+  it("catches errors and re-packages them", function () {
+    var error;
+
+    try {
+      describedClass.compile({
+        instructions: [
+          { type: "pop", symbol: "out" }
+        ]
+      });
+    } catch (e) {
+      error = e;
+    }
+
+    expect(error.originatingLevel).toEqual(1);
+    expect(error.level1Instruction).toEqual({ type: "pop", symbol: "out" });
+    expect(error.message).toEqual("Cannot pop from an empty stack");
+  });
 });

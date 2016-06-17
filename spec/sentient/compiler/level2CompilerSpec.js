@@ -78,4 +78,23 @@ describe("Level2Compiler", function () {
     expect(metadata).toBeDefined();
     expect(written).toEqual(true);
   });
+
+  it("catches errors and re-packages them", function () {
+    var error;
+
+    try {
+      describedClass.compile({
+        instructions: [
+          { type: "constant", value: 5 },
+          { type: "not" }
+        ]
+      });
+    } catch (e) {
+      error = e;
+    }
+
+    expect(error.originatingLevel).toEqual(2);
+    expect(error.level2Instruction).toEqual({ type: "not" });
+    expect(error.message).toEqual("Wrong type for not: integer");
+  });
 });

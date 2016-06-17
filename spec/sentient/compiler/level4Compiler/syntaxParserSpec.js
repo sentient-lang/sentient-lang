@@ -42,4 +42,15 @@ describe("SyntaxParser", function () {
     expect(error.name).toEqual("sentient:1:9");
     expect(message).toEqual("syntax error, unexpected '@'");
   });
+
+  it("sets the originating level to 4", function () {
+    var error = captureError(function () {
+      describedClass.parse("a = 123 @");
+    });
+
+    var message = error.message.substring(0, 28);
+
+    expect(error.originatingLevel).toEqual("syntax");
+    expect(message).toEqual("syntax error, unexpected '@'");
+  });
 });
