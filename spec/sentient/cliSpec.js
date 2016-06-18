@@ -247,8 +247,8 @@ describe("CLI", function () {
     }, 10);
   });
 
-  it("defaults to the 'silent' log level", function (done) {
-    spyOn(console, "warn");
+  it("defaults to the 'error' log level", function (done) {
+    spyOn(console, "info");
     run("a = 123; expose a;", []);
 
     setInterval(function () {
@@ -256,14 +256,14 @@ describe("CLI", function () {
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 123 });
-        expect(SpecHelper.calls(console.warn).length).toEqual(0);
+        expect(SpecHelper.calls(console.info).length).toEqual(0);
         done();
       }
     }, 10);
   });
 
   it("can set the log level to info", function (done) {
-    spyOn(console, "warn");
+    spyOn(console, "info");
     run("a = 123; expose a;", ["--info"]);
 
     setInterval(function () {
@@ -271,8 +271,8 @@ describe("CLI", function () {
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 123 });
-        expect(SpecHelper.calls(console.warn).length).toBeGreaterThan(2);
-        expect(SpecHelper.calls(console.warn).length).toBeLessThan(10);
+        expect(SpecHelper.calls(console.info).length).toBeGreaterThan(2);
+        expect(SpecHelper.calls(console.info).length).toBeLessThan(10);
         done();
       }
     }, 10);
@@ -280,6 +280,8 @@ describe("CLI", function () {
 
   it("can set the log level to debug", function (done) {
     spyOn(console, "warn");
+    spyOn(console, "info");
+
     run("a = 123; expose a;", ["--debug"]);
 
     setInterval(function () {

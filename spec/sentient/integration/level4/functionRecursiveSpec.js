@@ -8,6 +8,8 @@ describe("recursive calls to functions", function () {
   };
 
   it("exceeds the call stack within 2 seconds", function () {
+    spyOn(console, "error");
+
     var before = timeInMilliseconds();
 
     expect(function () {

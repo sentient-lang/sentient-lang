@@ -302,8 +302,13 @@ describe("CoprocessorAdapter", function () {
 
   describe("logging", function () {
     it("logs stderr if the log level is debug", function () {
+      var messages = [];
+
       Sentient.logger.level = "debug";
-      spyOn(console, "warn");
+
+      Sentient.logger.log = function (message) {
+        messages.push(message);
+      };
 
       describedClass.optimise({
         level1Variables: {
@@ -316,10 +321,8 @@ describe("CoprocessorAdapter", function () {
         ")
       });
 
-      var calls = SpecHelper.calls(console.warn);
-
-      expect(calls.length).toEqual(1);
-      expect(calls[0].substring(0, 32)).toEqual(
+      expect(messages.length).toEqual(1);
+      expect(messages[0].substring(0, 32)).toEqual(
         "Riss Coprocessor wrote to stderr"
       );
 

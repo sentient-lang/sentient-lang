@@ -17,6 +17,8 @@ describe("immutability", function () {
   });
 
   it("does not allow standard library functions to be redefined", function () {
+    spyOn(console, "error");
+
     expect(function () {
       Sentient.compile("function && () { return 1; };");
     }).toThrow();

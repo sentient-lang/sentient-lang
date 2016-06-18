@@ -60,12 +60,16 @@ describe("multiple assignment", function () {
   });
 
   it("throws an error when there are fewer expr's than variables", function () {
+    spyOn(console, "error");
+
     expect(function () {
       Sentient.compile("a, b = 1;");
     }).toThrow();
   });
 
   it("throws an error if a variable is used before declared", function () {
+    spyOn(console, "error");
+
     expect(function () {
       Sentient.compile("a, b = 1, 2 * a;");
     }).toThrow();

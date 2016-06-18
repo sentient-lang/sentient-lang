@@ -3,6 +3,10 @@
 var Sentient = require("../../../../lib/sentient");
 
 describe("function passing", function () {
+  beforeEach(function () {
+    spyOn(console, "error");
+  });
+
   it("supports passing functions to other functions", function () {
     var program = Sentient.compile("     \n\
       function foo (*func) {             \n\

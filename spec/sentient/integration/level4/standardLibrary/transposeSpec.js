@@ -58,12 +58,16 @@ describe("standard library: transpose", function () {
   });
 
   it("throws if not an array", function () {
+    spyOn(console, "error");
+
     expect(function () {
       Sentient.compile("123.transpose;");
     }).toThrow();
   });
 
   it("throws if not a nested array", function () {
+    spyOn(console, "error");
+
     expect(function () {
       Sentient.compile("[1, 2, 3].transpose;");
     }).toThrow();

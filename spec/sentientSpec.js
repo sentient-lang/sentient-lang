@@ -1,6 +1,5 @@
 "use strict";
 
-var SpecHelper = require("./specHelper");
 var Sentient = require("../lib/sentient");
 var MinisatAdapter = require("../lib/sentient/machine/minisatAdapter");
 var LingelingAdapter = require("../lib/sentient/machine/lingelingAdapter");
@@ -120,19 +119,21 @@ describe("Sentient", function () {
   });
 
   it("logs debug output", function (done) {
-    spyOn(console, "warn");
-
     Sentient.logger.level = "debug";
+
+    var messages = [];
+
+    Sentient.logger.log = function (message) {
+      messages.push(message);
+    };
 
     Sentient.compile("int a; expose a;", function (machineCode) {
       Sentient.run(machineCode, { a: 123 }, 0, function () {});
     });
 
     setInterval(function () {
-      var calls = SpecHelper.calls(console.warn);
-
-      if (calls.length === 31) {
-        expect(calls[0]).toEqual("Compiling program...");
+      if (messages.length === 31) {
+        expect(messages[0]).toEqual("Compiling program...");
 
         Sentient.logger.reset();
         done();
@@ -141,19 +142,21 @@ describe("Sentient", function () {
   });
 
   it("logs info output", function (done) {
-    spyOn(console, "warn");
-
     Sentient.logger.level = "info";
+
+    var messages = [];
+
+    Sentient.logger.log = function (message) {
+      messages.push(message);
+    };
 
     Sentient.compile("a = 123; expose a;", function (machineCode) {
       Sentient.run(machineCode, {}, 0, function () {});
     });
 
     setInterval(function () {
-      var calls = SpecHelper.calls(console.warn);
-
-      if (calls.length === 4) {
-        expect(calls[0]).toEqual("Compiling program...");
+      if (messages.length === 4) {
+        expect(messages[0]).toEqual("Compiling program...");
 
         Sentient.logger.reset();
         done();
@@ -164,5 +167,24 @@ describe("Sentient", function () {
   it("holds information from the package", function () {
     expect(Sentient.info.name).toEqual("sentient-lang");
     expect(Sentient.info.license).toEqual("MIT");
+  });
+
+  it("logs errors with Sentient.logger.error", function () {
+    var messages = [];
+
+    Sentient.logger.log = function (message, level) {
+      messages.push([message, level]);
+    };
+
+    expect(function () {
+      Sentient.compile("invalid");
+    }).toThrow();
+
+    expect(messages[0]).toEqual(["Compiling program...", "info"]);
+
+    var error = messages[2];
+    expect(error.toString().substring(0, 26)).toEqual(
+      "sentient:1:8: syntax error"
+    );
   });
 });

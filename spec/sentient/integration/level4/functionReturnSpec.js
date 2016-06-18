@@ -39,12 +39,16 @@ describe("function return", function () {
   });
 
   it("throws an error if the return width is too small", function () {
+    spyOn(console, "error");
+
     expect(function () {
       Sentient.compile("function foo () { return1 1, true; };");
     }).toThrow();
   });
 
   it("throws an error at call time if return width is too large", function () {
+    spyOn(console, "error");
+
     expect(function () {
       Sentient.compile("function foo () { return3 1, true; };");
     }).not.toThrow();

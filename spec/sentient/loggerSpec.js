@@ -6,14 +6,16 @@ var describedClass = require("../../lib/sentient/logger");
 describe("Logger", function () {
   beforeEach(function () {
     spyOn(console, "warn");
+    spyOn(console, "info");
+    spyOn(console, "error");
   });
 
   afterEach(function () {
     describedClass.reset();
   });
 
-  it("defaults to the 'silent' log level", function () {
-    expect(describedClass.level).toEqual("silent");
+  it("defaults to the 'error' log level", function () {
+    expect(describedClass.level).toEqual("error");
   });
 
   it("persists the log level across requires", function () {
@@ -24,11 +26,11 @@ describe("Logger", function () {
   });
 
   describe("reset", function () {
-    it("sets the log level back to silent", function () {
+    it("sets the log level back to error", function () {
       describedClass.level = "info";
       describedClass.reset();
 
-      expect(describedClass.level).toEqual("silent");
+      expect(describedClass.level).toEqual("error");
     });
   });
 
@@ -40,11 +42,11 @@ describe("Logger", function () {
     it("logs all messages", function () {
       describedClass.debug("debug message");
       describedClass.info("info message");
+      describedClass.error("error message");
 
-      expect(SpecHelper.calls(console.warn)).toEqual([
-        "debug message",
-        "info message"
-      ]);
+      expect(SpecHelper.calls(console.warn)).toEqual(["debug message"]);
+      expect(SpecHelper.calls(console.info)).toEqual(["info message"]);
+      expect(SpecHelper.calls(console.error)).toEqual(["error message"]);
     });
   });
 
@@ -53,13 +55,27 @@ describe("Logger", function () {
       describedClass.level = "info";
     });
 
-    it("logs info messages", function () {
+    it("logs info and error messages", function () {
       describedClass.debug("debug message");
       describedClass.info("info message");
+      describedClass.error("error message");
 
-      expect(SpecHelper.calls(console.warn)).toEqual([
-        "info message"
-      ]);
+      expect(SpecHelper.calls(console.info)).toEqual(["info message"]);
+      expect(SpecHelper.calls(console.error)).toEqual(["error message"]);
+    });
+  });
+
+  describe("error log level", function () {
+    beforeEach(function () {
+      describedClass.level = "error";
+    });
+
+    it("logs error messages", function () {
+      describedClass.debug("debug message");
+      describedClass.info("info message");
+      describedClass.error("error message");
+
+      expect(SpecHelper.calls(console.error)).toEqual(["error message"]);
     });
   });
 
@@ -85,6 +101,30 @@ describe("Logger", function () {
       expect(function () {
         describedClass.info("something");
       }).toThrow();
+    });
+  });
+
+  describe("custom log function", function () {
+    afterEach(function () {
+      describedClass.reset();
+    });
+
+    it("allows setting a custom log function", function () {
+      var messages = [];
+
+      describedClass.log = function (message, level) {
+        messages.push([message, level]);
+      };
+
+      describedClass.debug("debug message");
+      describedClass.info("info message");
+      describedClass.error("error message");
+
+      expect(messages).toEqual([
+        ["debug message", "debug"],
+        ["info message", "info"],
+        ["error message", "error"]
+      ]);
     });
   });
 });
