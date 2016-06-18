@@ -13,8 +13,8 @@ describe("Logger", function () {
     describedClass.reset();
   });
 
-  it("defaults to the 'error' log level", function () {
-    expect(describedClass.level).toEqual("error");
+  it("defaults to the 'silent' log level", function () {
+    expect(describedClass.level).toEqual("silent");
   });
 
   it("persists the log level across requires", function () {
@@ -25,11 +25,11 @@ describe("Logger", function () {
   });
 
   describe("reset", function () {
-    it("sets the log level back to error", function () {
+    it("sets the log level back to silent", function () {
       describedClass.level = "info";
       describedClass.reset();
 
-      expect(describedClass.level).toEqual("error");
+      expect(describedClass.level).toEqual("silent");
     });
   });
 
