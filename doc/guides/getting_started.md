@@ -193,14 +193,13 @@ most cases, it is better to pre-compile programs so that you do as much work
 upfront before the program runs:
 
 ```bash
-sentient ten.snt --compile > ten.smc
+sentient ten.snt --compile > ten.json
 ```
 
-The `.smc` suffix denotes 'Sentient Machine Code' and these files can be run
-like so:
+Sentient programs are compiled down to JSON files that can be run like so:
 
 ```bash
-sentient ten.smc --run
+sentient ten.json --run
 ```
 
 One advantage of pre-compiling programs is that you can optimise them to run

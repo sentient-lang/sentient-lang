@@ -11,13 +11,10 @@ describe("Compiler", function () {
       instructions: []
     });
 
-    expect(code).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0           \n\
-      c {                                            \n\
-      c   "level1Variables": {}                      \n\
-      c }                                            \n\
-      p cnf 0 0                                      \n\
-    '));
+    expect(code).toEqual({
+      level1Variables: {},
+      dimacs: "p cnf 0 0\n"
+    });
   });
 
   it("compiles a simple program", function () {
@@ -42,31 +39,30 @@ describe("Compiler", function () {
       ]
     });
 
-    expect(code).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0           \n\
-      c {                                            \n\
-      c   "title": "Three-Way AND",                  \n\
-      c   "description": "A simple 3-bit AND gate",  \n\
-      c   "author": "Chris Patuzzo",                 \n\
-      c   "date": "2015-11-25",                      \n\
-      c   "level1Variables": {                       \n\
-      c     "a": 1,                                  \n\
-      c     "b": 2,                                  \n\
-      c     "c": 3,                                  \n\
-      c     "out": 5                                 \n\
-      c   }                                          \n\
-      c }                                            \n\
-      p cnf 5 9                                      \n\
-      1 -1 0                                         \n\
-      2 -2 0                                         \n\
-      3 -3 0                                         \n\
-      -2 -3 4 0                                      \n\
-      2 -4 0                                         \n\
-      3 -4 0                                         \n\
-      -1 -4 5 0                                      \n\
-      1 -5 0                                         \n\
-      4 -5 0                                         \n\
-    '));
+    expect(code).toEqual({
+      title: "Three-Way AND",
+      description: "A simple 3-bit AND gate",
+      author: "Chris Patuzzo",
+      date: "2015-11-25",
+      level1Variables: {
+        a: 1,
+        b: 2,
+        c: 3,
+        out: 5
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 5 9                         \n\
+        1 -1 0                            \n\
+        2 -2 0                            \n\
+        3 -3 0                            \n\
+        -2 -3 4 0                         \n\
+        2 -4 0                            \n\
+        3 -4 0                            \n\
+        -1 -4 5 0                         \n\
+        1 -5 0                            \n\
+        4 -5 0                            \n\
+      ")
+    });
   });
 
   it("compiles a complicated program", function () {
@@ -100,40 +96,39 @@ describe("Compiler", function () {
       ]
     });
 
-    expect(code).toEqual(SpecHelper.stripWhitespace('                    \n\
-      c Sentient Machine Code, Version 1.0                               \n\
-      c {                                                                \n\
-      c   "title": "Complicated Program",                                \n\
-      c   "description": "An example program with lots of instructions", \n\
-      c   "author": "Chris Patuzzo",                                     \n\
-      c   "date": "2015-11-25",                                          \n\
-      c   "level1Variables": {                                           \n\
-      c     "a": 1,                                                      \n\
-      c     "b": 2,                                                      \n\
-      c     "out": 9                                                     \n\
-      c   }                                                              \n\
-      c }                                                                \n\
-      p cnf 9 19                                                         \n\
-      1 -1 0                                                             \n\
-      2 -2 0                                                             \n\
-      3 0                                                                \n\
-      -2 -3 4 0                                                          \n\
-      2 -4 0                                                             \n\
-      3 -4 0                                                             \n\
-      -1 -4 5 0                                                          \n\
-      1 -5 0                                                             \n\
-      4 -5 0                                                             \n\
-      1 6 0                                                              \n\
-      -1 -6 0                                                            \n\
-      -7 0                                                               \n\
-      2 7 -8 0                                                           \n\
-      -2 8 0                                                             \n\
-      -7 8 0                                                             \n\
-      5 8 9 0                                                            \n\
-      5 -8 -9 0                                                          \n\
-      -5 8 -9 0                                                          \n\
-      -5 -8 9 0                                                          \n\
-    '));
+    expect(code).toEqual({
+      title: "Complicated Program",
+      description: "An example program with lots of instructions",
+      author: "Chris Patuzzo",
+      date: "2015-11-25",
+      level1Variables: {
+        a: 1,
+        b: 2,
+        out: 9
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 9 19                        \n\
+        1 -1 0                            \n\
+        2 -2 0                            \n\
+        3 0                               \n\
+        -2 -3 4 0                         \n\
+        2 -4 0                            \n\
+        3 -4 0                            \n\
+        -1 -4 5 0                         \n\
+        1 -5 0                            \n\
+        4 -5 0                            \n\
+        1 6 0                             \n\
+        -1 -6 0                           \n\
+        -7 0                              \n\
+        2 7 -8 0                          \n\
+        -2 8 0                            \n\
+        -7 8 0                            \n\
+        5 8 9 0                           \n\
+        5 -8 -9 0                         \n\
+        -5 8 -9 0                         \n\
+        -5 -8 9 0                         \n\
+      ")
+    });
   });
 
   it("can optionally take a callback object", function () {

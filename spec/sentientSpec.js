@@ -114,7 +114,7 @@ describe("Sentient", function () {
 
   it("can compile programs asynchronously", function (done) {
     Sentient.compile("a = 123;", function (machineCode) {
-      expect(machineCode.substring(0, 10)).toEqual("c Sentient");
+      expect(machineCode.dimacs.length).toBeGreaterThan(10);
       done();
     });
   });

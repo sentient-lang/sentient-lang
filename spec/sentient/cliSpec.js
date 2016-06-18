@@ -51,7 +51,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 333 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 333 });
         done();
       }
     }, 10);
@@ -66,7 +66,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 123 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 123 });
         try { fs.unlinkSync("/tmp/cliSpec.tmp"); } catch (error) { }
         done();
       }
@@ -80,8 +80,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0].substring(0, 23)).toEqual("c Sentient Machine Code");
-        expect(calls[0].length).toBeGreaterThan(3000);
+        expect(JSON.parse(calls[0]).dimacs.length).toBeGreaterThan(2000);
         done();
       }
     }, 10);
@@ -90,13 +89,13 @@ describe("CLI", function () {
   it("can run a program without compiling/optimising it", function (done) {
     var precompiled = Sentient.compile("a = 111 + 222; expose a;");
 
-    run(precompiled, ["--run"]);
+    run(JSON.stringify(precompiled), ["--run"]);
 
     setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 333 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 333 });
         done();
       }
     }, 10);
@@ -105,14 +104,13 @@ describe("CLI", function () {
   it("can optimise a program without compiling/running it", function (done) {
     var precompiled = Sentient.compile("a = 111 + 222; expose a;");
 
-    run(precompiled, ["--optimise"]);
+    run(JSON.stringify(precompiled), ["--optimise"]);
 
     setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0].substring(0, 23)).toEqual("c Sentient Machine Code");
-        expect(calls[0].length).toBeLessThan(2000);
+        expect(JSON.parse(calls[0]).dimacs.length).toBeLessThan(100);
         done();
       }
     }, 10);
@@ -126,7 +124,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 333 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 333 });
         expect(Sentient.optimise).not.toHaveBeenCalled();
         done();
       }
@@ -140,7 +138,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 23 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 23 });
         done();
       }
     }, 10);
@@ -155,7 +153,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 23 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 23 });
         try { fs.unlinkSync("/tmp/cliSpec.tmp"); } catch (error) { }
         done();
       }
@@ -169,7 +167,10 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 3) {
-        expect(calls).toEqual([{ a: 0 }, { a: -128 }, { a: 64 }]);
+        expect(JSON.parse(calls[0])).toEqual({ a: 0 });
+        expect(JSON.parse(calls[1])).toEqual({ a: -128 });
+        expect(JSON.parse(calls[2])).toEqual({ a: 64 });
+
         done();
       }
     }, 10);
@@ -182,7 +183,11 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 4) {
-        expect(calls).toEqual([{ a: 4 }, { a: 3 }, { a: 2 }, {}]);
+        expect(JSON.parse(calls[0])).toEqual({ a: 4 });
+        expect(JSON.parse(calls[1])).toEqual({ a: 3 });
+        expect(JSON.parse(calls[2])).toEqual({ a: 2 });
+        expect(JSON.parse(calls[3])).toEqual({});
+
         done();
       }
     }, 10);
@@ -195,7 +200,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 123 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 123 });
 
         expect(MinisatAdapter.solve).toHaveBeenCalled();
         expect(LingelingAdapter.solve).not.toHaveBeenCalled();
@@ -213,7 +218,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 123 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 123 });
 
         expect(MinisatAdapter.solve).not.toHaveBeenCalled();
         expect(LingelingAdapter.solve).toHaveBeenCalled();
@@ -231,7 +236,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 123 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 123 });
 
         expect(MinisatAdapter.solve).not.toHaveBeenCalled();
         expect(LingelingAdapter.solve).not.toHaveBeenCalled();
@@ -250,7 +255,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 123 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 123 });
         expect(SpecHelper.calls(console.warn).length).toEqual(0);
         done();
       }
@@ -265,7 +270,7 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 123 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 123 });
         expect(SpecHelper.calls(console.warn).length).toBeGreaterThan(2);
         expect(SpecHelper.calls(console.warn).length).toBeLessThan(10);
         done();
@@ -281,51 +286,8 @@ describe("CLI", function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
-        expect(calls[0]).toEqual({ a: 123 });
+        expect(JSON.parse(calls[0])).toEqual({ a: 123 });
         expect(SpecHelper.calls(console.warn).length).toBeGreaterThan(10);
-        done();
-      }
-    }, 10);
-  });
-
-  it("can wrap a program in JavaScript boilerplate", function (done) {
-    run("a = 123; expose a;", ["--wrap", "foo"]);
-
-    setInterval(function () {
-      var calls = SpecHelper.calls(console.log);
-
-      if (calls.length === 1) {
-        var wrappedProgram = calls[0];
-        eval(wrappedProgram);
-
-        var exportedProgram = module.exports.foo;
-        expect(exportedProgram).toBeDefined();
-
-        var compiledProgram = Sentient.compile(exportedProgram);
-        var result = Sentient.run(compiledProgram)[0];
-
-        expect(result).toEqual({ a: 123 });
-        done();
-      }
-    }, 10);
-  });
-
-  it("can wrap a compiled program in JavaScript boilerplate", function (done) {
-    run("a = 123; expose a;", ["--wrap", "foo", "--compile"]);
-
-    setInterval(function () {
-      var calls = SpecHelper.calls(console.log);
-
-      if (calls.length === 1) {
-        var wrappedProgram = calls[0];
-        eval(wrappedProgram);
-
-        var exportedProgram = module.exports.foo;
-        expect(exportedProgram).toBeDefined();
-
-        var result = Sentient.run(exportedProgram)[0];
-
-        expect(result).toEqual({ a: 123 });
         done();
       }
     }, 10);

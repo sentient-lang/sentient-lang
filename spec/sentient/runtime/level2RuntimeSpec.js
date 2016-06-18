@@ -3,21 +3,18 @@
 var describedClass = require("../../../lib/sentient/runtime/level2Runtime");
 
 describe("Level2Runtime", function () {
-  var program = '                        \n\
-    c Sentient Machine Code, Version 1.0 \n\
-    c {                                  \n\
-    c   "level2Variables": {             \n\
-    c     "a": {                         \n\
-    c       "type": "boolean",           \n\
-    c       "symbols": ["foo"]           \n\
-    c     },                             \n\
-    c     "b": {                         \n\
-    c       "type": "integer",           \n\
-    c       "symbols": ["x", "y", "z"]   \n\
-    c     }                              \n\
-    c   }                                \n\
-    c }                                  \n\
-  ';
+  var program = {
+    "level2Variables": {
+      "a": {
+        "type": "boolean",
+        "symbols": ["foo"]
+      },
+      "b": {
+        "type": "integer",
+        "symbols": ["x", "y", "z"]
+      }
+    }
+  };
 
   describe("encode", function () {
     it("encodes the variable assignments", function () {

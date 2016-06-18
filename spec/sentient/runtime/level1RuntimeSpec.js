@@ -3,18 +3,15 @@
 var describedClass = require("../../../lib/sentient/runtime/level1Runtime");
 
 describe("Level1Runtime", function () {
-  var program = '                        \n\
-    c Sentient Machine Code, Version 1.0 \n\
-    c {                                  \n\
-    c   "level1Variables": {             \n\
-    c     "a": 5,                        \n\
-    c     "a.b.c": 10,                   \n\
-    c     "d__": 15,                     \n\
-    c     "-e-": 20,                     \n\
-    c     "$F$": 25                      \n\
-    c   }                                \n\
-    c }                                  \n\
-  ';
+  var program = {
+    "level1Variables": {
+      "a": 5,
+      "a.b.c": 10,
+      "d__": 15,
+      "-e-": 20,
+      "$F$": 25
+    }
+  };
 
   describe("encode", function () {
     it("encodes the variable assignments as literal assignments", function () {

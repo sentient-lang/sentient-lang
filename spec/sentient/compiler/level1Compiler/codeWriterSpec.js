@@ -15,28 +15,22 @@ describe("CodeWriter", function () {
   it("writes the simplest program", function () {
     var code = subject.write();
 
-    expect(code).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0           \n\
-      c {                                            \n\
-      c   "level1Variables": {}                      \n\
-      c }                                            \n\
-      p cnf 0 0                                      \n\
-    '));
+    expect(code).toEqual({
+      level1Variables: {},
+      dimacs: "p cnf 0 0\n"
+    });
   });
 
   it("can set the metadata", function () {
     subject.metadata({ foo: "bar", baz: 123 });
     var code = subject.write();
 
-    expect(code).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0           \n\
-      c {                                            \n\
-      c   "foo": "bar",                              \n\
-      c   "baz": 123,                                \n\
-      c   "level1Variables": {}                      \n\
-      c }                                            \n\
-      p cnf 0 0                                      \n\
-    '));
+    expect(code).toEqual({
+      foo: "bar",
+      baz: 123,
+      level1Variables: {},
+      dimacs: "p cnf 0 0\n"
+    });
   });
 
   it("can set the variables", function () {
@@ -44,16 +38,13 @@ describe("CodeWriter", function () {
     subject.variable("bar", 2);
     var code = subject.write();
 
-    expect(code).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0           \n\
-      c {                                            \n\
-      c   "level1Variables": {                       \n\
-      c     "foo": 1,                                \n\
-      c     "bar": 2                                 \n\
-      c   }                                          \n\
-      c }                                            \n\
-      p cnf 0 0                                      \n\
-    '));
+    expect(code).toEqual({
+      level1Variables: {
+        foo: 1,
+        bar: 2
+      },
+      dimacs: "p cnf 0 0\n"
+    });
   });
 
   it("can set the variables and the metadata together", function () {
@@ -62,18 +53,15 @@ describe("CodeWriter", function () {
     subject.variable("bar", 2);
     var code = subject.write();
 
-    expect(code).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0           \n\
-      c {                                            \n\
-      c   "foo": "bar",                              \n\
-      c   "baz": 123,                                \n\
-      c   "level1Variables": {                       \n\
-      c     "foo": 1,                                \n\
-      c     "bar": 2                                 \n\
-      c   }                                          \n\
-      c }                                            \n\
-      p cnf 0 0                                      \n\
-    '));
+    expect(code).toEqual({
+      foo: "bar",
+      baz: 123,
+      level1Variables: {
+        foo: 1,
+        bar: 2
+      },
+      dimacs: "p cnf 0 0\n"
+    });
   });
 
   it("can set the clauses", function () {
@@ -83,17 +71,16 @@ describe("CodeWriter", function () {
     subject.clause(3);
     var code = subject.write();
 
-    expect(code).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0           \n\
-      c {                                            \n\
-      c   "level1Variables": {}                      \n\
-      c }                                            \n\
-      p cnf 3 4                                      \n\
-      -1 -2 3 0                                      \n\
-      1 -3 0                                         \n\
-      2 -3 0                                         \n\
-      3 0                                            \n\
-    '));
+    expect(code).toEqual({
+      level1Variables: {},
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 3 4                         \n\
+        -1 -2 3 0                         \n\
+        1 -3 0                            \n\
+        2 -3 0                            \n\
+        3 0                               \n\
+      ")
+    });
   });
 
   it("behaves as expected for a complicated example", function() {
@@ -118,25 +105,24 @@ describe("CodeWriter", function () {
 
     var code = subject.write();
 
-    expect(code).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0           \n\
-      c {                                            \n\
-      c   "title": "Example program",                \n\
-      c   "author": "Chris Patuzzo",                 \n\
-      c   "date": "2015-11-24",                      \n\
-      c   "level1Variables": {                       \n\
-      c     "a": 1,                                  \n\
-      c     "b": 2,                                  \n\
-      c     "out": 3                                 \n\
-      c   }                                          \n\
-      c }                                            \n\
-      p cnf 3 6                                      \n\
-      1 -1 0                                         \n\
-      2 -2 0                                         \n\
-      -1 -2 3 0                                      \n\
-      1 -3 0                                         \n\
-      2 -3 0                                         \n\
-      3 0                                            \n\
-    '));
+    expect(code).toEqual({
+      title: "Example program",
+      author: "Chris Patuzzo",
+      date: "2015-11-24",
+      level1Variables: {
+        a: 1,
+        b: 2,
+        out: 3
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 3 6                         \n\
+        1 -1 0                            \n\
+        2 -2 0                            \n\
+        -1 -2 3 0                         \n\
+        1 -3 0                            \n\
+        2 -3 0                            \n\
+        3 0                               \n\
+      ")
+    });
   });
 });

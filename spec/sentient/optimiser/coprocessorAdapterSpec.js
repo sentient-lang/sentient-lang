@@ -8,243 +8,227 @@ var Sentient = require("../../../lib/sentient");
 
 describe("CoprocessorAdapter", function () {
   it("does not affect machine code that's already optimal", function () {
-    var result = describedClass.optimise(' \n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 2                         \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 2 2                            \n\
-      1 0                                  \n\
-      -2 0                                 \n\
-    ');
+    var result = describedClass.optimise({
+      level1Variables: {
+        a: 1,
+        b: 2
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 2 2                         \n\
+        1 0                               \n\
+        -2 0                              \n\
+      ")
+    });
 
-    expect(result).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 2                         \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 2 2                            \n\
-      1 0                                  \n\
-      -2 0                                 \n\
-    '));
+    expect(result).toEqual({
+      level1Variables: {
+        a: 1,
+        b: 2
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 2 2                         \n\
+        1 0                               \n\
+        -2 0                              \n\
+      ")
+    });
   });
 
   it("does not remove redundant literals that are variables", function () {
-    var result = describedClass.optimise(' \n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 3,                        \n\
-      c     "c": 4,                        \n\
-      c     "d": 5                         \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 4 4                            \n\
-      1 -1 0                               \n\
-      4 -4 0                               \n\
-      3 5 0                                \n\
-    ');
+    var result = describedClass.optimise({
+      level1Variables: {
+        a: 1,
+        b: 3,
+        c: 4,
+        d: 5
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 4 4                         \n\
+        1 -1 0                            \n\
+        4 -4 0                            \n\
+        3 5 0                             \n\
+      ")
+    });
 
-    expect(result).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 2,                        \n\
-      c     "c": 3,                        \n\
-      c     "d": 4                         \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 4 3                            \n\
-      2 4 0                                \n\
-      1 -1 0                               \n\
-      3 -3 0                               \n\
-    '));
+    expect(result).toEqual({
+      level1Variables: {
+        a: 1,
+        b: 2,
+        c: 3,
+        d: 4
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 4 3                         \n\
+        2 4 0                             \n\
+        1 -1 0                            \n\
+        3 -3 0                            \n\
+      ")
+    });
   });
 
   it("makes use of the coprocessor's 'dense' option", function () {
-    var result = describedClass.optimise(' \n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 2,                        \n\
-      c     "out": 9                       \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 9 3                            \n\
-      -1 -2 9 0                            \n\
-      1 -9 0                               \n\
-      2 -9 0                               \n\
-    ');
+    var result = describedClass.optimise({
+      level1Variables: {
+        a: 1,
+        b: 2,
+        out: 9
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 9 3                         \n\
+        -1 -2 9 0                         \n\
+        1 -9 0                            \n\
+        2 -9 0                            \n\
+      ")
+    });
 
-    expect(result).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0             \n\
-      c {                                              \n\
-      c   "level1Variables": {                         \n\
-      c     "a": 1,                                    \n\
-      c     "b": 2,                                    \n\
-      c     "out": 3                                   \n\
-      c   }                                            \n\
-      c }                                              \n\
-      p cnf 3 3                                        \n\
-      -1 -2 3 0                                        \n\
-      1 -3 0                                           \n\
-      2 -3 0                                           \n\
-    '));
+    expect(result).toEqual({
+      level1Variables: {
+        a: 1,
+        b: 2,
+        out: 3
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 3 3                         \n\
+        -1 -2 3 0                         \n\
+        1 -3 0                            \n\
+        2 -3 0                            \n\
+      ")
+    });
   });
 
-  it("does unit propogation an leaves the remaining tautologies", function () {
-    var result = describedClass.optimise(' \n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 2,                        \n\
-      c     "out": 9                       \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 9 3                            \n\
-      -1 -2 9 0                            \n\
-      1 -9 0                               \n\
-      2 -9 0                               \n\
-      9 0                                  \n\
-    ');
+  it("does unit propogation and leaves the remaining tautologies", function () {
+    var result = describedClass.optimise({
+      level1Variables: {
+        a: 1,
+        b: 2,
+        out: 9
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 9 3                         \n\
+        -1 -2 9 0                         \n\
+        1 -9 0                            \n\
+        2 -9 0                            \n\
+        9 0                               \n\
+      ")
+    });
 
-    expect(result).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 2,                        \n\
-      c     "out": 3                       \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 3 3                            \n\
-      3 0                                  \n\
-      1 0                                  \n\
-      2 0                                  \n\
-    '));
+    expect(result).toEqual({
+      level1Variables: {
+        a: 1,
+        b: 2,
+        out: 3
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 3 3                         \n\
+        3 0                               \n\
+        1 0                               \n\
+        2 0                               \n\
+      ")
+    });
   });
 
   it("removes tautologies that do not appear in the variables", function () {
-    var result = describedClass.optimise(' \n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "out": 9                       \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 9 3                            \n\
-      -1 -2 9 0                            \n\
-      1 -9 0                               \n\
-      2 -9 0                               \n\
-      9 0                                  \n\
-    ');
+    var result = describedClass.optimise({
+      level1Variables: {
+        out: 9
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 9 3                         \n\
+        -1 -2 9 0                         \n\
+        1 -9 0                            \n\
+        2 -9 0                            \n\
+        9 0                               \n\
+      ")
+    });
 
-    expect(result).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "out": 1                       \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 1 1                            \n\
-      1 0                                  \n\
-    '));
+    expect(result).toEqual({
+      level1Variables: {
+        out: 1
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 1 1                         \n\
+        1 0                               \n\
+      ")
+    });
   });
 
   it("removes falsehood literals from clauses", function () {
-    var result = describedClass.optimise(' \n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 2                         \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 3 2                            \n\
-      -3 0                                 \n\
-      1 2 3 0                              \n\
-    ');
+    var result = describedClass.optimise({
+      level1Variables: {
+        a: 1,
+        b: 2
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 3 2                         \n\
+        -3 0                              \n\
+        1 2 3 0                           \n\
+      ")
+    });
 
-    expect(result).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 2                         \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 2 1                            \n\
-      1 2 0                                \n\
-    '));
+    expect(result).toEqual({
+      level1Variables: {
+        a: 1,
+        b: 2
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 2 1                         \n\
+        1 2 0                             \n\
+      ")
+    });
   });
 
   it("preserves falsehoods that appear in the variables", function () {
-    var result = describedClass.optimise(' \n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 2,                        \n\
-      c     "c": 3                         \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 3 2                            \n\
-      -3 0                                 \n\
-      1 2 3 0                              \n\
-    ');
+    var result = describedClass.optimise({
+      level1Variables: {
+        a: 1,
+        b: 2,
+        c: 3
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 3 2                         \n\
+        -3 0                              \n\
+        1 2 3 0                           \n\
+      ")
+    });
 
-    expect(result).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 2,                        \n\
-      c     "c": 3                         \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 3 2                            \n\
-      -3 0                                 \n\
-      1 2 0                                \n\
-    '));
+    expect(result).toEqual({
+      level1Variables: {
+        a: 1,
+        b: 2,
+        c: 3
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 3 2                         \n\
+        -3 0                              \n\
+        1 2 0                             \n\
+      ")
+    });
   });
 
   it("writes a single unsat clause for an unsatisfiable problem", function () {
-    var result = describedClass.optimise(' \n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 1                         \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 5 3                            \n\
-      1 0                                  \n\
-      -1 0                                 \n\
-      2 3 4 5 0                            \n\
-    ');
+    var result = describedClass.optimise({
+      level1Variables: {
+        a: 1,
+        b: 1
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 5 3                         \n\
+        1 0                               \n\
+        -1 0                              \n\
+        2 3 4 5 0                         \n\
+      ")
+    });
 
-    expect(result).toEqual(SpecHelper.stripWhitespace('\n\
-      c Sentient Machine Code, Version 1.0 \n\
-      c {                                  \n\
-      c   "level1Variables": {             \n\
-      c     "a": 1,                        \n\
-      c     "b": 1                         \n\
-      c   }                                \n\
-      c }                                  \n\
-      p cnf 0 2                            \n\
-      0                                    \n\
-      1 -1 0                               \n\
-    '));
+    expect(result).toEqual({
+      level1Variables: {
+        a: 1,
+        b: 1
+      },
+      dimacs: SpecHelper.stripWhitespace("\n\
+        p cnf 0 2                         \n\
+        0                                 \n\
+        1 -1 0                            \n\
+      ")
+    });
   });
 
   it("ensures consistency when optimising (1)", function () {
@@ -321,17 +305,16 @@ describe("CoprocessorAdapter", function () {
       Sentient.logger.level = "info";
       spyOn(console, "warn");
 
-      describedClass.optimise('              \n\
-        c Sentient Machine Code, Version 1.0 \n\
-        c {                                  \n\
-        c   "level1Variables": {             \n\
-        c     "a": 1                         \n\
-        c   }                                \n\
-        c }                                  \n\
-        p cnf 2 2                            \n\
-        1 0                                  \n\
-        2 0                                  \n\
-      ');
+      describedClass.optimise({
+        level1Variables: {
+          a: 1
+        },
+        dimacs: SpecHelper.stripWhitespace("\n\
+          p cnf 2 2                         \n\
+          1 0                               \n\
+          2 0                               \n\
+        ")
+      });
 
       var calls = SpecHelper.calls(console.warn);
 
@@ -347,17 +330,16 @@ describe("CoprocessorAdapter", function () {
       Sentient.logger.level = "debug";
       spyOn(console, "warn");
 
-      describedClass.optimise('              \n\
-        c Sentient Machine Code, Version 1.0 \n\
-        c {                                  \n\
-        c   "level1Variables": {             \n\
-        c     "a": 1                         \n\
-        c   }                                \n\
-        c }                                  \n\
-        p cnf 2 2                            \n\
-        1 0                                  \n\
-        2 0                                  \n\
-      ');
+      describedClass.optimise({
+        level1Variables: {
+          a: 1
+        },
+        dimacs: SpecHelper.stripWhitespace("\n\
+          p cnf 2 2                         \n\
+          1 0                               \n\
+          2 0                               \n\
+        ")
+      });
 
       var calls = SpecHelper.calls(console.warn);
 

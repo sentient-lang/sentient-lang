@@ -7,22 +7,19 @@ describe("Level3Runtime", function () {
 
   describe("general behaviour", function () {
     beforeEach(function () {
-      program = '                            \n\
-        c Sentient Machine Code, Version 1.0 \n\
-        c {                                  \n\
-        c   "level3Variables": {             \n\
-        c     "foo": {                       \n\
-        c       "type": "boolean",           \n\
-        c       "symbols": ["a"]             \n\
-        c     },                             \n\
-        c     "bar": {                       \n\
-        c       "type": "integer",           \n\
-        c       "symbols": ["b"],            \n\
-        c       "supporting": true           \n\
-        c     }                              \n\
-        c   }                                \n\
-        c }                                  \n\
-      ';
+      program = {
+        "level3Variables": {
+          "foo": {
+            "type": "boolean",
+            "symbols": ["a"]
+          },
+          "bar": {
+            "type": "integer",
+            "symbols": ["b"],
+            "supporting": true
+          }
+        }
+      };
     });
 
     it("throws an error when assigning to missing variables", function () {
@@ -64,21 +61,18 @@ describe("Level3Runtime", function () {
 
   describe("primitives", function () {
     beforeEach(function () {
-      program = '                            \n\
-        c Sentient Machine Code, Version 1.0 \n\
-        c {                                  \n\
-        c   "level3Variables": {             \n\
-        c     "foo": {                       \n\
-        c       "type": "boolean",           \n\
-        c       "symbols": ["a"]             \n\
-        c     },                             \n\
-        c     "bar": {                       \n\
-        c       "type": "integer",           \n\
-        c       "symbols": ["b"]             \n\
-        c     }                              \n\
-        c   }                                \n\
-        c }                                  \n\
-      ';
+      program = {
+        "level3Variables": {
+          "foo": {
+            "type": "boolean",
+            "symbols": ["a"]
+          },
+          "bar": {
+            "type": "integer",
+            "symbols": ["b"]
+          }
+        }
+      };
     });
 
     it("encodes booleans and integers", function () {
@@ -118,40 +112,37 @@ describe("Level3Runtime", function () {
 
   describe("arrays of primitives", function () {
     beforeEach(function () {
-      program = '                             \n\
-        c Sentient Machine Code, Version 1.0  \n\
-        c {                                   \n\
-        c   "level3Variables": {              \n\
-        c     "bool1": {                      \n\
-        c       "type": "boolean",            \n\
-        c       "symbols": ["a"]              \n\
-        c     },                              \n\
-        c     "bool2": {                      \n\
-        c       "type": "boolean",            \n\
-        c       "supporting": true,           \n\
-        c       "symbols": ["b"]              \n\
-        c     },                              \n\
-        c     "int1": {                       \n\
-        c       "type": "integer",            \n\
-        c       "supporting": true,           \n\
-        c       "symbols": ["c"]              \n\
-        c     },                              \n\
-        c     "int2": {                       \n\
-        c       "type": "integer",            \n\
-        c       "supporting": true,           \n\
-        c       "symbols": ["d"]              \n\
-        c     },                              \n\
-        c     "bools": {                      \n\
-        c       "type": "array",              \n\
-        c       "symbols": ["bool1", "bool2"] \n\
-        c     },                              \n\
-        c     "ints": {                       \n\
-        c       "type": "array",              \n\
-        c       "symbols": ["int1", "int2"]   \n\
-        c     }                               \n\
-        c   }                                 \n\
-        c }                                   \n\
-      ';
+      program = {
+        "level3Variables": {
+          "bool1": {
+            "type": "boolean",
+            "symbols": ["a"]
+          },
+          "bool2": {
+            "type": "boolean",
+            "supporting": true,
+            "symbols": ["b"]
+          },
+          "int1": {
+            "type": "integer",
+            "supporting": true,
+            "symbols": ["c"]
+          },
+          "int2": {
+            "type": "integer",
+            "supporting": true,
+            "symbols": ["d"]
+          },
+          "bools": {
+            "type": "array",
+            "symbols": ["bool1", "bool2"]
+          },
+          "ints": {
+            "type": "array",
+            "symbols": ["int1", "int2"]
+          }
+        }
+      };
     });
 
     it("encodes arrays of booleans and integers", function () {
@@ -236,46 +227,43 @@ describe("Level3Runtime", function () {
 
   describe("arrays of arrays", function () {
     beforeEach(function () {
-      program = '                               \n\
-        c Sentient Machine Code, Version 1.0    \n\
-        c {                                     \n\
-        c   "level3Variables": {                \n\
-        c     "foo": {                          \n\
-        c       "type": "integer",              \n\
-        c       "supporting": true,             \n\
-        c       "symbols": ["a"]                \n\
-        c     },                                \n\
-        c     "bar": {                          \n\
-        c       "type": "integer",              \n\
-        c       "supporting": true,             \n\
-        c       "symbols": ["b"]                \n\
-        c     },                                \n\
-        c     "baz": {                          \n\
-        c       "type": "integer",              \n\
-        c       "supporting": true,             \n\
-        c       "symbols": ["c"]                \n\
-        c     },                                \n\
-        c     "array4": {                       \n\
-        c       "type": "array",                \n\
-        c       "symbols": ["array3"]           \n\
-        c     },                                \n\
-        c     "array1": {                       \n\
-        c       "type": "array",                \n\
-        c       "supporting": true,             \n\
-        c       "symbols": ["foo", "bar"]       \n\
-        c     },                                \n\
-        c     "array2": {                       \n\
-        c       "type": "array",                \n\
-        c       "symbols": ["baz"]              \n\
-        c     },                                \n\
-        c     "array3": {                       \n\
-        c       "type": "array",                \n\
-        c       "supporting": true,             \n\
-        c       "symbols": ["array1", "array2"] \n\
-        c     }                                 \n\
-        c   }                                   \n\
-        c }                                     \n\
-      ';
+      program = {
+        "level3Variables": {
+          "foo": {
+            "type": "integer",
+            "supporting": true,
+            "symbols": ["a"]
+          },
+          "bar": {
+            "type": "integer",
+            "supporting": true,
+            "symbols": ["b"]
+          },
+          "baz": {
+            "type": "integer",
+            "supporting": true,
+            "symbols": ["c"]
+          },
+          "array4": {
+            "type": "array",
+            "symbols": ["array3"]
+          },
+          "array1": {
+            "type": "array",
+            "supporting": true,
+            "symbols": ["foo", "bar"]
+          },
+          "array2": {
+            "type": "array",
+            "symbols": ["baz"]
+          },
+          "array3": {
+            "type": "array",
+            "supporting": true,
+            "symbols": ["array1", "array2"]
+          }
+        }
+      };
     });
 
     it("encodes arrays of arrays", function () {
@@ -364,22 +352,19 @@ describe("Level3Runtime", function () {
 
   describe("nullability of values", function () {
     beforeEach(function () {
-      program = '                            \n\
-        c Sentient Machine Code, Version 1.0 \n\
-        c {                                  \n\
-        c   "level3Variables": {             \n\
-        c     "foo": {                       \n\
-        c       "type": "integer",           \n\
-        c       "symbols": ["a"],            \n\
-        c       "nilDecider": "bar"          \n\
-        c     },                             \n\
-        c     "bar": {                       \n\
-        c       "type": "boolean",           \n\
-        c       "symbols": ["b"]             \n\
-        c     }                              \n\
-        c   }                                \n\
-        c }                                  \n\
-      ';
+      program = {
+        "level3Variables": {
+          "foo": {
+            "type": "integer",
+            "symbols": ["a"],
+            "nilDecider": "bar"
+          },
+          "bar": {
+            "type": "boolean",
+            "symbols": ["b"]
+          }
+        }
+      };
     });
 
     it("encodes the nilDecider symbol to true if null", function () {
@@ -460,18 +445,15 @@ describe("Level3Runtime", function () {
     });
 
     it("throws an error if 'nilDecider' is missing from metadata", function () {
-      program = '                            \n\
-        c Sentient Machine Code, Version 1.0 \n\
-        c {                                  \n\
-        c   "level3Variables": {             \n\
-        c     "foo": {                       \n\
-        c       "type": "integer",           \n\
-        c       "symbols": ["a"],            \n\
-        c       "nilDecider": "bar"          \n\
-        c     }                              \n\
-        c   }                                \n\
-        c }                                  \n\
-      ';
+      program = {
+        "level3Variables": {
+          "foo": {
+            "type": "integer",
+            "symbols": ["a"],
+            "nilDecider": "bar"
+          }
+        }
+      };
 
       expect(function () {
         describedClass.encode(program, { foo: 123 });
@@ -484,30 +466,27 @@ describe("Level3Runtime", function () {
 
     describe("arrays", function () {
       beforeEach(function () {
-        program = '                            \n\
-          c Sentient Machine Code, Version 1.0 \n\
-          c {                                  \n\
-          c   "level3Variables": {             \n\
-          c     "arr": {                       \n\
-          c       "type": "array",             \n\
-          c       "symbols": ["foo", "bar"]    \n\
-          c     },                             \n\
-          c     "foo": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["a"]             \n\
-          c     },                             \n\
-          c     "bar": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["b"],            \n\
-          c       "nilDecider": "baz"          \n\
-          c     },                             \n\
-          c     "baz": {                       \n\
-          c       "type": "boolean",           \n\
-          c       "symbols": ["x"]             \n\
-          c     }                              \n\
-          c   }                                \n\
-          c }                                  \n\
-        ';
+        program = {
+          "level3Variables": {
+            "arr": {
+              "type": "array",
+              "symbols": ["foo", "bar"]
+            },
+            "foo": {
+              "type": "integer",
+              "symbols": ["a"]
+            },
+            "bar": {
+              "type": "integer",
+              "symbols": ["b"],
+              "nilDecider": "baz"
+            },
+            "baz": {
+              "type": "boolean",
+              "symbols": ["x"]
+            }
+          }
+        };
       });
 
       it("encodes the nilDecider symbol to true if null", function () {
@@ -591,51 +570,48 @@ describe("Level3Runtime", function () {
 
     describe("nested arrays", function () {
       beforeEach(function () {
-        program = '                            \n\
-          c Sentient Machine Code, Version 1.0 \n\
-          c {                                  \n\
-          c   "level3Variables": {             \n\
-          c     "arr": {                       \n\
-          c       "type": "array",             \n\
-          c       "symbols": ["arr1", "arr2"]  \n\
-          c     },                             \n\
-          c     "arr1": {                      \n\
-          c       "type": "array",             \n\
-          c       "symbols": ["foo", "bar"]    \n\
-          c     },                             \n\
-          c     "arr2": {                      \n\
-          c       "type": "array",             \n\
-          c       "symbols": ["baz", "qux"]    \n\
-          c     },                             \n\
-          c     "foo": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["a"]             \n\
-          c     },                             \n\
-          c     "bar": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["b"],            \n\
-          c       "nilDecider": "abc"          \n\
-          c     },                             \n\
-          c     "baz": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["c"]             \n\
-          c     },                             \n\
-          c     "qux": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["d"],            \n\
-          c       "nilDecider": "def"          \n\
-          c     },                             \n\
-          c     "abc": {                       \n\
-          c       "type": "boolean",           \n\
-          c       "symbols": ["x"]             \n\
-          c     },                             \n\
-          c     "def": {                       \n\
-          c       "type": "boolean",           \n\
-          c       "symbols": ["y"]             \n\
-          c     }                              \n\
-          c   }                                \n\
-          c }                                  \n\
-        ';
+        program = {
+          "level3Variables": {
+            "arr": {
+              "type": "array",
+              "symbols": ["arr1", "arr2"]
+            },
+            "arr1": {
+              "type": "array",
+              "symbols": ["foo", "bar"]
+            },
+            "arr2": {
+              "type": "array",
+              "symbols": ["baz", "qux"]
+            },
+            "foo": {
+              "type": "integer",
+              "symbols": ["a"]
+            },
+            "bar": {
+              "type": "integer",
+              "symbols": ["b"],
+              "nilDecider": "abc"
+            },
+            "baz": {
+              "type": "integer",
+              "symbols": ["c"]
+            },
+            "qux": {
+              "type": "integer",
+              "symbols": ["d"],
+              "nilDecider": "def"
+            },
+            "abc": {
+              "type": "boolean",
+              "symbols": ["x"]
+            },
+            "def": {
+              "type": "boolean",
+              "symbols": ["y"]
+            }
+          }
+        };
       });
 
       it("encodes the nilDecider symbol to true/false", function () {
@@ -748,30 +724,27 @@ describe("Level3Runtime", function () {
 
     describe("when the array itself has a 'nilDecider'", function () {
       beforeEach(function () {
-        program = '                            \n\
-          c Sentient Machine Code, Version 1.0 \n\
-          c {                                  \n\
-          c   "level3Variables": {             \n\
-          c     "arr": {                       \n\
-          c       "type": "array",             \n\
-          c       "symbols": ["foo", "bar"],   \n\
-          c       "nilDecider": "baz"          \n\
-          c     },                             \n\
-          c     "foo": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["a"]             \n\
-          c     },                             \n\
-          c     "bar": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["b"]             \n\
-          c     },                             \n\
-          c     "baz": {                       \n\
-          c       "type": "boolean",           \n\
-          c       "symbols": ["x"]             \n\
-          c     }                              \n\
-          c   }                                \n\
-          c }                                  \n\
-        ';
+        program = {
+          "level3Variables": {
+            "arr": {
+              "type": "array",
+              "symbols": ["foo", "bar"],
+              "nilDecider": "baz"
+            },
+            "foo": {
+              "type": "integer",
+              "symbols": ["a"]
+            },
+            "bar": {
+              "type": "integer",
+              "symbols": ["b"]
+            },
+            "baz": {
+              "type": "boolean",
+              "symbols": ["x"]
+            }
+          }
+        };
       });
 
       it("encodes the nilDecider symbol to true if null", function () {
@@ -852,51 +825,48 @@ describe("Level3Runtime", function () {
 
     describe("nested arrays with 'nilDecider' set on arrays", function () {
       beforeEach(function () {
-        program = '                            \n\
-          c Sentient Machine Code, Version 1.0 \n\
-          c {                                  \n\
-          c   "level3Variables": {             \n\
-          c     "arr": {                       \n\
-          c       "type": "array",             \n\
-          c       "symbols": ["arr1", "arr2"], \n\
-          c       "nilDecider": "abc"          \n\
-          c     },                             \n\
-          c     "arr1": {                      \n\
-          c       "type": "array",             \n\
-          c       "symbols": ["foo", "bar"]    \n\
-          c     },                             \n\
-          c     "arr2": {                      \n\
-          c       "type": "array",             \n\
-          c       "symbols": ["baz", "qux"],   \n\
-          c       "nilDecider": "def"          \n\
-          c     },                             \n\
-          c     "foo": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["a"]             \n\
-          c     },                             \n\
-          c     "bar": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["b"]             \n\
-          c     },                             \n\
-          c     "baz": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["c"]             \n\
-          c     },                             \n\
-          c     "qux": {                       \n\
-          c       "type": "integer",           \n\
-          c       "symbols": ["d"]             \n\
-          c     },                             \n\
-          c     "abc": {                       \n\
-          c       "type": "boolean",           \n\
-          c       "symbols": ["x"]             \n\
-          c     },                             \n\
-          c     "def": {                       \n\
-          c       "type": "boolean",           \n\
-          c       "symbols": ["y"]             \n\
-          c     }                              \n\
-          c   }                                \n\
-          c }                                  \n\
-        ';
+        program = {
+          "level3Variables": {
+            "arr": {
+              "type": "array",
+              "symbols": ["arr1", "arr2"],
+              "nilDecider": "abc"
+            },
+            "arr1": {
+              "type": "array",
+              "symbols": ["foo", "bar"]
+            },
+            "arr2": {
+              "type": "array",
+              "symbols": ["baz", "qux"],
+              "nilDecider": "def"
+            },
+            "foo": {
+              "type": "integer",
+              "symbols": ["a"]
+            },
+            "bar": {
+              "type": "integer",
+              "symbols": ["b"]
+            },
+            "baz": {
+              "type": "integer",
+              "symbols": ["c"]
+            },
+            "qux": {
+              "type": "integer",
+              "symbols": ["d"]
+            },
+            "abc": {
+              "type": "boolean",
+              "symbols": ["x"]
+            },
+            "def": {
+              "type": "boolean",
+              "symbols": ["y"]
+            }
+          }
+        };
       });
 
       it("encodes the nilDecider symbol to true if null", function () {
