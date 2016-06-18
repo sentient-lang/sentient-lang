@@ -131,7 +131,7 @@ describe("Sentient", function () {
     setInterval(function () {
       var calls = SpecHelper.calls(console.warn);
 
-      if (calls.length === 27) {
+      if (calls.length === 31) {
         expect(calls[0]).toEqual("Compiling program...");
 
         Sentient.logger.reset();

@@ -301,32 +301,7 @@ describe("CoprocessorAdapter", function () {
   });
 
   describe("logging", function () {
-    it("logs stderr if the log level is info", function () {
-      Sentient.logger.level = "info";
-      spyOn(console, "warn");
-
-      describedClass.optimise({
-        level1Variables: {
-          a: 1
-        },
-        dimacs: SpecHelper.stripWhitespace("\n\
-          p cnf 2 2                         \n\
-          1 0                               \n\
-          2 0                               \n\
-        ")
-      });
-
-      var calls = SpecHelper.calls(console.warn);
-
-      expect(calls.length).toEqual(1);
-      expect(calls[0].split("\n")[0]).toEqual(
-        "Riss Coprocessor wrote to stderr: c pp iteration 0"
-      );
-
-      Sentient.logger.reset();
-    });
-
-    it("logs stdout and stderr if the log level is debug", function () {
+    it("logs stderr if the log level is debug", function () {
       Sentient.logger.level = "debug";
       spyOn(console, "warn");
 
@@ -343,9 +318,9 @@ describe("CoprocessorAdapter", function () {
 
       var calls = SpecHelper.calls(console.warn);
 
-      expect(calls.length).toEqual(2);
-      expect(calls[1].substring(0, 32)).toEqual(
-        "c Reading from standard input..."
+      expect(calls.length).toEqual(1);
+      expect(calls[0].substring(0, 32)).toEqual(
+        "Riss Coprocessor wrote to stderr"
       );
 
       Sentient.logger.reset();
