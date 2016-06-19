@@ -187,4 +187,11 @@ describe("Sentient", function () {
       "sentient:1:8: syntax error"
     );
   });
+
+  it("can retrieve the source code of a program", function () {
+    var program = Sentient.compile("int a; expose a;");
+    var source = Sentient.source(program);
+
+    expect(source).toEqual("int a; expose a;");
+  });
 });
