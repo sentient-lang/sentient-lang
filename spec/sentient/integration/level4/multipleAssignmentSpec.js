@@ -5,14 +5,14 @@ var Sentient = require("../../../../lib/sentient");
 describe("multiple assignment", function () {
   it("allows one-one assignment", function () {
     var program = Sentient.compile("a = 1; expose a;");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 1 }]);
   });
 
   it("allows many-many assignment", function () {
     var program = Sentient.compile("a, b, c = 1, 2, 3; expose a, b, c;");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 1, b: 2, c: 3 }]);
   });
@@ -26,14 +26,14 @@ describe("multiple assignment", function () {
       a, b, c = foo();              \n\
       expose a, b, c;               \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 1, b: 2, c: 3 }]);
   });
 
   it("allows assignment of mixed types", function () {
     var program = Sentient.compile("a, b = 1, true; expose a, b;");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 1, b: true }]);
   });
@@ -47,14 +47,14 @@ describe("multiple assignment", function () {
       a, b = foo();                 \n\
       expose a, b;                  \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 1, b: true }]);
   });
 
   it("assigns from left-right with fewer variables than expr's", function () {
     var program = Sentient.compile("a, b = 1, 2, 3, 4; expose a, b;");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 1, b: 2 }]);
   });
@@ -82,7 +82,7 @@ describe("multiple assignment", function () {
                                     \n\
       expose a, b;                  \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 2, b: 1 }]);
   });
@@ -94,7 +94,7 @@ describe("multiple assignment", function () {
                                     \n\
       expose a, b, c;               \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ b: 1, c: 2, a: 3 }]);
   });
@@ -109,7 +109,7 @@ describe("multiple assignment", function () {
                                                       \n\
       expose a, b, c, d, e, f;                        \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ e: 123, f: 1, d: true, c: false, b: 1, a: 123 }]);
   });

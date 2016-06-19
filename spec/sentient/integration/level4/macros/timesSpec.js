@@ -13,7 +13,7 @@ describe("macro: times", function () {
                                     \n\
       expose numbers;               \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ numbers: [0, 1, 2] }]);
   });
@@ -28,7 +28,7 @@ describe("macro: times", function () {
                                     \n\
       expose numbers;               \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ numbers: [0, 1, 2] }]);
   });

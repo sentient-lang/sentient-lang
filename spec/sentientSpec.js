@@ -19,16 +19,28 @@ describe("Sentient", function () {
       expose p1, p2, target;                       \n\
     ");
 
-    var result = Sentient.run(program, { target: 21 });
+    var result = Sentient.run({
+      program: program,
+      assignments: { target: 21 }
+    });
     expect(result).toEqual([{ p1: 7, p2: 3, target: 21 }]);
 
-    result = Sentient.run(program, { target: 65 });
+    result = Sentient.run({
+      program: program,
+      assignments: { target: 65 }
+    });
     expect(result).toEqual([{ p1: 5, p2: 13, target: 65 }]);
 
-    result = Sentient.run(program, { target: 221 });
+    result = Sentient.run({
+      program: program,
+      assignments: { target: 221 }
+    });
     expect(result).toEqual([{ p1: 13, p2: 17, target: 221 }]);
 
-    result = Sentient.run(program, { p1: 19 });
+    result = Sentient.run({
+      program: program,
+      assignments: { p1: 19 }
+    });
     expect(result).toEqual([{ p1: 19, p2: 2, target: 38 }]);
   });
 
@@ -40,14 +52,20 @@ describe("Sentient", function () {
       expose a, b, total;                          \n\
     ");
 
-    var result = Sentient.run(
-      program, { total: 100 }, 1, undefined, MinisatAdapter
-    );
+    var result = Sentient.run({
+      program: program,
+      assignments: { total: 100 },
+      number: 1,
+      machine: MinisatAdapter
+    });
     expect(result).toEqual([{ a: 38, b: 62, total: 100 }]);
 
-    result = Sentient.run(
-      program, { total: 100 }, 1, undefined, LingelingAdapter
-    );
+    result = Sentient.run({
+      program: program,
+      assignments: { total: 100 },
+      number: 1,
+      machine: LingelingAdapter
+    });
     expect(result).toEqual([{ a: 39, b: 61, total: 100 }]);
   });
 
@@ -59,9 +77,12 @@ describe("Sentient", function () {
       expose a, b, total;                          \n\
     ");
 
-    var result = Sentient.run(
-      program, { total: 100 }, 5, undefined, MinisatAdapter
-    );
+    var result = Sentient.run({
+      program: program,
+      assignments: { total: 100 },
+      number: 5,
+      machine: MinisatAdapter
+    });
 
     expect(result).toEqual([
       { a: 38, b: 62, total: 100 },
@@ -71,9 +92,12 @@ describe("Sentient", function () {
       { a: 4, b: 96, total: 100 }
     ]);
 
-    result = Sentient.run(
-      program, { total: 100 }, 5, undefined, LingelingAdapter
-    );
+    result = Sentient.run({
+      program: program,
+      assignments: { total: 100 },
+      number: 5,
+      machine: LingelingAdapter
+    });
 
     expect(result).toEqual([
       { a: 39, b: 61, total: 100 },
@@ -94,7 +118,7 @@ describe("Sentient", function () {
 
     var results = [];
 
-    Sentient.run(program, { total: 100 }, 5, function (result) {
+    var callback = function (result) {
       results.push(result);
 
       if (results.length === 5) {
@@ -108,6 +132,13 @@ describe("Sentient", function () {
 
         done();
       }
+    };
+
+    Sentient.run({
+      program: program,
+      assignments: { total: 100 },
+      number: 5,
+      callback: callback
     });
   });
 
@@ -128,7 +159,12 @@ describe("Sentient", function () {
     };
 
     Sentient.compile("int a; expose a;", function (machineCode) {
-      Sentient.run(machineCode, { a: 123 }, 0, function () {});
+      Sentient.run({
+        program: machineCode,
+        assignments: { a: 123 },
+        number: 0,
+        callback: function () {}
+      });
     });
 
     setInterval(function () {
@@ -151,7 +187,11 @@ describe("Sentient", function () {
     };
 
     Sentient.compile("a = 123; expose a;", function (machineCode) {
-      Sentient.run(machineCode, {}, 0, function () {});
+      Sentient.run({
+        program: machineCode,
+        number: 0,
+        callback: function () {}
+      });
     });
 
     setInterval(function () {

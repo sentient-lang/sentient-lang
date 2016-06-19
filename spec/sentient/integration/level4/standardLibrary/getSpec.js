@@ -9,7 +9,7 @@ describe("standard library: get", function () {
       a, aNil = [1, 2].get(x);      \n\
       expose a, aNil;               \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: 2, aNil: false }]);
 
     program = Sentient.compile("\n\
@@ -17,7 +17,7 @@ describe("standard library: get", function () {
       a, aNil = [1, 2].get(x);      \n\
       expose a, aNil;               \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: 0, aNil: true }]);
 
     program = Sentient.compile("\n\
@@ -25,7 +25,7 @@ describe("standard library: get", function () {
       a, aNil = [true].get(x); \n\
       expose a, aNil;          \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: true, aNil: false }]);
 
     program = Sentient.compile("\n\
@@ -33,13 +33,13 @@ describe("standard library: get", function () {
       a, aNil = [true].get(x); \n\
       expose a, aNil;          \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: false, aNil: true }]);
   });
 
   it("can be called as a method instead of a function", function () {
     var program = Sentient.compile("a, aNil = get([1], 0); expose a, aNil;");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: 1, aNil: false }]);
   });
 });

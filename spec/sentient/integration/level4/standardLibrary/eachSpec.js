@@ -13,7 +13,7 @@ describe("standard library: each", function () {
                                             \n\
       expose total;                         \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ total: 6 }]);
   });
@@ -28,7 +28,7 @@ describe("standard library: each", function () {
                                                    \n\
       expose elements;                             \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ elements: [1, 2, 3] }]);
   });
@@ -43,7 +43,7 @@ describe("standard library: each", function () {
                                                                         \n\
       expose presence;                                                  \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ presence: [true, false] }]);
   });
@@ -60,7 +60,7 @@ describe("standard library: each", function () {
                                             \n\
       expose total;                         \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ total: 6 }]);
   });
@@ -70,7 +70,7 @@ describe("standard library: each", function () {
       a = each([1, 2, 3], function (e) {}); \n\
       expose a;                             \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: [1, 2, 3] }]);
   });
@@ -85,7 +85,7 @@ describe("standard library: each", function () {
                                             \n\
       expose total;                         \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ total: 6 }]);
   });
@@ -104,7 +104,7 @@ describe("standard library: each", function () {
                                             \n\
       expose total;                         \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ total: 18 }]);
   });

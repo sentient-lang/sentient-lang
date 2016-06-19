@@ -15,7 +15,7 @@ describe("standard library: eachPair", function () {
                                                          \n\
       expose leftTotal, rightTotal;                      \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     // Should iterate as: [1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]
     expect(result).toEqual([{ leftTotal: 10, rightTotal: 20 }]);
@@ -33,7 +33,7 @@ describe("standard library: eachPair", function () {
                                                                  \n\
       expose leftIndexTotal, rightIndexTotal;                    \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     // Should iterate as: [0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]
     expect(result).toEqual([{ leftIndexTotal: 4, rightIndexTotal: 14 }]);
@@ -52,7 +52,7 @@ describe("standard library: eachPair", function () {
                                                          \n\
       expose total;                                      \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ total: 30 }]);
   });
@@ -62,7 +62,7 @@ describe("standard library: eachPair", function () {
       a = eachPair([1, 2, 3, 4], function (l, r) {}); \n\
       expose a;                                       \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: [1, 2, 3, 4] }]);
   });
@@ -79,7 +79,7 @@ describe("standard library: eachPair", function () {
                                                        \n\
       expose leftTotal, rightTotal;                    \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     // Should iterate as: [1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]
     expect(result).toEqual([{ leftTotal: 10, rightTotal: 20 }]);
@@ -97,7 +97,7 @@ describe("standard library: eachPair", function () {
                                             \n\
       expose total;                         \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ total: 30 }]);
   });

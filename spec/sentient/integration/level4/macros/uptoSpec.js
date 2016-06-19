@@ -13,7 +13,7 @@ describe("macro: upto", function () {
                                     \n\
       expose total;                 \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ total: 9 }]);
   });
@@ -28,7 +28,7 @@ describe("macro: upto", function () {
                                     \n\
       expose total;                 \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ total: -6 }]);
   });
@@ -43,7 +43,7 @@ describe("macro: upto", function () {
                                     \n\
       expose total;                 \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ total: 9 }]);
   });

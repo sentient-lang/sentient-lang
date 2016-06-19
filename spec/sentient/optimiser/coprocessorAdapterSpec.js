@@ -240,7 +240,11 @@ describe("CoprocessorAdapter", function () {
     ");
 
     var optimisedProgram = describedClass.optimise(program);
-    var result = Sentient.run(optimisedProgram, { c: 5 }, 3);
+    var result = Sentient.run({
+      program: optimisedProgram,
+      assignments: { c: 5 },
+      number: 3
+    });
 
     expect(result).toEqual([
       { a: 3, b: 4, c: 5 },
@@ -261,7 +265,11 @@ describe("CoprocessorAdapter", function () {
     ");
 
     var optimisedProgram = describedClass.optimise(program);
-    var result = Sentient.run(optimisedProgram, { total: 100 }, 3);
+    var result = Sentient.run({
+      program: optimisedProgram,
+      assignments: { total: 100 },
+      number: 3
+    });
 
     expect(result).toEqual([
       { total: 100, numbers: [ 64, 1, 35 ] },
@@ -279,7 +287,7 @@ describe("CoprocessorAdapter", function () {
     ");
 
     var optimisedProgram = describedClass.optimise(program);
-    var result = Sentient.run(optimisedProgram, {});
+    var result = Sentient.run({ program: optimisedProgram });
 
     expect(result).toEqual([{}]);
   });
@@ -291,7 +299,10 @@ describe("CoprocessorAdapter", function () {
     ");
 
     var optimisedProgram = describedClass.optimise(program);
-    var result = Sentient.run(optimisedProgram, {}, 0);
+    var result = Sentient.run({
+      program: optimisedProgram,
+      number: 0
+    });
 
     expect(result).toEqual([
       { a: 0 },

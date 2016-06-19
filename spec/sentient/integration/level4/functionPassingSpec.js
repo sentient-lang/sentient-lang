@@ -20,7 +20,7 @@ describe("function passing", function () {
       a = foo(*bar);                     \n\
       expose a;                          \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 123 }]);
   });
@@ -69,7 +69,7 @@ describe("function passing", function () {
       a = foo(111, *double, *double); \n\
       expose a;                       \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 444 }]);
   });
@@ -89,7 +89,7 @@ describe("function passing", function () {
                                               \n\
       expose a, b;                            \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 123, b: 456 }]);
   });
@@ -113,7 +113,7 @@ describe("function passing", function () {
       invariant x != y, x != z, y != z; \n\
       expose x, y, z;                   \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ x: 0, y: 1, z: -1 }]);
   });
@@ -132,7 +132,7 @@ describe("function passing", function () {
       a, b, c = foo(*f), f();          \n\
       expose a, b, c;                  \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 123, b: 456, c: 123 }]);
   });

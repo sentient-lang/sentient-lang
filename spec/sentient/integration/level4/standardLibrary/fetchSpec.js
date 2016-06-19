@@ -13,7 +13,7 @@ describe("standard library: []", function () {
                                     \n\
       expose a, b, c;               \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 1, b: 2, c: 3 }]);
   });
@@ -27,7 +27,7 @@ describe("standard library: []", function () {
                                     \n\
       expose a, b;                  \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: true, b: false }]);
   });
@@ -42,7 +42,7 @@ describe("standard library: []", function () {
                                     \n\
       expose a, b, c;               \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 10, b: 20, c: 30 }]);
   });
@@ -53,7 +53,7 @@ describe("standard library: []", function () {
       a = [1, 2, 3][x];             \n\
       expose a;                     \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
     expect(result).toEqual([{}]);
 
     program = Sentient.compile("\n\
@@ -61,7 +61,7 @@ describe("standard library: []", function () {
       a = [1, 2, 3][x];         \n\
       expose a;                 \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{}]);
 
     program = Sentient.compile("  \n\
@@ -69,13 +69,13 @@ describe("standard library: []", function () {
       a = [[10], [20, 30]][x][y]; \n\
       expose a;                   \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{}]);
   });
 
   it("can be called as a method instead of a function", function () {
     var program = Sentient.compile("a = []([1, 2, 3], 1); expose a;");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: 2 }]);
   });
 });

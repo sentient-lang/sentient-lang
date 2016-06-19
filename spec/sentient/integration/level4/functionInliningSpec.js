@@ -15,7 +15,7 @@ describe("inline function definitions", function () {
                                          \n\
       expose a;                          \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 123 }]);
   });
@@ -34,7 +34,7 @@ describe("inline function definitions", function () {
                                      \n\
       expose a, b, c;                \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 123, b: 456, c: 789 }]);
   });
@@ -53,7 +53,7 @@ describe("inline function definitions", function () {
                                      \n\
       expose a, b;                   \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 123, b: 123 }]);
   });
@@ -70,7 +70,7 @@ describe("inline function definitions", function () {
                                          \n\
       expose a;                          \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 7 }]);
   });
@@ -90,7 +90,7 @@ describe("inline function definitions", function () {
                                          \n\
       expose global;                     \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ global: 103 }]);
   });

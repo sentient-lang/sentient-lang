@@ -10,7 +10,7 @@ describe("function return", function () {
       double_x();                        \n\
       expose x;                          \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ x: 246 }]);
   });
@@ -21,7 +21,7 @@ describe("function return", function () {
       a, b = foo();                        \n\
       expose a, b;                         \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 1, b: true }]);
   });
@@ -33,7 +33,7 @@ describe("function return", function () {
       a, b = bar();                        \n\
       expose a, b;                         \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 1, b: true }]);
   });

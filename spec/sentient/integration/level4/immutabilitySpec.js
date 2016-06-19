@@ -11,7 +11,7 @@ describe("immutability", function () {
       a = foo();                     \n\
       expose a;                      \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 2 }]);
   });

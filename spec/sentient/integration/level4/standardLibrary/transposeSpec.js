@@ -9,7 +9,7 @@ describe("standard library: transpose", function () {
       y = x.transpose;              \n\
       expose y;                     \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
     expect(result).toEqual([{ y: [[1, 3, 5], [2, 4, 6]] }]);
 
     program = Sentient.compile("    \n\
@@ -17,7 +17,7 @@ describe("standard library: transpose", function () {
       y = x.transpose;              \n\
       expose y;                     \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{ y: [[1, 4], [2, 5], [3, 6]] }]);
 
     program = Sentient.compile("    \n\
@@ -25,7 +25,7 @@ describe("standard library: transpose", function () {
       y = x.transpose;              \n\
       expose y;                     \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{ y: [[1, 2], [3]] }]);
 
     program = Sentient.compile("    \n\
@@ -34,7 +34,7 @@ describe("standard library: transpose", function () {
       z = y.transpose;              \n\
       expose z;                     \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{ z: [[1], [2, 3]] }]);
 
     program = Sentient.compile("    \n\
@@ -43,7 +43,7 @@ describe("standard library: transpose", function () {
       z = y.transpose;              \n\
       expose z;                     \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{ z: [[10, 40, 10], [50]] }]);
 
     program = Sentient.compile("    \n\
@@ -53,7 +53,7 @@ describe("standard library: transpose", function () {
       w = z.transpose;              \n\
       expose w;                     \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{ w: [[10], [40, 50], [10]] }]);
   });
 
@@ -75,7 +75,7 @@ describe("standard library: transpose", function () {
 
   it("can be called as a method instead of a function", function () {
     var program = Sentient.compile("a = [[1], [2, 3]].transpose; expose a;");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: [[1, 2], [3]] }]);
   });
 });

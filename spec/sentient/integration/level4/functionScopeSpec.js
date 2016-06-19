@@ -16,7 +16,7 @@ describe("function definitions", function () {
                                     \n\
       expose a, b, c;               \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 123, b: 456, c: 456 }]);
   });
@@ -34,7 +34,7 @@ describe("function definitions", function () {
                                     \n\
       expose a, b, c;               \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 456, b: 123, c: 456 }]);
   });
@@ -51,7 +51,7 @@ describe("function definitions", function () {
                                     \n\
       expose x;                     \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ x: 444 }]);
   });
@@ -69,7 +69,7 @@ describe("function definitions", function () {
       a = foo();                    \n\
       expose a;                     \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 20 }]);
   });
@@ -93,7 +93,7 @@ describe("function definitions", function () {
                                     \n\
       expose a, b, c;               \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 10, b: 20, c: 10 }]);
   });
@@ -110,7 +110,7 @@ describe("function definitions", function () {
       a = foo();                    \n\
       expose a;                     \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 10 }]);
   });

@@ -11,7 +11,7 @@ describe("function arguments", function () {
       a, b, c = foo(), bar(123), baz(456, 789);  \n\
       expose a, b, c;                            \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: 1, b: 2, c: 3 }]);
   });
@@ -27,7 +27,7 @@ describe("function arguments", function () {
                                     \n\
       expose a, b;                  \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
 
     expect(result).toEqual([{ a: true, b: false }]);
   });

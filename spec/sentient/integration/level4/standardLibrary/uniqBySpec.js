@@ -10,7 +10,7 @@ describe("standard library: uniqBy?", function () {
       });                                  \n\
       expose a;                            \n\
     ");
-    var result = Sentient.run(program);
+    var result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: true }]);
 
     program = Sentient.compile("            \n\
@@ -19,7 +19,7 @@ describe("standard library: uniqBy?", function () {
       });                                   \n\
       expose a;                             \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: false }]);
 
     program = Sentient.compile("               \n\
@@ -28,7 +28,7 @@ describe("standard library: uniqBy?", function () {
       });                                      \n\
       expose a;                                \n\
     ");
-    result = Sentient.run(program);
+    result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: true }]);
   });
 });

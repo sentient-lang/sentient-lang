@@ -30,7 +30,11 @@ var Application = function () {
     errorSpan.innerText = "";
 
     if (number >= 1 && number <= 999) {
-      cache[number] = cache[number] || Sentient.run(self.machineCode, { number: number })[0];
+      cache[number] = cache[number] || Sentient.run({
+        program: self.machineCode,
+        assignments: { number: number }
+      })[0];
+
       self.results = cache[number];
 
       if (typeof self.results.number === "undefined") {
