@@ -1,7 +1,10 @@
 {
   "name": "sentient-lang",
   "version": "0.0.0-alpha.29",
+  "engines": { "node": ">0.10" },
+  "engineStrict": true,
   "description": "Sentient Language Compiler and Runtime",
+  "keywords": ["sentient", "language", "declarative"],
   "homepage": "http://sentient-lang.org",
   "author": "Chris Patuzzo <chris@patuzzo.co.uk>",
   "license": "MIT",
@@ -11,6 +14,7 @@
     "type": "git",
     "url": "https://github.com/sentient-lang/sentient-lang"
   },
+  "bugs": "https://github.com/sentient-lang/sentient-lang/issues",
   "bin": {
     "sentient": "sentient"
   },
