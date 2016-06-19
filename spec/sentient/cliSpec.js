@@ -308,4 +308,25 @@ describe("CLI", function () {
       }
     }, 10);
   });
+
+  it("can print the exposed variables of a compiled program", function (done) {
+    var precompiled = Sentient.compile("a = 111 + 222; expose a;");
+
+    run(JSON.stringify(precompiled), ["--exposed"]);
+
+    setInterval(function () {
+      var calls = SpecHelper.calls(console.log);
+
+      if (calls.length === 1) {
+        expect(JSON.parse(calls[0])).toEqual({
+          a: {
+            type: "integer",
+            minimum: -512,
+            maximum: 511
+          }
+        });
+        done();
+      }
+    }, 10);
+  });
 });
