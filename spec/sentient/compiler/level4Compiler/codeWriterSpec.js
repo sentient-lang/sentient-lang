@@ -13,6 +13,7 @@ describe("CodeWriter", function () {
   it("writes the simplest program", function () {
     var code = subject.write();
     expect(code).toEqual({
+      metadata: {},
       instructions: []
     });
   });
@@ -24,10 +25,24 @@ describe("CodeWriter", function () {
     var code = subject.write();
 
     expect(code).toEqual({
+      metadata: {},
       instructions: [
         { foo: "bar", baz: 123 },
         { qux: "qux" }
       ]
+    });
+  });
+
+  it("can set the metadata", function () {
+    subject.metadata({ foo: "bar", baz: 123 });
+    var code = subject.write();
+
+    expect(code).toEqual({
+      metadata: {
+        foo: "bar",
+        baz: 123
+      },
+      instructions: []
     });
   });
 });
