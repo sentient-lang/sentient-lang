@@ -293,4 +293,19 @@ describe("CLI", function () {
       }
     }, 10);
   });
+
+  it("can print the source code of a compiled program", function (done) {
+    var precompiled = Sentient.compile("a = 111 + 222; expose a;");
+
+    run(JSON.stringify(precompiled), ["--source"]);
+
+    setInterval(function () {
+      var calls = SpecHelper.calls(console.log);
+
+      if (calls.length === 1) {
+        expect(calls[0]).toEqual("a = 111 + 222; expose a;");
+        done();
+      }
+    }, 10);
+  });
 });
