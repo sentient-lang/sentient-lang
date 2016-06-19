@@ -1,6 +1,6 @@
 {
   "name": "sentient-lang",
-  "version": "0.0.0-alpha.29",
+  "version": "0.0.0-alpha.30",
   "engines": { "node": ">0.10" },
   "engineStrict": true,
   "description": "Sentient Language Compiler and Runtime",
