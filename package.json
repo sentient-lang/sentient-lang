@@ -1,6 +1,6 @@
 {
   "name": "sentient-lang",
-  "version": "0.0.0-alpha.27",
+  "version": "0.0.0-alpha.28",
   "description": "Sentient Language Compiler and Runtime",
   "homepage": "http://sentient-lang.org",
   "author": "Chris Patuzzo <chris@patuzzo.co.uk>",
