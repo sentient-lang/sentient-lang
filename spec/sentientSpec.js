@@ -194,4 +194,17 @@ describe("Sentient", function () {
 
     expect(source).toEqual("int a; expose a;");
   });
+
+  it("can retrieve information about exposed variables", function () {
+    var program = Sentient.compile("int a; expose a;");
+    var exposed = Sentient.exposed(program);
+
+    expect(exposed).toEqual({
+      a: {
+        type: "integer",
+        minimum: -128,
+        maximum: 127
+      }
+    });
+  });
 });
