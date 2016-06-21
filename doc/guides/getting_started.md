@@ -102,7 +102,8 @@ you've used before. Welcome to a new way of thinking!
 ###Program breakdown
 
 If you're wondering what each of the lines mean, here's a quick overview. For a
-more thorough overview, you may wish to explore the [language specification](????).
+more thorough overview, you may wish to explore the
+[Language Specification](../specifications/language.md).
 
 **Line 1:** `int a, b, c`
 
@@ -205,7 +206,7 @@ sentient ten.json --run
 
 One advantage of pre-compiling programs is that you can optimise them to run
 much faster. Optimisation is out of scope for this guide, but you can read more
-about it [here](?????).
+about it [here](TODO).
 
 ###Next steps
 
@@ -213,8 +214,8 @@ Congratulations, if you've got this far you've survived the Getting Started
 guide. You now know the basics of how to compile and run programs with Sentient.
 It is recommended that you do one of the following next:
 
-- Check out the [language specification](???) for Sentient
+- Check out the [Language Specification](../specifications/language.md) for Sentient
 - Write a Sentient program to find [Pythagorean Triples](https://en.wikipedia.org/wiki/Pythagorean_triple)
-- Play with some [example programs](???)
+- Play with some [example programs](TODO)
 
 Good luck!
