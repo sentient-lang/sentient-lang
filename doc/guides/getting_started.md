@@ -15,7 +15,7 @@ npm install -g sentient-lang
 And that's it! That will install the `sentient` executable which you can use for
 compiling and running Sentient programs.
 
-At present, Sentient is officially supported in Node 4 or newer, but it will
+At present, Sentient is officially supported in Node 0.11 or newer, but it will
 probably work with older versions, too. You can check which version of Node
 you're running with `node --version`.
 
@@ -47,7 +47,7 @@ especially useful.
 ```
   Usage: sentient [options] [file]
 
-  Sentient Language Compiler and Runtime, Version 0.0.0-alpha.25
+  Sentient Language Compiler and Runtime, Version 0.0.0-alpha.30
 
   Options:
 
@@ -55,13 +55,14 @@ especially useful.
     -H, --help-verbose        output usage information with explanation
     -v, --version             output the version number
     -c, --compile             compile a program to machine code
-    -o, --optimise            optimise a pre-compiled program
-    -r, --run                 run a pre-compiled program
+    -o, --optimise            optimise a compiled program
+    -r, --run                 run a compiled program
+    -s, --source              output the source of a compiled program
+    -e, --exposed             output exposed variables of a compiled program
     -a, --assign '<json>'     assign some of the exposed variables
     -A, --assign-file <file>  read assignments from a file
     -n, --number <n>          return the given number of solutions
     -m, --machine <name>      use the specified machine adapter
-    -w, --wrap <name>         wrap the program in JavaScript boilerplate
     -i, --info                set the log level to info
     -d, --debug               set the log level to debug
 ```
@@ -89,7 +90,7 @@ expose a, b, c;
 Save the file and run `sentient ten.snt`. You should see the following output:
 
 ```javascript
-{ a: 1, b: 1, c: 8 }
+{"a":1,"b":1,"c":8}
 ```
 
 And there you have it – your first Sentient program! Notice that we didn't
@@ -137,9 +138,9 @@ sentient ten.snt --number 3
 You should see the following output:
 
 ```javascript
-{ a: 1, b: 1, c: 8 }
-{ a: 5, b: 1, c: 4 }
-{ a: 3, b: 1, c: 6 }
+{"a":1,"b":1,"c":8}
+{"a":5,"b":1,"c":4}
+{"a":3,"b":1,"c":6}
 ```
 
 These solutions appear in no particular order. You can also instruct Sentient to
