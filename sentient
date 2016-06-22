@@ -1,4 +1,4 @@
 #!/bin/sh
-':' //; exec "$(command -v nodejs || command -v node)" --max-old-space-size=999999999 "$0" "$@"
+':' //; exec "$(command -v nodejs || command -v node)" --max-old-space-size=999999999 --stack-size=999999999 "$0" "$@"
 
 require("./lib/main").cli();
