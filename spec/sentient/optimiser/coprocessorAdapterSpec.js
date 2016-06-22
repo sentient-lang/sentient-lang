@@ -224,7 +224,7 @@ describe("CoprocessorAdapter", function () {
         b: 1
       },
       dimacs: SpecHelper.stripWhitespace("\n\
-        p cnf 0 2                         \n\
+        p cnf 1 2                         \n\
         0                                 \n\
         1 -1 0                            \n\
       ")
