@@ -9,5 +9,25 @@ describe("standard library: reserved names", function () {
     expect(function () {
       Sentient.compile("function collect () {};");
     }).toThrow();
+
+    expect(function () {
+      Sentient.compile("function upto () {};");
+    }).toThrow();
+
+    expect(function () {
+      Sentient.compile("function downto () {};");
+    }).toThrow();
+
+    expect(function () {
+      Sentient.compile("function times () {};");
+    }).toThrow();
+
+    expect(function () {
+      Sentient.compile("function get () {};");
+    }).toThrow();
+
+    expect(function () {
+      Sentient.compile("function [] () {};");
+    }).toThrow();
   });
 });
