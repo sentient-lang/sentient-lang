@@ -177,36 +177,36 @@ describe("Integration: 'getIndex'", function () {
         { type: "get" },
         { type: "getIndex", index: 0, checkBounds: true },
         { type: "pop", symbol: "foo" },
-        { type: "pop", symbol: "fooOutOfBounds" },
+        { type: "pop", symbol: "fooInBounds" },
         { type: "variable", symbol: "foo" },
-        { type: "variable", symbol: "fooOutOfBounds" },
+        { type: "variable", symbol: "fooInBounds" },
 
         { type: "push", symbol: "array" },
         { type: "constant", value: 0 },
         { type: "get" },
         { type: "getIndex", index: 1, checkBounds: true },
         { type: "pop", symbol: "bar" },
-        { type: "pop", symbol: "barOutOfBounds" },
+        { type: "pop", symbol: "barInBounds" },
         { type: "variable", symbol: "bar" },
-        { type: "variable", symbol: "barOutOfBounds" },
+        { type: "variable", symbol: "barInBounds" },
 
         { type: "push", symbol: "array" },
         { type: "constant", value: 1 },
         { type: "get" },
         { type: "getIndex", index: 0, checkBounds: true },
         { type: "pop", symbol: "baz" },
-        { type: "pop", symbol: "bazOutOfBounds" },
+        { type: "pop", symbol: "bazInBounds" },
         { type: "variable", symbol: "baz" },
-        { type: "variable", symbol: "bazOutOfBounds" },
+        { type: "variable", symbol: "bazInBounds" },
 
         { type: "push", symbol: "array" },
         { type: "constant", value: 1 },
         { type: "get" },
         { type: "getIndex", index: 1, checkBounds: true },
         { type: "pop", symbol: "qux" },
-        { type: "pop", symbol: "quxOutOfBounds" },
+        { type: "pop", symbol: "quxInBounds" },
         { type: "variable", symbol: "qux" },
-        { type: "variable", symbol: "quxOutOfBounds" }
+        { type: "variable", symbol: "quxInBounds" }
       ]
     });
 
@@ -223,10 +223,10 @@ describe("Integration: 'getIndex'", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result.fooOutOfBounds).toEqual(false);
-    expect(result.barOutOfBounds).toEqual(false);
-    expect(result.bazOutOfBounds).toEqual(false);
-    expect(result.quxOutOfBounds).toEqual(true);
+    expect(result.fooInBounds).toEqual(true);
+    expect(result.barInBounds).toEqual(true);
+    expect(result.bazInBounds).toEqual(true);
+    expect(result.quxInBounds).toEqual(false);
 
     expect(result.foo).toEqual(10);
     expect(result.bar).toEqual(20);
@@ -301,38 +301,38 @@ describe("Integration: 'getIndex'", function () {
         { type: "get" },
         { type: "getIndex", index: 0, checkBounds: true },
         { type: "pop", symbol: "a" },
-        { type: "pop", symbol: "aOutOfBounds" },
+        { type: "pop", symbol: "aInBounds" },
 
         { type: "push", symbol: "nested_array" },
         { type: "constant", value: 0 },
         { type: "get" },
         { type: "getIndex", index: 1, checkBounds: true },
         { type: "pop", symbol: "b" },
-        { type: "pop", symbol: "bOutOfBounds" },
+        { type: "pop", symbol: "bInBounds" },
 
         { type: "push", symbol: "nested_array" },
         { type: "constant", value: 1 },
         { type: "get" },
         { type: "getIndex", index: 0, checkBounds: true },
         { type: "pop", symbol: "c" },
-        { type: "pop", symbol: "cOutOfBounds" },
+        { type: "pop", symbol: "cInBounds" },
 
         { type: "push", symbol: "nested_array" },
         { type: "constant", value: 1 },
         { type: "get" },
         { type: "getIndex", index: 1, checkBounds: true },
         { type: "pop", symbol: "d" },
-        { type: "pop", symbol: "dOutOfBounds" },
+        { type: "pop", symbol: "dInBounds" },
 
         { type: "variable", symbol: "a" },
         { type: "variable", symbol: "b" },
         { type: "variable", symbol: "c" },
         { type: "variable", symbol: "d" },
 
-        { type: "variable", symbol: "aOutOfBounds" },
-        { type: "variable", symbol: "bOutOfBounds" },
-        { type: "variable", symbol: "cOutOfBounds" },
-        { type: "variable", symbol: "dOutOfBounds" }
+        { type: "variable", symbol: "aInBounds" },
+        { type: "variable", symbol: "bInBounds" },
+        { type: "variable", symbol: "cInBounds" },
+        { type: "variable", symbol: "dInBounds" }
       ]
     });
 
@@ -349,16 +349,16 @@ describe("Integration: 'getIndex'", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result.aOutOfBounds).toEqual(false);
+    expect(result.aInBounds).toEqual(true);
     expect(result.a).toEqual(10);
 
-    expect(result.bOutOfBounds).toEqual(false);
+    expect(result.bInBounds).toEqual(true);
     expect(result.b).toEqual(20);
 
-    expect(result.cOutOfBounds).toEqual(false);
+    expect(result.cInBounds).toEqual(true);
     expect(result.c).toEqual(30);
 
-    expect(result.dOutOfBounds).toEqual(true);
+    expect(result.dInBounds).toEqual(false);
     expect(result.d).toEqual(0);
   });
 
@@ -381,9 +381,9 @@ describe("Integration: 'getIndex'", function () {
 
         { type: "getIndex", index: 1, checkBounds: true },
         { type: "pop", symbol: "a" },
-        { type: "pop", symbol: "aOutOfBounds" },
+        { type: "pop", symbol: "aInBounds" },
         { type: "variable", symbol: "a" },
-        { type: "variable", symbol: "aOutOfBounds" }
+        { type: "variable", symbol: "aInBounds" }
       ]
     });
 
@@ -400,7 +400,7 @@ describe("Integration: 'getIndex'", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result.aOutOfBounds).toEqual(true);
+    expect(result.aInBounds).toEqual(false);
     expect(result.a).toEqual(0);
   });
 
@@ -432,26 +432,26 @@ describe("Integration: 'getIndex'", function () {
         { type: "push", symbol: "bar" },
         { type: "getIndex", index: 0, checkBounds: true },
         { type: "pop", symbol: "a" },
-        { type: "pop", symbol: "aOutOfBounds" },
+        { type: "pop", symbol: "aInBounds" },
 
         // b = bar[1]
         { type: "push", symbol: "bar" },
         { type: "getIndex", index: 1, checkBounds: true },
         { type: "pop", symbol: "b" },
-        { type: "pop", symbol: "bOutOfBounds" },
+        { type: "pop", symbol: "bInBounds" },
 
         // c = bar[2]
         { type: "push", symbol: "bar" },
         { type: "getIndex", index: 2, checkBounds: true },
         { type: "pop", symbol: "c" },
-        { type: "pop", symbol: "cOutOfBounds" },
+        { type: "pop", symbol: "cInBounds" },
 
         { type: "variable", symbol: "a" },
         { type: "variable", symbol: "b" },
         { type: "variable", symbol: "c" },
-        { type: "variable", symbol: "aOutOfBounds" },
-        { type: "variable", symbol: "bOutOfBounds" },
-        { type: "variable", symbol: "cOutOfBounds" }
+        { type: "variable", symbol: "aInBounds" },
+        { type: "variable", symbol: "bInBounds" },
+        { type: "variable", symbol: "cInBounds" }
       ]
     });
 
@@ -468,13 +468,13 @@ describe("Integration: 'getIndex'", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result.aOutOfBounds).toEqual(false);
+    expect(result.aInBounds).toEqual(true);
     expect(result.a).toEqual(40);
 
-    expect(result.bOutOfBounds).toEqual(true);
+    expect(result.bInBounds).toEqual(false);
     expect(result.b).toEqual(0);
 
-    expect(result.cOutOfBounds).toEqual(true);
+    expect(result.cInBounds).toEqual(false);
     expect(result.c).toEqual(0);
   });
 

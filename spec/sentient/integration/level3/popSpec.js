@@ -53,9 +53,9 @@ describe("Integration: 'pop'", function () {
         { type: "constant", value: 1 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "bar" },
-        { type: "pop", symbol: "barOutOfBounds" },
+        { type: "pop", symbol: "barInBounds" },
         { type: "variable", symbol: "bar" },
-        { type: "variable", symbol: "barOutOfBounds" }
+        { type: "variable", symbol: "barInBounds" }
       ]
     });
     program = Level2Compiler.compile(program);
@@ -71,7 +71,7 @@ describe("Integration: 'pop'", function () {
     result = Level3Runtime.decode(program, result);
 
     expect(result.bar).toEqual(0);
-    expect(result.barOutOfBounds).toEqual(true);
+    expect(result.barInBounds).toEqual(false);
   });
 
   it("replaces conditional invariants when reassigned", function () {

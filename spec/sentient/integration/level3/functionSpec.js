@@ -480,9 +480,9 @@ describe("Integration: defining and calling functions", function () {
 
         { type: "call", name: "get_1", width: 1 },
 
-        { type: "pop", symbol: "aNil" },
+        { type: "pop", symbol: "aPresent" },
         { type: "pop", symbol: "a" },
-        { type: "variable", symbol: "aNil" },
+        { type: "variable", symbol: "aPresent" },
         { type: "variable", symbol: "a" }
       ]
     });
@@ -500,7 +500,7 @@ describe("Integration: defining and calling functions", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result).toEqual({ a: 0, aNil: true });
+    expect(result).toEqual({ a: 0, aPresent: false });
   });
 
   it("does not bleed array elements into the caller", function () {
@@ -1118,10 +1118,10 @@ describe("Integration: defining and calling functions", function () {
           { type: "pop", symbol: "arr" },
 
           { type: "call", name: "foo", width: 0 },
-          { type: "pop", symbol: "aNil" },
+          { type: "pop", symbol: "aPresent" },
           { type: "pop", symbol: "a" },
 
-          { type: "variable", symbol: "aNil" },
+          { type: "variable", symbol: "aPresent" },
           { type: "variable", symbol: "a" }
         ]
       });
@@ -1139,7 +1139,7 @@ describe("Integration: defining and calling functions", function () {
       result = Level2Runtime.decode(program, result);
       result = Level3Runtime.decode(program, result);
 
-      expect(result).toEqual({ a: 0, aNil: true });
+      expect(result).toEqual({ a: 0, aPresent: false });
     });
 
     it("copies conditional nils to arguments of the function", function () {
@@ -1165,9 +1165,9 @@ describe("Integration: defining and calling functions", function () {
           { type: "push", symbol: "arr" },
           { type: "call", name: "foo", width: 1 },
 
-          { type: "pop", symbol: "aNil" },
+          { type: "pop", symbol: "aPresent" },
           { type: "pop", symbol: "a" },
-          { type: "variable", symbol: "aNil" },
+          { type: "variable", symbol: "aPresent" },
           { type: "variable", symbol: "a" }
         ]
       });
@@ -1185,7 +1185,7 @@ describe("Integration: defining and calling functions", function () {
       result = Level2Runtime.decode(program, result);
       result = Level3Runtime.decode(program, result);
 
-      expect(result).toEqual({ a: 0, aNil: true });
+      expect(result).toEqual({ a: 0, aPresent: false });
     });
 
     it("does not inherit conditional nils for shadowed arguments", function () {
@@ -1213,10 +1213,10 @@ describe("Integration: defining and calling functions", function () {
           { type: "collect", width: 2 },
 
           { type: "call", name: "foo", width: 1 },
-          { type: "pop", symbol: "aNil" },
+          { type: "pop", symbol: "aPresent" },
           { type: "pop", symbol: "a" },
 
-          { type: "variable", symbol: "aNil" },
+          { type: "variable", symbol: "aPresent" },
           { type: "variable", symbol: "a" }
         ]
       });
@@ -1234,7 +1234,7 @@ describe("Integration: defining and calling functions", function () {
       result = Level2Runtime.decode(program, result);
       result = Level3Runtime.decode(program, result);
 
-      expect(result).toEqual({ a: 2, aNil: false });
+      expect(result).toEqual({ a: 2, aPresent: true });
     });
 
     it("inherits nested conditional nils from the context", function () {
@@ -1261,10 +1261,10 @@ describe("Integration: defining and calling functions", function () {
           { type: "pop", symbol: "arr" },
 
           { type: "call", name: "foo", width: 0 },
-          { type: "pop", symbol: "aNil" },
+          { type: "pop", symbol: "aPresent" },
           { type: "pop", symbol: "a" },
 
-          { type: "variable", symbol: "aNil" },
+          { type: "variable", symbol: "aPresent" },
           { type: "variable", symbol: "a" }
         ]
       });
@@ -1282,7 +1282,7 @@ describe("Integration: defining and calling functions", function () {
       result = Level2Runtime.decode(program, result);
       result = Level3Runtime.decode(program, result);
 
-      expect(result).toEqual({ a: 0, aNil: true });
+      expect(result).toEqual({ a: 0, aPresent: false });
     });
 
     it("copies conditional nils back to the context", function () {

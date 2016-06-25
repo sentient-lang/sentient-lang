@@ -157,17 +157,17 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: -1 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "foo" },
-        { type: "pop", symbol: "fooOutOfBounds" },
+        { type: "pop", symbol: "fooInBounds" },
         { type: "variable", symbol: "foo" },
-        { type: "variable", symbol: "fooOutOfBounds" },
+        { type: "variable", symbol: "fooInBounds" },
 
         { type: "push", symbol: "array" },
         { type: "constant", value: 2 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "bar" },
-        { type: "pop", symbol: "barOutOfBounds" },
+        { type: "pop", symbol: "barInBounds" },
         { type: "variable", symbol: "bar" },
-        { type: "variable", symbol: "barOutOfBounds" }
+        { type: "variable", symbol: "barInBounds" }
       ]
     });
 
@@ -184,8 +184,8 @@ describe("Integration: 'get'", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result.fooOutOfBounds).toEqual(true);
-    expect(result.barOutOfBounds).toEqual(true);
+    expect(result.fooInBounds).toEqual(false);
+    expect(result.barInBounds).toEqual(false);
 
     expect(result.foo).toEqual(0);
     expect(result.bar).toEqual(0);
@@ -271,7 +271,7 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 0 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "a" },
-        { type: "pop", symbol: "aOutOfBounds" },
+        { type: "pop", symbol: "aInBounds" },
 
         { type: "push", symbol: "nested_array" },
         { type: "constant", value: 0 },
@@ -279,7 +279,7 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 1 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "b" },
-        { type: "pop", symbol: "bOutOfBounds" },
+        { type: "pop", symbol: "bInBounds" },
 
         { type: "push", symbol: "nested_array" },
         { type: "constant", value: 1 },
@@ -287,7 +287,7 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 0 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "c" },
-        { type: "pop", symbol: "cOutOfBounds" },
+        { type: "pop", symbol: "cInBounds" },
 
         { type: "push", symbol: "nested_array" },
         { type: "constant", value: 0 },
@@ -295,7 +295,7 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 2 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "d" },
-        { type: "pop", symbol: "dOutOfBounds" },
+        { type: "pop", symbol: "dInBounds" },
 
         { type: "push", symbol: "nested_array" },
         { type: "constant", value: 1 },
@@ -303,7 +303,7 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 1 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "e" },
-        { type: "pop", symbol: "eOutOfBounds" },
+        { type: "pop", symbol: "eInBounds" },
 
         { type: "push", symbol: "nested_array" },
         { type: "constant", value: 1 },
@@ -311,7 +311,7 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 2 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "f" },
-        { type: "pop", symbol: "fOutOfBounds" },
+        { type: "pop", symbol: "fInBounds" },
 
         { type: "variable", symbol: "a" },
         { type: "variable", symbol: "b" },
@@ -320,12 +320,12 @@ describe("Integration: 'get'", function () {
         { type: "variable", symbol: "e" },
         { type: "variable", symbol: "f" },
 
-        { type: "variable", symbol: "aOutOfBounds" },
-        { type: "variable", symbol: "bOutOfBounds" },
-        { type: "variable", symbol: "cOutOfBounds" },
-        { type: "variable", symbol: "dOutOfBounds" },
-        { type: "variable", symbol: "eOutOfBounds" },
-        { type: "variable", symbol: "fOutOfBounds" }
+        { type: "variable", symbol: "aInBounds" },
+        { type: "variable", symbol: "bInBounds" },
+        { type: "variable", symbol: "cInBounds" },
+        { type: "variable", symbol: "dInBounds" },
+        { type: "variable", symbol: "eInBounds" },
+        { type: "variable", symbol: "fInBounds" }
       ]
     });
 
@@ -342,22 +342,22 @@ describe("Integration: 'get'", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result.aOutOfBounds).toEqual(false);
+    expect(result.aInBounds).toEqual(true);
     expect(result.a).toEqual(10);
 
-    expect(result.bOutOfBounds).toEqual(false);
+    expect(result.bInBounds).toEqual(true);
     expect(result.b).toEqual(20);
 
-    expect(result.cOutOfBounds).toEqual(false);
+    expect(result.cInBounds).toEqual(true);
     expect(result.c).toEqual(30);
 
-    expect(result.dOutOfBounds).toEqual(true);
+    expect(result.dInBounds).toEqual(false);
     expect(result.d).toEqual(0);
 
-    expect(result.eOutOfBounds).toEqual(true);
+    expect(result.eInBounds).toEqual(false);
     expect(result.e).toEqual(0);
 
-    expect(result.fOutOfBounds).toEqual(true);
+    expect(result.fInBounds).toEqual(false);
     expect(result.f).toEqual(0);
   });
 
@@ -381,9 +381,9 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 1 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "a" },
-        { type: "pop", symbol: "aOutOfBounds" },
+        { type: "pop", symbol: "aInBounds" },
         { type: "variable", symbol: "a" },
-        { type: "variable", symbol: "aOutOfBounds" }
+        { type: "variable", symbol: "aInBounds" }
       ]
     });
 
@@ -400,7 +400,7 @@ describe("Integration: 'get'", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result.aOutOfBounds).toEqual(true);
+    expect(result.aInBounds).toEqual(false);
     expect(result.a).toEqual(0);
   });
 
@@ -434,28 +434,28 @@ describe("Integration: 'get'", function () {
         { type: "constant", value: 0 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "a" },
-        { type: "pop", symbol: "aOutOfBounds" },
+        { type: "pop", symbol: "aInBounds" },
 
         // b = bar[1]
         { type: "push", symbol: "bar" },
         { type: "constant", value: 1 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "b" },
-        { type: "pop", symbol: "bOutOfBounds" },
+        { type: "pop", symbol: "bInBounds" },
 
         // c = bar[2]
         { type: "push", symbol: "bar" },
         { type: "constant", value: 2 },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "c" },
-        { type: "pop", symbol: "cOutOfBounds" },
+        { type: "pop", symbol: "cInBounds" },
 
         { type: "variable", symbol: "a" },
         { type: "variable", symbol: "b" },
         { type: "variable", symbol: "c" },
-        { type: "variable", symbol: "aOutOfBounds" },
-        { type: "variable", symbol: "bOutOfBounds" },
-        { type: "variable", symbol: "cOutOfBounds" }
+        { type: "variable", symbol: "aInBounds" },
+        { type: "variable", symbol: "bInBounds" },
+        { type: "variable", symbol: "cInBounds" }
       ]
     });
 
@@ -472,13 +472,13 @@ describe("Integration: 'get'", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result.aOutOfBounds).toEqual(false);
+    expect(result.aInBounds).toEqual(true);
     expect(result.a).toEqual(4);
 
-    expect(result.bOutOfBounds).toEqual(true);
+    expect(result.bInBounds).toEqual(false);
     expect(result.b).toEqual(0);
 
-    expect(result.cOutOfBounds).toEqual(true);
+    expect(result.cInBounds).toEqual(false);
     expect(result.c).toEqual(0);
   });
 
@@ -558,7 +558,7 @@ describe("Integration: 'get'", function () {
         { type: "get", checkBounds: true },
 
         { type: "pop", symbol: "out" },
-        { type: "pop", symbol: "outOfBounds" },
+        { type: "pop", symbol: "inBounds" },
 
         { type: "variable", symbol: "a" },
         { type: "variable", symbol: "b" },
@@ -566,7 +566,7 @@ describe("Integration: 'get'", function () {
         { type: "variable", symbol: "x" },
         { type: "variable", symbol: "y" },
         { type: "variable", symbol: "out" },
-        { type: "variable", symbol: "outOfBounds" }
+        { type: "variable", symbol: "inBounds" }
       ]
     });
     program = Level2Compiler.compile(program);
@@ -583,7 +583,7 @@ describe("Integration: 'get'", function () {
       result = Level2Runtime.decode(program, result);
       result = Level3Runtime.decode(program, result);
 
-      if (result.outOfBounds) {
+      if (!result.inBounds) {
         return "out of bounds";
       } else {
         return result.out;
@@ -656,9 +656,9 @@ describe("Integration: 'get'", function () {
         { type: "push", symbol: "z" },
         { type: "get", checkBounds: true },
         { type: "pop", symbol: "out" },
-        { type: "pop", symbol: "outOfBounds" },
+        { type: "pop", symbol: "inBounds" },
         { type: "variable", symbol: "out" },
-        { type: "variable", symbol: "outOfBounds" }
+        { type: "variable", symbol: "inBounds" }
       ]
     });
     program = Level2Compiler.compile(program);
@@ -675,7 +675,7 @@ describe("Integration: 'get'", function () {
       result = Level2Runtime.decode(program, result);
       result = Level3Runtime.decode(program, result);
 
-      if (result.outOfBounds) {
+      if (!result.inBounds) {
         return "out of bounds";
       } else {
         return result.out;

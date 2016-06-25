@@ -23,7 +23,7 @@ describe("Sentient", function () {
       program: program,
       assignments: { target: 21 }
     });
-    expect(result).toEqual([{ p1: 7, p2: 3, target: 21 }]);
+    expect(result).toEqual([{ p1: 3, p2: 7, target: 21 }]);
 
     result = Sentient.run({
       program: program,

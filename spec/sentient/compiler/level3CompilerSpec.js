@@ -33,7 +33,7 @@ describe("Level3Compiler", function () {
       symbols: ["$$$_L3_INTEGER7_$$$"]
     });
 
-    expect(code.instructions.length).toEqual(55);
+    expect(code.instructions.length).toEqual(57);
   });
 
   it("can optionally take a callback object", function () {
