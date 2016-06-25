@@ -303,6 +303,8 @@ Or using a ternary form:
 a = someCondition ? valueIfTrue : valueIfFalse;
 ```
 
+See the [boolean reference](../references/boolean.md) for more information.
+
 ###Next steps
 
 Hopefully this has given you a better understanding of the syntax of Sentient.
