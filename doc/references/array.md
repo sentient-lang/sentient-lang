@@ -130,6 +130,15 @@ a, b = [5, 10, 15].get(-1)    # a: 0,  b: false
 a, b = [5, 10, 15].get(99)    # a: 0,  b: false
 ```
 
+###include?
+
+Returns true if the array includes the given element.
+
+```ruby
+[1, 2, 3].include?(3)    #=> true
+[1, 2, 3].include?(4)    #=> false
+```
+
 ###last
 
 Returns the last element in the array.
@@ -186,3 +195,24 @@ t = nestedArray.transpose
 
 If this array is iterated, any gaps will set 'isPresent' to false. See `each`
 for more information.
+
+###uniq?
+
+Returns true if the array contains unique elements.
+
+```ruby
+[1, 2, 3].uniq?    #=> true
+[1, 2, 1].uniq?    #=> false
+```
+
+Equality will be used to check uniqueness.
+
+###uniqBy?
+
+Returns true if the array contains unique elements when a given function is
+called on the array's elements.
+
+```ruby
+[1, 3].uniqBy?(*odd?)    #=> true
+[1, 3].uniqBy?(*odd?)    #=> false
+```
