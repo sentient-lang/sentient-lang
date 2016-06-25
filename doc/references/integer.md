@@ -186,6 +186,22 @@ Returns true if the integer is greater than zero.
 0.positive?     #=> false
 ```
 
+###pred
+
+Returns the integer's predecessor.
+
+```ruby
+3.pred    #=> 2
+```
+
+###succ
+
+Returns the integer's successor.
+
+```ruby
+3.succ    #=> 4
+```
+
 ###times
 
 Iterates up to one less than the integer, starting from 0.
