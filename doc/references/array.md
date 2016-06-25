@@ -108,6 +108,14 @@ You may optionally provide 'index' and 'isPresent' arguments:
 
 See `each` for more information on what these arguments mean.
 
+###first
+
+Returns the first element in the array.
+
+```ruby
+[1, 2, 3].first    #=> 1
+```
+
 ###get
 
 Gets the element at an index and performs bounds checking.
@@ -120,6 +128,14 @@ a boolean that is true if the index is in bounds.
 a, b = [5, 10, 15].get(1)     # a: 10, b: true
 a, b = [5, 10, 15].get(-1)    # a: 0,  b: false
 a, b = [5, 10, 15].get(99)    # a: 0,  b: false
+```
+
+###last
+
+Returns the last element in the array.
+
+```ruby
+[1, 2, 3].last    #=> 3
 ```
 
 ###length
