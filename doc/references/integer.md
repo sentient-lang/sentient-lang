@@ -148,6 +148,24 @@ total = 0;
 
 This method only supports [integer literals](../specification/literals.md).
 
+###negative?
+
+Returns true if the integer is less than zero.
+
+```ruby
+-1.negative?    #=> true
+0.negative?     #=> false
+```
+
+###positive?
+
+Returns true if the integer is greater than zero.
+
+```ruby
+1.positive?     #=> true
+0.positive?     #=> false
+```
+
 ###times
 
 Iterates up to one less than the integer, starting from 0.
@@ -179,3 +197,12 @@ total = 0;
 ```
 
 This method only supports [integer literals](../specification/literals.md).
+
+###zero?
+
+Returns true if the integer is equal to zero.
+
+```ruby
+0.zero?    #=> true
+1.zero?    #=> false
+```
