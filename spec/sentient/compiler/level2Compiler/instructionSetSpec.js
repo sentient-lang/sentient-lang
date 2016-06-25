@@ -1045,13 +1045,15 @@ describe("InstructionSet", function () {
       expect(symbolTable.type(quotientSymbol)).toEqual("integer");
       expect(symbolTable.symbols(quotientSymbol)).toEqual([
         "$$$_L2_INTEGER1_BIT0_$$$",
-        "$$$_L2_INTEGER1_BIT1_$$$"
+        "$$$_L2_INTEGER1_BIT1_$$$",
+        "$$$_L2_INTEGER1_BIT2_$$$"
       ]);
 
       expect(symbolTable.type(moduloSymbol)).toEqual("integer");
       expect(symbolTable.symbols(moduloSymbol)).toEqual([
         "$$$_L2_INTEGER2_BIT0_$$$",
-        "$$$_L2_INTEGER2_BIT1_$$$"
+        "$$$_L2_INTEGER2_BIT1_$$$",
+        "$$$_L2_INTEGER2_BIT2_$$$"
       ]);
     });
   });

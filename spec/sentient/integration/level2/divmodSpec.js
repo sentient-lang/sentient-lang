@@ -53,6 +53,36 @@ describe("Integration: 'divmod'", function () {
     }
   });
 
+  it("chooses an appropriate number of bits in twos-complement", function () {
+    var program = Level2Compiler.compile({
+      instructions: [
+        { type: "constant", value: -16 },
+        { type: "constant", value: -1 },
+        { type: "divmod" },
+        { type: "pop", symbol: "q1" },
+        { type: "pop", symbol: "r1" },
+        { type: "variable", symbol: "q1" },
+        { type: "variable", symbol: "r1" },
+
+        { type: "constant", value: -1 },
+        { type: "constant", value: 2 },
+        { type: "divmod" },
+        { type: "pop", symbol: "q2" },
+        { type: "pop", symbol: "r2" },
+        { type: "variable", symbol: "q2" },
+        { type: "variable", symbol: "r2" }
+      ]
+    });
+    program = Level1Compiler.compile(program);
+
+    var result = Machine.run(program, {})[0];
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+
+    expect(result).toEqual({ q1: 16, r1: 0, q2: -1, r2: 1 });
+  });
+
   it("throws an error if there are fewer than two integers", function () {
     expect(function () {
       Level2Compiler.compile({
