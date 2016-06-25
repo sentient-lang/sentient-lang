@@ -146,7 +146,7 @@ total = 0;
 # total: 12
 ```
 
-This method only supports [integer literals](???).
+This method only supports [integer literals](../specification/literals.md).
 
 ###times
 
@@ -162,7 +162,7 @@ total = 0;
 # total: 10
 ```
 
-This method only supports [integer literals](???).
+This method only supports [integer literals](../specification/literals.md).
 
 ###upto
 
@@ -178,4 +178,4 @@ total = 0;
 # total: 12
 ```
 
-This method only supports [integer literals](???).
+This method only supports [integer literals](../specification/literals.md).
