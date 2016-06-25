@@ -148,6 +148,16 @@ total = 0;
 
 This method only supports [integer literals](../specification/literals.md).
 
+###even?
+
+Returns true if the integer is even.
+
+```ruby
+0.even?    #=> true
+1.even?    #=> false
+2.even?    #=> true
+```
+
 ###negative?
 
 Returns true if the integer is less than zero.
@@ -155,6 +165,16 @@ Returns true if the integer is less than zero.
 ```ruby
 -1.negative?    #=> true
 0.negative?     #=> false
+```
+
+###odd?
+
+Returns true if the integer is odd.
+
+```ruby
+0.odd?    #=> false
+1.odd?    #=> true
+2.odd?    #=> false
 ```
 
 ###positive?
