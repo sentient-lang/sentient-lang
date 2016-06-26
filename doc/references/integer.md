@@ -132,6 +132,14 @@ Returns the absolute value of the integer.
 -5.abs   #=> 5
 ```
 
+###cube
+
+Returns the cube of the integer.
+
+```ruby
+3.cube    #=> 27
+```
+
 ###downto
 
 Iterates from a start integer downto an end integer.
@@ -192,6 +200,14 @@ Returns the integer's predecessor.
 
 ```ruby
 3.pred    #=> 2
+```
+
+###square
+
+Returns the square of the integer.
+
+```ruby
+3.square    #=> 9
 ```
 
 ###succ

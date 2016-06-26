@@ -100,10 +100,6 @@ describe("function passing", function () {
         invariant x == f(x);            \n\
       };                                \n\
                                         \n\
-      function cube (x) {               \n\
-        return x * x * x;               \n\
-      };                                \n\
-                                        \n\
       int3 x, y, z;                     \n\
                                         \n\
       x.fixedPoint(*cube);              \n\
