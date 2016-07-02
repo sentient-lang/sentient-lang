@@ -7,7 +7,7 @@ describe("standard library: reserved names", function () {
     spyOn(console, "error");
 
     expect(function () {
-      Sentient.compile("function collect () {};");
+      Sentient.compile("function buildArray () {};");
     }).toThrow();
 
     expect(function () {

@@ -17,9 +17,9 @@ describe("exprPrimary", function () {
     expect(subject.parse("xfalse")).toEqual("xfalse");
     expect(subject.parse("true_false")).toEqual("true_false");
     expect(subject.parse("false1")).toEqual("false1");
-    expect(subject.parse("[1, 2]")).toEqual(["collect", 1, 2]);
-    expect(subject.parse("[a, true]")).toEqual(["collect", "a", true]);
-    expect(subject.parse("[ 1 ]")).toEqual(["collect", 1]);
+    expect(subject.parse("[1, 2]")).toEqual(["buildArray", 1, 2]);
+    expect(subject.parse("[a, true]")).toEqual(["buildArray", "a", true]);
+    expect(subject.parse("[ 1 ]")).toEqual(["buildArray", 1]);
   });
 
   it("rejects invalid", function () {

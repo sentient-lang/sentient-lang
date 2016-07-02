@@ -87,20 +87,20 @@ describe("ExpressionParser", function () {
     ]);
   });
 
-  it("generates instructions for 'collect' function calls", function () {
-    expect(describedClass.parse(["collect", 1, 2])).toEqual([
+  it("generates instructions for 'buildArray' function calls", function () {
+    expect(describedClass.parse(["buildArray", 1, 2])).toEqual([
       { type: "constant", value: 1 },
       { type: "constant", value: 2 },
       { type: "collect", width: 2 }
     ]);
 
-    expect(describedClass.parse(["collect", "a", true])).toEqual([
+    expect(describedClass.parse(["buildArray", "a", true])).toEqual([
       { type: "push", symbol: "a" },
       { type: "constant", value: true },
       { type: "collect", width: 2 }
     ]);
 
-    expect(describedClass.parse(["collect", 1])).toEqual([
+    expect(describedClass.parse(["buildArray", 1])).toEqual([
       { type: "constant", value: 1 },
       { type: "collect", width: 1 }
     ]);

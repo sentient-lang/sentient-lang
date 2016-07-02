@@ -9,7 +9,7 @@ describe("returnStatement", function () {
     expect(subject.parse("return 123, 456;")).toEqual([2, 123, 456]);
     expect(subject.parse("return 2 + 2;")).toEqual([1, ["+", 2, 2]]);
     expect(subject.parse("return true, ABC;")).toEqual([2, true, "ABC"]);
-    expect(subject.parse("return [1], x;")).toEqual([2, ["collect", 1], "x"]);
+    expect(subject.parse("return [1],x;")).toEqual([2, ["buildArray", 1], "x"]);
     expect(subject.parse("return 3.divmod(2);")).toEqual([1, ["divmod", 3, 2]]);
     expect(subject.parse("return2 3.divmod(2);")).toEqual([2,["divmod", 3, 2]]);
     expect(subject.parse("return foo();")).toEqual([1, ["foo"]]);

@@ -30,17 +30,17 @@ describe("expression", function () {
     );
 
     expect(subject.parse("[1, 2].get(0)")).toEqual(
-      ["get", ["collect", 1, 2], 0]
+      ["get", ["buildArray", 1, 2], 0]
     );
 
     expect(subject.parse("[[1].get(0) + 1]")).toEqual(
-      ["collect", ["+", ["get", ["collect", 1], 0], 1]]
+      ["buildArray", ["+", ["get", ["buildArray", 1], 0], 1]]
     );
 
     expect(subject.parse("-arr[0]")).toEqual(["-@", ["[]", "arr", 0]]);
 
     expect(subject.parse("-[1, 2, x][-y] * 3")).toEqual(
-      ["*", ["-@", ["[]", ["collect", 1, 2, "x"], ["-@", "y"]]], 3]
+      ["*", ["-@", ["[]", ["buildArray", 1, 2, "x"], ["-@", "y"]]], 3]
     );
 
     expect(subject.parse("x == 1 ? 1 + 1 : 2 + 2")).toEqual(
@@ -73,7 +73,7 @@ describe("expression", function () {
 
     expect(subject.parse("A + B.-@")).toEqual(["+", "A", ["-@", "B"]]);
     expect(subject.parse("a.==(b)")).toEqual(["==", "a", "b"]);
-    expect(subject.parse("1.collect(2)")).toEqual(["collect", 1, 2]);
+    expect(subject.parse("1.buildArray(2)")).toEqual(["buildArray", 1, 2]);
 
     expect(subject.parse("1 + 2 / 3")).toEqual(["+", 1, ["/", 2, 3]]);
     expect(subject.parse("-3")).toEqual(["-@", 3]);
