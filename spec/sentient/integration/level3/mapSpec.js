@@ -133,4 +133,35 @@ describe("Integration: 'map'", function () {
 
     expect(result).toEqual({ out: [20] });
   });
+
+  describe("when the function does not return one element", function () {
+    it("throws an error", function () {
+      expect(function () {
+        Level3Compiler.compile({
+          instructions: [
+            { type: "constant", value: 10 },
+            { type: "define", name: "myFn", args: ["element"] },
+            { type: "push", symbol: "element" },
+            { type: "push", symbol: "element" },
+            { type: "return", width: 2 },
+            { type: "pointer", name: "myFn" },
+            { type: "map" }
+          ]
+        });
+      }).toThrow();
+
+      expect(function () {
+        Level3Compiler.compile({
+          instructions: [
+            { type: "constant", value: 10 },
+            { type: "collect", width: 1 },
+            { type: "define", name: "myFn", args: ["element"] },
+            { type: "return", width: 0 },
+            { type: "pointer", name: "myFn" },
+            { type: "map" }
+          ]
+        });
+      }).toThrow();
+    });
+  });
 });
