@@ -12,7 +12,7 @@ describe("Compiler", function () {
       error = e;
     }
 
-    expect(error.message.substring(0, 12)).toEqual("syntax error");
+    expect(error.message.substring(0, 20)).toEqual("sentient:1:9: syntax");
 
     try {
       describedClass.compile("a = b;");

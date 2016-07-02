@@ -26,10 +26,10 @@ describe("SyntaxParser", function () {
       describedClass.parse("a = 123");
     });
 
-    var message = error.message.substring(0, 37);
-
-    expect(error.name).toEqual("sentient:1:8");
-    expect(message).toEqual("syntax error, unexpected end-of-input");
+    var message = error.message.substring(0, 51);
+    expect(message).toEqual(
+      "sentient:1:8: syntax error, unexpected end-of-input"
+    );
   });
 
   it("throws on an unexpected symbol", function () {
@@ -37,10 +37,8 @@ describe("SyntaxParser", function () {
       describedClass.parse("a = 123 @");
     });
 
-    var message = error.message.substring(0, 28);
-
-    expect(error.name).toEqual("sentient:1:9");
-    expect(message).toEqual("syntax error, unexpected '@'");
+    var message = error.message.substring(0, 42);
+    expect(message).toEqual("sentient:1:9: syntax error, unexpected '@'");
   });
 
   it("sets the originating level to 4", function () {
@@ -48,9 +46,9 @@ describe("SyntaxParser", function () {
       describedClass.parse("a = 123 @");
     });
 
-    var message = error.message.substring(0, 28);
+    var message = error.message.substring(0, 42);
 
     expect(error.originatingLevel).toEqual("syntax");
-    expect(message).toEqual("syntax error, unexpected '@'");
+    expect(message).toEqual("sentient:1:9: syntax error, unexpected '@'");
   });
 });

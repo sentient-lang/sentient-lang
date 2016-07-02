@@ -223,8 +223,8 @@ describe("Sentient", function () {
     expect(messages[0]).toEqual(["Compiling program...", "info"]);
 
     var error = messages[2];
-    expect(error.toString().substring(0, 26)).toEqual(
-      "sentient:1:8: syntax error"
+    expect(error.toString().substring(0, 33)).toEqual(
+      "Error: sentient:1:8: syntax error"
     );
   });
 
