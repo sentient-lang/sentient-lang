@@ -23,7 +23,7 @@ describe("Sentient", function () {
       program: program,
       assignments: { target: 21 }
     });
-    expect(result).toEqual([{ p1: 3, p2: 7, target: 21 }]);
+    expect(result).toEqual([{ p1: 7, p2: 3, target: 21 }]);
 
     result = Sentient.run({
       program: program,
@@ -35,13 +35,13 @@ describe("Sentient", function () {
       program: program,
       assignments: { target: 221 }
     });
-    expect(result).toEqual([{ p1: 13, p2: 17, target: 221 }]);
+    expect(result).toEqual([{ p1: 17, p2: 13, target: 221 }]);
 
     result = Sentient.run({
       program: program,
       assignments: { p1: 19 }
     });
-    expect(result).toEqual([{ p1: 19, p2: 2, target: 38 }]);
+    expect(result).toEqual([{ p1: 19, p2: 7, target: 133 }]);
   });
 
   it("can run against different SAT solvers", function () {

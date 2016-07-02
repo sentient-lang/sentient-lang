@@ -500,7 +500,7 @@ describe("Integration: defining and calling functions", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result).toEqual({ a: 0, aPresent: false });
+    expect(result).toEqual({ a: -1, aPresent: false });
   });
 
   it("does not bleed array elements into the caller", function () {
@@ -1139,7 +1139,7 @@ describe("Integration: defining and calling functions", function () {
       result = Level2Runtime.decode(program, result);
       result = Level3Runtime.decode(program, result);
 
-      expect(result).toEqual({ a: 0, aPresent: false });
+      expect(result).toEqual({ a: -1, aPresent: false });
     });
 
     it("copies conditional nils to arguments of the function", function () {
@@ -1185,7 +1185,7 @@ describe("Integration: defining and calling functions", function () {
       result = Level2Runtime.decode(program, result);
       result = Level3Runtime.decode(program, result);
 
-      expect(result).toEqual({ a: 0, aPresent: false });
+      expect(result).toEqual({ a: -1, aPresent: false });
     });
 
     it("does not inherit conditional nils for shadowed arguments", function () {
@@ -1282,7 +1282,7 @@ describe("Integration: defining and calling functions", function () {
       result = Level2Runtime.decode(program, result);
       result = Level3Runtime.decode(program, result);
 
-      expect(result).toEqual({ a: 0, aPresent: false });
+      expect(result).toEqual({ a: -1, aPresent: false });
     });
 
     it("copies conditional nils back to the context", function () {

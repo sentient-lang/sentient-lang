@@ -199,7 +199,7 @@ describe("Integration: 'eachPair'", function () {
 
     expect(result).toEqual({
       out: [10, 20],
-      elements: [[10, 20], [10, 0], [20, 0]],
+      elements: [[10, 20], [10, -1], [20, -1]],
       indexes: [[0, 1], [0, 2], [1, 2]],
       presence: [[true, true], [true, false], [true, false]]
     });

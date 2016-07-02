@@ -61,4 +61,21 @@ describe("standard library: map", function () {
 
     expect(result).toEqual([{ mapped: [-2, -3, -4] }]);
   });
+
+  it("works for a troublesome edge-case", function () {
+    var program = Sentient.compile("        \n\
+      nestedArray = [[10], [20, 30]];       \n\
+      index = 0;                            \n\
+      arr = nestedArray[index];             \n\
+                                            \n\
+      mapped = arr.map(function (e) {       \n\
+        return 50 / e;                      \n\
+      });                                   \n\
+                                            \n\
+      expose mapped;                        \n\
+    ");
+    var result = Sentient.run({ program: program });
+
+    expect(result).toEqual([{ mapped: [5] }]);
+  });
 });

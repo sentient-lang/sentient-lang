@@ -1682,7 +1682,7 @@ describe("InstructionSet", function () {
           { type: "push", symbol: "b" },
 
           // else 0
-          { type: "constant", value: 0 },
+          { type: "constant", value: -1 },
           { type: "if" },
           { type: "if" },
 
@@ -1951,7 +1951,7 @@ describe("InstructionSet", function () {
           { type: 'equal' },
           { type: 'push', symbol: 'b' },
 
-          { type: 'constant', value: 0 },
+          { type: 'constant', value: -1 },
           { type: 'if' },
           { type: 'if' },
 
@@ -2536,7 +2536,7 @@ describe("InstructionSet", function () {
 
           { type: 'push', symbol: 'b' },
 
-          { type: 'constant', value: 0 },
+          { type: 'constant', value: -1 },
           { type: 'if' },
           { type: 'if' },
 

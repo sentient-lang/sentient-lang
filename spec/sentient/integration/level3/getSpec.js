@@ -187,8 +187,8 @@ describe("Integration: 'get'", function () {
     expect(result.fooInBounds).toEqual(false);
     expect(result.barInBounds).toEqual(false);
 
-    expect(result.foo).toEqual(0);
-    expect(result.bar).toEqual(0);
+    expect(result.foo).toEqual(-1);
+    expect(result.bar).toEqual(-1);
   });
 
   it("can get from nested arrays of different widths", function () {
@@ -352,13 +352,13 @@ describe("Integration: 'get'", function () {
     expect(result.c).toEqual(30);
 
     expect(result.dInBounds).toEqual(false);
-    expect(result.d).toEqual(0);
+    expect(result.d).toEqual(-1);
 
     expect(result.eInBounds).toEqual(false);
-    expect(result.e).toEqual(0);
+    expect(result.e).toEqual(-1);
 
     expect(result.fInBounds).toEqual(false);
-    expect(result.f).toEqual(0);
+    expect(result.f).toEqual(-1);
   });
 
   it("works as expected when nested arrays are reassigned", function () {
@@ -401,7 +401,7 @@ describe("Integration: 'get'", function () {
     result = Level3Runtime.decode(program, result);
 
     expect(result.aInBounds).toEqual(false);
-    expect(result.a).toEqual(0);
+    expect(result.a).toEqual(-1);
   });
 
   it("works as expected when nested arrays are re-collected", function () {
@@ -476,10 +476,10 @@ describe("Integration: 'get'", function () {
     expect(result.a).toEqual(4);
 
     expect(result.bInBounds).toEqual(false);
-    expect(result.b).toEqual(0);
+    expect(result.b).toEqual(-1);
 
     expect(result.cInBounds).toEqual(false);
-    expect(result.c).toEqual(0);
+    expect(result.c).toEqual(-1);
   });
 
   it("can be used in reverse to lookup an index", function () {

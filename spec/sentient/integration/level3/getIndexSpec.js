@@ -231,7 +231,7 @@ describe("Integration: 'getIndex'", function () {
     expect(result.foo).toEqual(10);
     expect(result.bar).toEqual(20);
     expect(result.baz).toEqual(30);
-    expect(result.qux).toEqual(0);
+    expect(result.qux).toEqual(-1);
   });
 
   it("can get from nested arrays of different widths", function () {
@@ -359,7 +359,7 @@ describe("Integration: 'getIndex'", function () {
     expect(result.c).toEqual(30);
 
     expect(result.dInBounds).toEqual(false);
-    expect(result.d).toEqual(0);
+    expect(result.d).toEqual(-1);
   });
 
   it("works as expected when nested arrays are reassigned", function () {
@@ -401,7 +401,7 @@ describe("Integration: 'getIndex'", function () {
     result = Level3Runtime.decode(program, result);
 
     expect(result.aInBounds).toEqual(false);
-    expect(result.a).toEqual(0);
+    expect(result.a).toEqual(-1);
   });
 
   it("works as expected when nested arrays are re-collected", function () {
@@ -472,10 +472,10 @@ describe("Integration: 'getIndex'", function () {
     expect(result.a).toEqual(40);
 
     expect(result.bInBounds).toEqual(false);
-    expect(result.b).toEqual(0);
+    expect(result.b).toEqual(-1);
 
     expect(result.cInBounds).toEqual(false);
-    expect(result.c).toEqual(0);
+    expect(result.c).toEqual(-1);
   });
 
   it("works for heavily nested array", function () {

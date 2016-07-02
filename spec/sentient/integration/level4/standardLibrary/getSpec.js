@@ -18,7 +18,7 @@ describe("standard library: get", function () {
       expose a, aP;             \n\
     ");
     result = Sentient.run({ program: program });
-    expect(result).toEqual([{ a: 0, aP: false }]);
+    expect(result).toEqual([{ a: -1, aP: false }]);
 
     program = Sentient.compile("\n\
       x = 0;                    \n\

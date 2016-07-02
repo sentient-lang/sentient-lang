@@ -70,7 +70,7 @@ describe("Integration: 'pop'", function () {
     result = Level2Runtime.decode(program, result);
     result = Level3Runtime.decode(program, result);
 
-    expect(result.bar).toEqual(0);
+    expect(result.bar).toEqual(-1);
     expect(result.barInBounds).toEqual(false);
   });
 
