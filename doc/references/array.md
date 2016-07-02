@@ -155,6 +155,29 @@ Returns the length of the array.
 [1, 2, 3].length    #=> 3
 ```
 
+###map
+
+Maps a function over each element in an array:
+
+```ruby
+[1, 2, 3].map(function (element) {
+  return element * 2;
+});
+#=> [2, 4, 6]
+
+[1, 2, 3].map(*square);
+#=> [1, 4, 9]
+```
+
+You may optionally provide an 'index' argument for the function:
+
+```ruby
+[1, 2, 3].map(function (element, index) {
+  return element * index;
+});
+#=> [0, 2, 6]
+```
+
 ###transpose
 
 Transposes a nested array, swapping columns for rows:
