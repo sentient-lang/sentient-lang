@@ -247,6 +247,16 @@ Returns true if none of the elements cause the given function to return true.
 #=> false
 ```
 
+###one?
+
+Returns true if one element causes the given function to return true.
+
+```ruby
+[1, 3].one?(*even?)          #=> false
+[1, 2, 3].one?(*even?)       #=> true
+[1, 2, 3, 4].one?(*even?)    #=> false
+```
+
 ###size
 
 Alias for 'length'.
