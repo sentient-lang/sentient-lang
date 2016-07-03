@@ -177,7 +177,7 @@ describe("Sentient", function () {
     }, 10);
   });
 
-  it("logs info output", function (done) {
+  it("logs info output", function () {
     Sentient.logger.level = "info";
 
     var messages = [];
@@ -186,22 +186,18 @@ describe("Sentient", function () {
       messages.push(message);
     };
 
-    Sentient.compile("a = 123; expose a;", function (machineCode) {
-      Sentient.run({
-        program: machineCode,
-        number: 0,
-        callback: function () {}
-      });
+    var program = Sentient.compile("a = 123; expose a;");
+
+    Sentient.run({
+      program: program,
+      number: 0,
+      callback: function () {}
     });
 
-    setInterval(function () {
-      if (messages.length === 4) {
-        expect(messages[0]).toEqual("Compiling program...");
+    Sentient.logger.reset();
 
-        Sentient.logger.reset();
-        done();
-      }
-    }, 10);
+    expect(messages.length).toEqual(4);
+    expect(messages[0]).toEqual("Compiling program...");
   });
 
   it("holds information from the package", function () {
