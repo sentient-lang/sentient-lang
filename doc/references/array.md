@@ -42,6 +42,15 @@ Returns true if the index is within the bounds of the array.
 [1, 2, 3].bounds?(3)     #=> false
 ```
 
+###buildArray
+
+Returns a new array populated with the given objects.
+
+```ruby
+buildArray(1, 2, 3)    #=> [1, 2, 3]
+buildArray(true)       #=> [true]
+```
+
 ###each
 
 Iterates through each element in the array.
