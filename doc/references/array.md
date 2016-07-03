@@ -59,6 +59,19 @@ Alias for 'map'.
 
 Alias for 'length'.
 
+###countBy
+
+Counts the number of elements for which the given function returns true.
+
+```ruby
+[1, 2, 3].countBy(*odd?)     #=> 2
+
+[1, 2, 3].countBy(function (e) {
+  return e > 2;
+});
+#=> 1
+```
+
 ###each
 
 Iterates through each element in the array.
