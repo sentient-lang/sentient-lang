@@ -78,4 +78,17 @@ describe("standard library: map", function () {
 
     expect(result).toEqual([{ mapped: [5] }]);
   });
+
+  it("has an alias 'collect'", function () {
+    var program = Sentient.compile("            \n\
+      mapped = [1, 2, 3].collect(function (e) { \n\
+        return 2 * e;                           \n\
+      });                                       \n\
+                                                \n\
+      expose mapped;                            \n\
+    ");
+    var result = Sentient.run({ program: program });
+
+    expect(result).toEqual([{ mapped: [2, 4, 6] }]);
+  });
 });

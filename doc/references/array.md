@@ -51,6 +51,10 @@ buildArray(1, 2, 3)    #=> [1, 2, 3]
 buildArray(true)       #=> [true]
 ```
 
+###collect
+
+Alias for 'map'.
+
 ###each
 
 Iterates through each element in the array.
