@@ -45,6 +45,19 @@ Returns true if the given function returns true for all elements in the array.
 #=> false
 ```
 
+###any?
+
+Returns true if the given function returns true for any element in the array.
+
+```ruby
+[1, 2, 3].any?(*even?)    #=> true
+
+[1, 2, 3].any?(function (e) {
+  return e > 3;
+});
+#=> false
+```
+
 ###bounds?
 
 Returns true if the index is within the bounds of the array.
