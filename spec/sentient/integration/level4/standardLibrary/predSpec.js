@@ -12,4 +12,10 @@ describe("standard library: pred", function () {
     result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: -5 }]);
   });
+
+  it("has an alias 'prev'", function () {
+    var program = Sentient.compile("a = 1.prev; expose a;");
+    var result = Sentient.run({ program: program });
+    expect(result).toEqual([{ a: 0 }]);
+  });
 });

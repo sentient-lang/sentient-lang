@@ -175,6 +175,10 @@ Returns true if the integer is less than zero.
 0.negative?     #=> false
 ```
 
+###next
+
+Alias for 'succ'.
+
 ###odd?
 
 Returns true if the integer is odd.
@@ -201,6 +205,10 @@ Returns the integer's predecessor.
 ```ruby
 3.pred    #=> 2
 ```
+
+###prev
+
+Alias for 'pred'.
 
 ###square
 
