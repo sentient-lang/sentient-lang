@@ -28,4 +28,22 @@ describe("standard library: include?", function () {
     result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: false }]);
   });
+
+  it("works correctly with nils", function () {
+    var program = Sentient.compile("\n\
+      i = 0;                        \n\
+      arr = [[10], [20, 30]][i];    \n\
+      a = arr.include?(-1);         \n\
+      expose a;                     \n\
+    ");
+
+    var result = Sentient.run({ program: program });
+    expect(result).toEqual([{ a: false }]);
+  });
+
+  it("has an alias 'member?'", function () {
+    var program = Sentient.compile("a = [1, 2, 3].member?(1); expose a;");
+    var result = Sentient.run({ program: program });
+    expect(result).toEqual([{ a: true }]);
+  });
 });
