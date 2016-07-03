@@ -32,4 +32,16 @@ describe("standard library: length", function () {
     var result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: 2 }]);
   });
+
+  it("has an alias 'size'", function () {
+    var program = Sentient.compile("a = size([1, 2]); expose a;");
+    var result = Sentient.run({ program: program });
+    expect(result).toEqual([{ a: 2 }]);
+  });
+
+  it("has an alias 'count'", function () {
+    var program = Sentient.compile("a = count([1, 2]); expose a;");
+    var result = Sentient.run({ program: program });
+    expect(result).toEqual([{ a: 2 }]);
+  });
 });

@@ -55,6 +55,10 @@ buildArray(true)       #=> [true]
 
 Alias for 'map'.
 
+###count
+
+Alias for 'length'.
+
 ###each
 
 Iterates through each element in the array.
@@ -190,6 +194,10 @@ You may optionally provide an 'index' argument for the function:
 });
 #=> [0, 2, 6]
 ```
+
+###size
+
+Alias for 'length'.
 
 ###transpose
 
