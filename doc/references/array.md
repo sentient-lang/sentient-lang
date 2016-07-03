@@ -32,6 +32,19 @@ Fetches the element at an index from the array.
 The index must not fall outside the bounds of the array, else the program will
 have no solutions.
 
+###all?
+
+Returns true if the given function returns true for all elements in the array.
+
+```ruby
+[1, 3, 5].all?(*odd?)    #=> true
+
+[1, 2, 3].all?(function (e) {
+  return e > 2;
+});
+#=> false
+```
+
 ###bounds?
 
 Returns true if the index is within the bounds of the array.
