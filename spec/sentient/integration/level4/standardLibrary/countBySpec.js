@@ -16,4 +16,17 @@ describe("standard library: countBy", function () {
     result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: 0 }]);
   });
+
+  it("works correctly with dynamically scoped functions", function () {
+    var program = Sentient.compile("         \n\
+      foo = 2;                               \n\
+      a = [1, 2, 3].countBy(function^ (x) {  \n\
+        return x == foo;                     \n\
+      });                                    \n\
+      expose a;                              \n\
+    ");
+
+    var result = Sentient.run({ program: program });
+    expect(result).toEqual([{ a: 1 }]);
+  });
 });

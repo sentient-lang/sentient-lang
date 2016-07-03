@@ -31,4 +31,17 @@ describe("standard library: uniqBy?", function () {
     result = Sentient.run({ program: program });
     expect(result).toEqual([{ a: true }]);
   });
+
+  it("works correctly with dynamically scoped functions", function () {
+    var program = Sentient.compile("        \n\
+      foo = 2;                              \n\
+                                            \n\
+      a = [1, 2, 3].uniqBy?(function^ (x) { \n\
+        return x * foo;                     \n\
+      });                                   \n\
+      expose a;                             \n\
+    ");
+    var result = Sentient.run({ program: program });
+    expect(result).toEqual([{ a: true }]);
+  });
 });
