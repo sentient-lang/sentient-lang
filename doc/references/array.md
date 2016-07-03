@@ -234,6 +234,19 @@ You may optionally provide an 'index' argument for the function:
 #=> [0, 2, 6]
 ```
 
+###none?
+
+Returns true if none of the elements cause the given function to return true.
+
+```ruby
+[1, 3].none?(*even?)    #=> true
+
+[1, 2, 3].none?(function (e) {
+  return e > 2;
+});
+#=> false
+```
+
 ###size
 
 Alias for 'length'.
