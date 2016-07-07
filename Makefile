@@ -56,3 +56,7 @@ riss-linux:
 	cp riss-427/riss $(TARGET) && \
 	cp riss-427/coprocessor $(TARGET) && \
 	rm -rf riss-427 Riss.tar.gz
+
+count:
+	find lib -name '*.js' | grep -v pegParser | xargs wc -l | grep total
+	find spec -name '*.js' | xargs wc -l | grep total
