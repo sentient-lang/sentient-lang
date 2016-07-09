@@ -313,4 +313,40 @@ describe("ExpressionParser", function () {
       }).toThrow();
     });
   });
+
+  describe("eachCons", function () {
+    it("calls eachCons with the integer literal", function () {
+      expect(describedClass.parse(["eachCons", "array", 2, "*foo"])).toEqual([
+        { type: "push", symbol: "array" },
+        { type: "pointer", name: "foo" },
+        { type: "eachCons", width: 2 }
+      ]);
+    });
+
+    it("throws an error if wrong number of args", function () {
+      expect(function () {
+        describedClass.parse(["eachCons"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["eachCons", "array"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["eachCons", "array", 2]);
+      }).toThrow();
+    });
+
+    it("throws an error if not an integer literal", function () {
+      expect(function () {
+        describedClass.parse(["eachCons", "array", "x", "*foo"]);
+      }).toThrow();
+    });
+
+    it("throws an error if not a function pointer", function () {
+      expect(function () {
+        describedClass.parse(["eachCons", "array", 2, "foo"]);
+      }).toThrow();
+    });
+  });
 });
