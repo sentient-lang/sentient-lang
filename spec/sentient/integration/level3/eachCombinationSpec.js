@@ -12,7 +12,7 @@ var Level3Runtime = require(runtime + "/level3Runtime");
 
 var Machine = require("../../../../lib/sentient/machine");
 
-describe("Integration: 'eachPair'", function () {
+describe("Integration: 'eachCombination'", function () {
   it("sets the elements, index and isPresent per iteration", function () {
     var program = Level3Compiler.compile({
       instructions: [
@@ -37,12 +37,9 @@ describe("Integration: 'eachPair'", function () {
         { type: "constant", value: 0 },
         { type: "pop", symbol: "counter" },
 
-        { type: "define", name: "myFn",
-          args: ["e", "f", "i", "j", "p", "q"], dynamic: true },
+        { type: "define", name: "myFn", args: ["e", "i", "p"], dynamic: true },
 
         { type: "push", symbol: "e" },
-        { type: "push", symbol: "f" },
-        { type: "collect", width: 2 },
         { type: "push", symbol: "elements" },
         { type: "push", symbol: "counter" },
         { type: "fetch" },
@@ -50,8 +47,6 @@ describe("Integration: 'eachPair'", function () {
         { type: "invariant" },
 
         { type: "push", symbol: "i" },
-        { type: "push", symbol: "j" },
-        { type: "collect", width: 2 },
         { type: "push", symbol: "indexes" },
         { type: "push", symbol: "counter" },
         { type: "fetch" },
@@ -59,8 +54,6 @@ describe("Integration: 'eachPair'", function () {
         { type: "invariant" },
 
         { type: "push", symbol: "p" },
-        { type: "push", symbol: "q" },
-        { type: "collect", width: 2 },
         { type: "push", symbol: "presence" },
         { type: "push", symbol: "counter" },
         { type: "fetch" },
@@ -76,7 +69,7 @@ describe("Integration: 'eachPair'", function () {
 
         { type: "push", symbol: "myArray" },
         { type: "pointer", name: "myFn" },
-        { type: "eachPair" },
+        { type: "eachCombination", width: 2 },
         { type: "pop", symbol: "out" },
 
         { type: "variable", symbol: "out" },
@@ -103,6 +96,92 @@ describe("Integration: 'eachPair'", function () {
       elements: [[10, 20], [10, 30], [20, 30]],
       indexes: [[0, 1], [0, 2], [1, 2]],
       presence: [[true, true], [true, true], [true, true]]
+    });
+  });
+
+  it("allows for different combination widths", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "constant", value: 10 },
+        { type: "constant", value: 20 },
+        { type: "constant", value: 30 },
+        { type: "collect", width: 3 },
+        { type: "pop", symbol: "myArray" },
+
+        { type: "typedef", name: "integer", width: 6 },
+        { type: "typedef", name: "array", width: 3 },
+        { type: "array", symbol: "elements", width: 1 },
+
+        { type: "typedef", name: "integer", width: 6 },
+        { type: "typedef", name: "array", width: 3 },
+        { type: "array", symbol: "indexes", width: 1 },
+
+        { type: "typedef", name: "boolean", width: 6 },
+        { type: "typedef", name: "array", width: 3 },
+        { type: "array", symbol: "presence", width: 1 },
+
+        { type: "constant", value: 0 },
+        { type: "pop", symbol: "counter" },
+
+        { type: "define", name: "myFn", args: ["e", "i", "p"], dynamic: true },
+
+        { type: "push", symbol: "e" },
+        { type: "push", symbol: "elements" },
+        { type: "push", symbol: "counter" },
+        { type: "fetch" },
+        { type: "equal" },
+        { type: "invariant" },
+
+        { type: "push", symbol: "i" },
+        { type: "push", symbol: "indexes" },
+        { type: "push", symbol: "counter" },
+        { type: "fetch" },
+        { type: "equal" },
+        { type: "invariant" },
+
+        { type: "push", symbol: "p" },
+        { type: "push", symbol: "presence" },
+        { type: "push", symbol: "counter" },
+        { type: "fetch" },
+        { type: "equal" },
+        { type: "invariant" },
+
+        { type: "push", symbol: "counter" },
+        { type: "constant", value: 1 },
+        { type: "add" },
+        { type: "pop", symbol: "counter" },
+
+        { type: "return", width: 0 },
+
+        { type: "push", symbol: "myArray" },
+        { type: "pointer", name: "myFn" },
+        { type: "eachCombination", width: 3 },
+        { type: "pop", symbol: "out" },
+
+        { type: "variable", symbol: "out" },
+        { type: "variable", symbol: "elements" },
+        { type: "variable", symbol: "indexes" },
+        { type: "variable", symbol: "presence" }
+      ]
+    });
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level3Runtime.encode(program, {});
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments)[0];
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result).toEqual({
+      out: [10, 20, 30],
+      elements: [[10, 20, 30]],
+      indexes: [[0, 1, 2]],
+      presence: [[true, true, true]]
     });
   });
 
@@ -136,12 +215,9 @@ describe("Integration: 'eachPair'", function () {
         { type: "constant", value: 0 },
         { type: "pop", symbol: "counter" },
 
-        { type: "define", name: "myFn",
-          args: ["e", "f", "i", "j", "p", "q"], dynamic: true },
+        { type: "define", name: "myFn", args: ["e", "i", "p"], dynamic: true },
 
         { type: "push", symbol: "e" },
-        { type: "push", symbol: "f" },
-        { type: "collect", width: 2 },
         { type: "push", symbol: "elements" },
         { type: "push", symbol: "counter" },
         { type: "fetch" },
@@ -149,8 +225,6 @@ describe("Integration: 'eachPair'", function () {
         { type: "invariant" },
 
         { type: "push", symbol: "i" },
-        { type: "push", symbol: "j" },
-        { type: "collect", width: 2 },
         { type: "push", symbol: "indexes" },
         { type: "push", symbol: "counter" },
         { type: "fetch" },
@@ -158,8 +232,6 @@ describe("Integration: 'eachPair'", function () {
         { type: "invariant" },
 
         { type: "push", symbol: "p" },
-        { type: "push", symbol: "q" },
-        { type: "collect", width: 2 },
         { type: "push", symbol: "presence" },
         { type: "push", symbol: "counter" },
         { type: "fetch" },
@@ -175,7 +247,7 @@ describe("Integration: 'eachPair'", function () {
 
         { type: "push", symbol: "myArray" },
         { type: "pointer", name: "myFn" },
-        { type: "eachPair" },
+        { type: "eachCombination", width: 2 },
         { type: "pop", symbol: "out" },
 
         { type: "variable", symbol: "out" },
@@ -205,7 +277,7 @@ describe("Integration: 'eachPair'", function () {
     });
   });
 
-  it("supports calling eachPair with a four-argument function", function () {
+  it("supports calling eachCombination with a two-argument fn", function () {
     var program = Level3Compiler.compile({
       instructions: [
         { type: "constant", value: 10 },
@@ -225,12 +297,9 @@ describe("Integration: 'eachPair'", function () {
         { type: "constant", value: 0 },
         { type: "pop", symbol: "counter" },
 
-        { type: "define", name: "myFn",
-          args: ["e", "f", "i", "j"], dynamic: true },
+        { type: "define", name: "myFn", args: ["e", "i"], dynamic: true },
 
         { type: "push", symbol: "e" },
-        { type: "push", symbol: "f" },
-        { type: "collect", width: 2 },
         { type: "push", symbol: "elements" },
         { type: "push", symbol: "counter" },
         { type: "fetch" },
@@ -238,8 +307,6 @@ describe("Integration: 'eachPair'", function () {
         { type: "invariant" },
 
         { type: "push", symbol: "i" },
-        { type: "push", symbol: "j" },
-        { type: "collect", width: 2 },
         { type: "push", symbol: "indexes" },
         { type: "push", symbol: "counter" },
         { type: "fetch" },
@@ -255,7 +322,7 @@ describe("Integration: 'eachPair'", function () {
 
         { type: "push", symbol: "myArray" },
         { type: "pointer", name: "myFn" },
-        { type: "eachPair" },
+        { type: "eachCombination", width: 2 },
         { type: "pop", symbol: "out" },
 
         { type: "variable", symbol: "out" },
@@ -283,7 +350,7 @@ describe("Integration: 'eachPair'", function () {
     });
   });
 
-  it("supports calling eachPair with a two-argument function", function () {
+  it("supports calling eachCombination with a one-argument fn", function () {
     var program = Level3Compiler.compile({
       instructions: [
         { type: "constant", value: 10 },
@@ -299,11 +366,9 @@ describe("Integration: 'eachPair'", function () {
         { type: "constant", value: 0 },
         { type: "pop", symbol: "counter" },
 
-        { type: "define", name: "myFn", args: ["e", "f"], dynamic: true },
+        { type: "define", name: "myFn", args: ["e"], dynamic: true },
 
         { type: "push", symbol: "e" },
-        { type: "push", symbol: "f" },
-        { type: "collect", width: 2 },
         { type: "push", symbol: "elements" },
         { type: "push", symbol: "counter" },
         { type: "fetch" },
@@ -319,7 +384,7 @@ describe("Integration: 'eachPair'", function () {
 
         { type: "push", symbol: "myArray" },
         { type: "pointer", name: "myFn" },
-        { type: "eachPair" },
+        { type: "eachCombination", width: 2 },
         { type: "pop", symbol: "out" },
 
         { type: "variable", symbol: "out" },
@@ -345,7 +410,7 @@ describe("Integration: 'eachPair'", function () {
     });
   });
 
-  it("supports calling each with nested arrays", function () {
+  it("supports calling eachCombination with nested arrays", function () {
     var program = Level3Compiler.compile({
       instructions: [
         { type: "constant", value: 10 },
@@ -369,11 +434,9 @@ describe("Integration: 'eachPair'", function () {
         { type: "constant", value: 0 },
         { type: "pop", symbol: "counter" },
 
-        { type: "define", name: "myFn", args: ["e", "f"], dynamic: true },
+        { type: "define", name: "myFn", args: ["e"], dynamic: true },
 
         { type: "push", symbol: "e" },
-        { type: "push", symbol: "f" },
-        { type: "collect", width: 2 },
         { type: "push", symbol: "elements" },
         { type: "push", symbol: "counter" },
         { type: "fetch" },
@@ -389,7 +452,7 @@ describe("Integration: 'eachPair'", function () {
 
         { type: "push", symbol: "myArray" },
         { type: "pointer", name: "myFn" },
-        { type: "eachPair" },
+        { type: "eachCombination", width: 2 },
         { type: "pop", symbol: "out" },
 
         { type: "variable", symbol: "out" },
@@ -413,5 +476,66 @@ describe("Integration: 'eachPair'", function () {
       out: [[[10]], [[20]], [[30]]],
       elements: [[[[10]], [[20]]], [[[10]], [[30]]], [[[20]], [[30]]]]
     });
+  });
+
+  it("throws an error if width is undefined", function () {
+    expect(function () {
+      Level3Compiler.compile({
+        instructions: [
+          { type: "constant", value: 10 },
+          { type: "constant", value: 20 },
+          { type: "constant", value: 30 },
+          { type: "collect", width: 3 },
+          { type: "pop", symbol: "myArray" },
+
+          { type: "define", name: "myFn", args: ["e"], dynamic: true },
+          { type: "return", width: 0 },
+
+          { type: "push", symbol: "myArray" },
+          { type: "pointer", name: "myFn" },
+          { type: "eachCombination" }
+        ]
+      });
+    }).toThrow();
+  });
+
+  it("throws an error if width is out of bounds", function () {
+    expect(function () {
+      Level3Compiler.compile({
+        instructions: [
+          { type: "constant", value: 10 },
+          { type: "constant", value: 20 },
+          { type: "constant", value: 30 },
+          { type: "collect", width: 3 },
+          { type: "pop", symbol: "myArray" },
+
+          { type: "define", name: "myFn", args: ["e"], dynamic: true },
+          { type: "return", width: 0 },
+
+          { type: "push", symbol: "myArray" },
+          { type: "pointer", name: "myFn" },
+          { type: "eachCombination", width: 0 }
+        ]
+      });
+    }).toThrow();
+
+    expect(function () {
+      Level3Compiler.compile({
+        instructions: [
+          { type: "constant", value: 10 },
+          { type: "constant", value: 20 },
+          { type: "constant", value: 30 },
+          { type: "collect", width: 3 },
+          { type: "pop", symbol: "myArray" },
+
+          { type: "define", name: "myFn", args: ["e"], dynamic: true },
+          { type: "return", width: 0 },
+
+          { type: "push", symbol: "myArray" },
+          { type: "pointer", name: "myFn" },
+          { type: "eachCombination", width: 4 }
+        ]
+      });
+    }).toThrow();
   });
 });

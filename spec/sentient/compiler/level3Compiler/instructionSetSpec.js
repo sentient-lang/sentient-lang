@@ -3444,7 +3444,7 @@ describe("InstructionSet", function () {
     });
   });
 
-  describe("eachPair", function () {
+  describe("eachCombination", function () {
     beforeEach(function () {
       symbolTable.set("a", "boolean", ["x"]);
       symbolTable.set("b", "boolean", ["y"]);
@@ -3463,7 +3463,7 @@ describe("InstructionSet", function () {
       subject.pointer("missing");
 
       expect(function () {
-        subject.eachPair();
+        subject.eachCombination();
       }).toThrow();
     });
 
@@ -3471,47 +3471,48 @@ describe("InstructionSet", function () {
       symbolTable.set("arr", "boolean", ["x"]);
 
       expect(function () {
-        subject.eachPair();
+        subject.eachCombination(2);
       }).toThrow();
     });
 
+    it("throws if width is 0", function () {
+      expect(function () {
+        subject.eachCombination(0);
+      }).toThrow();
+    });
+
+    it("throws if width is larger than array width", function () {
+      expect(function () {
+        subject.eachCombination(3);
+      }).toThrow();
+    });
+
+    it("allows functions that take one argument", function () {
+      functionRegistry.register("func", ["e"], [], false, false, 0);
+      expect(function () { subject.eachCombination(2); }).not.toThrow();
+    });
+
     it("allows functions that take two arguments", function () {
-      functionRegistry.register("func", ["e", "f"], [], false, false, 0);
-      expect(function () { subject.eachPair(); }).not.toThrow();
+      functionRegistry.register("func", ["e", "i"], [], false, false, 0);
+      expect(function () { subject.eachCombination(2); }).not.toThrow();
     });
 
-    it("allows functions that take four arguments", function () {
-      functionRegistry.register(
-        "func", ["e", "f", "i", "j"], [], false, false, 0
-      );
-
-      expect(function () { subject.eachPair(); }).not.toThrow();
-    });
-
-    it("allows functions that take six arguments", function () {
-      functionRegistry.register(
-        "func", ["e", "f", "i", "j", "p", "q"], [], false, false, 0
-      );
-
-      expect(function () { subject.eachPair(); }).not.toThrow();
+    it("allows functions that take three arguments", function () {
+      functionRegistry.register("func", ["e", "i", "p"], [], false, false, 0);
+      expect(function () { subject.eachCombination(2); }).not.toThrow();
     });
 
     it("does not allow functions that take zero arguments", function () {
       functionRegistry.register("func", [], [], false, false, 0);
-      expect(function () { subject.eachPair(); }).toThrow();
+      expect(function () { subject.eachCombination(2); }).toThrow();
     });
 
-    it("does not allow functions that take > 6 arguments", function () {
+    it("does not allow functions that take > 3 arguments", function () {
       functionRegistry.register(
-        "func", ["e", "f", "i", "j", "p", "q", "x"], [], false, false, 0
+        "func", ["e", "i", "p", "x"], [], false, false, 0
       );
 
-      expect(function () { subject.eachPair(); }).toThrow();
-    });
-
-    it("does not allow functions that take 1 argument", function () {
-      functionRegistry.register("func", ["e"], [], false, false, 0);
-      expect(function () { subject.eachPair(); }).toThrow();
+      expect(function () { subject.eachCombination(2); }).toThrow();
     });
   });
 });
