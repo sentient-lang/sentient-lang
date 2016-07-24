@@ -1462,6 +1462,27 @@ describe("InstructionSet", function () {
       });
     });
 
+    describe("creating an empty array", function () {
+      beforeEach(function () {
+        stack.push("bottom");
+        symbolTable.set("bottom", "anything", ["anything"]);
+      });
+
+      it("adds a symbol to the top of the stack", function () {
+        subject.collect(0);
+
+        expect(stack.pop()).toEqual("$$$_L3_TMP1_$$$");
+        expect(stack.pop()).toEqual("bottom");
+      });
+
+      it("adds the new symbol to the symbol table", function () {
+        subject.collect(0);
+
+        expect(symbolTable.type("$$$_L3_TMP1_$$$")).toEqual("array");
+        expect(symbolTable.symbols("$$$_L3_TMP1_$$$")).toEqual([]);
+      });
+    });
+
     describe("creating an array of [int, bool]", function () {
       beforeEach(function () {
         stack.push("int");
@@ -1528,22 +1549,6 @@ describe("InstructionSet", function () {
       it("throws an error", function () {
         expect(function () {
           subject.collect(2);
-        }).toThrow();
-      });
-    });
-
-    describe("creating an empty array", function () {
-      beforeEach(function () {
-        stack.push("bottom");
-        stack.push("foo");
-
-        symbolTable.set("bottom", "anything", ["anything"]);
-        symbolTable.set("foo", "integer", ["a"]);
-      });
-
-      it("throws an error", function () {
-        expect(function () {
-          subject.collect(0);
         }).toThrow();
       });
     });

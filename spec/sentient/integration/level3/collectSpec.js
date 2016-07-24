@@ -80,6 +80,88 @@ describe("Integration: 'collect'", function () {
     expect(result.abc).toEqual([[[[[[true, false]]]]]]);
   });
 
+  it("allows empty arrays", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "collect", width: 0 },
+        { type: "pop", symbol: "a" },
+
+        { type: "constant", value: 10 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 0 },
+        { type: "collect", width: 2 },
+        { type: "pop", symbol: "b" },
+
+        { type: "constant", value: 10 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 0 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 0 },
+        { type: "collect", width: 3 },
+        { type: "pop", symbol: "c" },
+
+        { type: "variable", symbol: "a" },
+        { type: "variable", symbol: "b" },
+        { type: "variable", symbol: "c" }
+      ]
+    });
+
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level3Runtime.encode(program, {});
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments)[0];
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result).toEqual({
+      a: [],
+      b: [[10], []],
+      c: [[[10]], [[]], []]
+    });
+  });
+
+  it("allows nested empty arrays", function () {
+    var program = Level3Compiler.compile({
+      instructions: [
+        { type: "constant", value: 10 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 1 },
+
+        { type: "collect", width: 0 },
+        { type: "collect", width: 1 },
+        { type: "collect", width: 1 },
+
+        { type: "collect", width: 2 },
+
+        { type: "pop", symbol: "out" },
+        { type: "variable", symbol: "out" }
+      ]
+    });
+
+    program = Level2Compiler.compile(program);
+    program = Level1Compiler.compile(program);
+
+    var assignments = Level3Runtime.encode(program, {});
+    assignments = Level2Runtime.encode(program, assignments);
+    assignments = Level1Runtime.encode(program, assignments);
+
+    var result = Machine.run(program, assignments)[0];
+
+    result = Level1Runtime.decode(program, result);
+    result = Level2Runtime.decode(program, result);
+    result = Level3Runtime.decode(program, result);
+
+    expect(result).toEqual({ out: [[[[10]]], [[[]]]] });
+  });
+
   it("throws an error for mixed type arrays", function () {
     expect(function () {
       Level3Compiler.compile({

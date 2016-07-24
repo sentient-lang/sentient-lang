@@ -20,6 +20,7 @@ describe("exprPrimary", function () {
     expect(subject.parse("[1, 2]")).toEqual(["buildArray", 1, 2]);
     expect(subject.parse("[a, true]")).toEqual(["buildArray", "a", true]);
     expect(subject.parse("[ 1 ]")).toEqual(["buildArray", 1]);
+    expect(subject.parse("[]")).toEqual(["buildArray"]);
   });
 
   it("rejects invalid", function () {
@@ -27,7 +28,6 @@ describe("exprPrimary", function () {
     expect(function () { subject.parse("1a"); }).toThrow();
     expect(function () { subject.parse("1 1"); }).toThrow();
     expect(function () { subject.parse("_a"); }).toThrow();
-    expect(function () { subject.parse("[]"); }).toThrow();
     expect(function () { subject.parse("[1 1]"); }).toThrow();
   });
 });
