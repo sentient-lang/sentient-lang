@@ -349,4 +349,56 @@ describe("ExpressionParser", function () {
       }).toThrow();
     });
   });
+
+  describe("reduce", function () {
+    it("calls reduce with the initial value", function () {
+      expect(describedClass.parse(["reduce", "arr", 0, "*+"])).toEqual([
+        { type: "push", symbol: "arr" },
+        { type: "pointer", name: "+" },
+        { type: "constant", value: 0 },
+        { type: "reduce", initial: true }
+      ]);
+    });
+
+    it("works when initial value is not a constant", function () {
+      expect(
+        describedClass.parse(["reduce", "arr", ["+", 1, 1], "*+"])
+      ).toEqual([
+        { type: "push", symbol: "arr" },
+        { type: "pointer", name: "+" },
+        { type: "constant", value: 1 },
+        { type: "constant", value: 1 },
+        { type: "call", name: "+", width: 2 },
+        { type: "reduce", initial: true }
+      ]);
+    });
+
+    it("works when there is no initial value", function () {
+      expect(describedClass.parse(["reduce", "arr", "*+"])).toEqual([
+        { type: "push", symbol: "arr" },
+        { type: "pointer", name: "+" },
+        { type: "reduce" }
+      ]);
+    });
+
+    it("throws an error if wrong number of args", function () {
+      expect(function () {
+        describedClass.parse(["reduce"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["reduce", "array"]);
+      }).toThrow();
+
+      expect(function () {
+        describedClass.parse(["reduce", "array", 0, "*+", 0]);
+      }).toThrow();
+    });
+
+    it("throws an error if not a function pointer", function () {
+      expect(function () {
+        describedClass.parse(["reduce", "array", 0, "foo"]);
+      }).toThrow();
+    });
+  });
 });

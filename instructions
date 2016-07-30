@@ -85,5 +85,8 @@ Level 3 Instructions:
 [X] call
 [X] pointer
 [X] each
-[X] eachPair
+[X] eachCombination
+[X] eachSlice
+[X] map
+[X] reduce
 [X] transpose
