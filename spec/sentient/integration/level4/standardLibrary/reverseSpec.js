@@ -28,4 +28,11 @@ describe("standard library: reverse", function () {
 
     expect(result).toEqual([{ b: [20, 10] }]);
   });
+
+  it("does not cause a syntax error when chained with fetch", function () {
+    var program = Sentient.compile("a = [1, 2, 3].reverse[0]; expose a;");
+    var result = Sentient.run({ program: program });
+
+    expect(result).toEqual([{ a: 3 }]);
+  });
 });

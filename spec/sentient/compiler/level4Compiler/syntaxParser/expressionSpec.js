@@ -83,6 +83,13 @@ describe("expression", function () {
     expect(subject.parse("50")).toEqual(50);
     expect(subject.parse("a")).toEqual("a");
     expect(subject.parse("foo")).toEqual("foo");
+
+    expect(subject.parse("1.buildArray(2)[0]")).toEqual(
+      ["[]", ["buildArray", 1, 2], 0]
+    );
+    expect(subject.parse("a.b[c].d[e][f].g")).toEqual(
+      ["g", ["[]", ["[]", ["d", ["[]", ["b", "a"], "c"]], "e"], "f"]]
+    );
   });
 
   it("rejects invalid", function () {
