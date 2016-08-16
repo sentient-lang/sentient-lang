@@ -1,6 +1,6 @@
 {
   "name": "sentient-lang",
-  "version": "0.0.0-alpha.38",
+  "version": "0.0.0-alpha.39",
   "engines": { "node": ">0.10" },
   "engineStrict": true,
   "description": "Sentient Language Compiler and Runtime",
@@ -8,7 +8,7 @@
   "homepage": "http://sentient-lang.org",
   "author": "Chris Patuzzo <chris@patuzzo.co.uk>",
   "license": "MIT",
-  "files": ["lib", "sentient", "vendor"],
+  "files": ["bin", "lib", "sentient", "vendor"],
   "main": "./lib/main.js",
   "repository": {
     "type": "git",
