@@ -261,55 +261,6 @@ describe("Integration: 'pop'", function () {
     }).toThrow();
   });
 
-  it("throws an error if array re-assignment changes type", function () {
-    expect(function () {
-      Level3Compiler.compile({
-        instructions: [
-          { type: "constant", value: 10 },
-          { type: "collect", width: 1 },
-          { type: "pop", symbol: "foo" },
-
-          { type: "constant", value: true },
-          { type: "collect", width: 1 },
-          { type: "pop", symbol: "foo" }
-        ]
-      });
-    }).toThrow();
-  });
-
-  it("throws an error if nested array re-assignment changes type", function () {
-    expect(function () {
-      Level3Compiler.compile({
-        instructions: [
-          { type: "constant", value: 10 },
-          { type: "collect", width: 1 },
-          { type: "collect", width: 1 },
-          { type: "pop", symbol: "foo" },
-
-          { type: "constant", value: true },
-          { type: "collect", width: 1 },
-          { type: "collect", width: 1 },
-          { type: "pop", symbol: "foo" }
-        ]
-      });
-    }).toThrow();
-
-    expect(function () {
-      Level3Compiler.compile({
-        instructions: [
-          { type: "constant", value: 10 },
-          { type: "collect", width: 1 },
-          { type: "collect", width: 1 },
-          { type: "pop", symbol: "foo" },
-
-          { type: "constant", value: 10 },
-          { type: "collect", width: 1 },
-          { type: "pop", symbol: "foo" }
-        ]
-      });
-    }).toThrow();
-  });
-
   it("throws an error if the stack is empty", function () {
     expect(function () {
       Level3Compiler.compile({
