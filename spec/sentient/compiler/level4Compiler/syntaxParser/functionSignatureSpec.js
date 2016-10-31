@@ -35,6 +35,9 @@ describe("functionSignature", function () {
     expect(subject.parse("function (x)")).toEqual(
       ["_anonymous", false, false, ["x"]]
     );
+    expect(subject.parse("function(x)")).toEqual(
+      ["_anonymous", false, false, ["x"]]
+    );
     expect(subject.parse("function^ (x)")).toEqual(
       ["_anonymous", true, false, ["x"]]
     );
