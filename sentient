@@ -1,4 +1,4 @@
-#!/bin/sh
-':' //; exec "$(command -v nodejs || command -v node)" --max-old-space-size=999999999 --stack-size=999999999 "$0" "$@"
+#!/bin/bash
+':' //; exec "$(command -v nodejs || command -v node)" --max-old-space-size=999999999 --stack-size=999999999 "$0" "$@" 2> >(grep -v "Undeclared assignment target" >&2)
 
 require("./lib/main").cli();
