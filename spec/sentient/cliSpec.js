@@ -47,11 +47,12 @@ describe("CLI", function () {
   it("can compile and run a program", function (done) {
     run("a = 111 + 222; expose a;", []);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 333 });
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -62,12 +63,13 @@ describe("CLI", function () {
 
     run("", ["/tmp/cliSpec.tmp"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 123 });
         try { fs.unlinkSync("/tmp/cliSpec.tmp"); } catch (error) { }
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -76,11 +78,12 @@ describe("CLI", function () {
   it("can compile a program without optimising/running it", function (done) {
     run("a = 111 + 222; expose a;", ["--compile"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0]).dimacs.length).toBeGreaterThan(2000);
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -91,11 +94,12 @@ describe("CLI", function () {
 
     run(JSON.stringify(precompiled), ["--run"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 333 });
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -106,11 +110,12 @@ describe("CLI", function () {
 
     run(JSON.stringify(precompiled), ["--optimise"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0]).dimacs.length).toBeLessThan(100);
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -120,12 +125,13 @@ describe("CLI", function () {
     spyOn(Sentient, "optimise");
     run("a = 111 + 222; expose a;", []);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 333 });
         expect(Sentient.optimise).not.toHaveBeenCalled();
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -134,11 +140,12 @@ describe("CLI", function () {
   it("can assign values to exposed variables", function (done) {
     run("int a; expose a;", ["--assign", "{ a: 23 }"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 23 });
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -149,12 +156,13 @@ describe("CLI", function () {
 
     run("int a; expose a;", ["--assign-file", "/tmp/cliSpec.tmp"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 23 });
         try { fs.unlinkSync("/tmp/cliSpec.tmp"); } catch (error) { }
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -163,7 +171,7 @@ describe("CLI", function () {
   it("can specify the number of solutions", function (done) {
     run("int a; expose a;", ["--number", "3"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 3) {
@@ -171,6 +179,7 @@ describe("CLI", function () {
         expect(JSON.parse(calls[1])).toEqual({ a: -128 });
         expect(JSON.parse(calls[2])).toEqual({ a: 64 });
 
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -179,7 +188,7 @@ describe("CLI", function () {
   it("can be set to run until solutions are exhausted", function (done) {
     run("int a; expose a; invariant a > 1, a < 5;", ["--number", "0"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 4) {
@@ -188,6 +197,7 @@ describe("CLI", function () {
         expect(JSON.parse(calls[2])).toEqual({ a: 2 });
         expect(JSON.parse(calls[3])).toEqual({});
 
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -196,7 +206,7 @@ describe("CLI", function () {
   it("can specify that minisat should do the solving", function (done) {
     run("a = 123; expose a;", ["--machine", "minisat"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
@@ -206,6 +216,7 @@ describe("CLI", function () {
         expect(LingelingAdapter.solve).not.toHaveBeenCalled();
         expect(RissAdapter.solve).not.toHaveBeenCalled();
 
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -214,7 +225,7 @@ describe("CLI", function () {
   it("can specify that lingeling should do the solving", function (done) {
     run("a = 123; expose a;", ["--machine", "lingeling"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
@@ -224,6 +235,7 @@ describe("CLI", function () {
         expect(LingelingAdapter.solve).toHaveBeenCalled();
         expect(RissAdapter.solve).not.toHaveBeenCalled();
 
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -232,7 +244,7 @@ describe("CLI", function () {
   it("can specify that riss should do the solving", function (done) {
     run("a = 123; expose a;", ["--machine", "riss"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
@@ -242,6 +254,7 @@ describe("CLI", function () {
         expect(LingelingAdapter.solve).not.toHaveBeenCalled();
         expect(RissAdapter.solve).toHaveBeenCalled();
 
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -251,12 +264,13 @@ describe("CLI", function () {
     spyOn(console, "warn");
     run("a = 123; expose a;", []);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 123 });
         expect(SpecHelper.calls(console.warn).length).toEqual(0);
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -266,13 +280,14 @@ describe("CLI", function () {
     spyOn(console, "warn");
     run("a = 123; expose a;", ["--info"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 123 });
-        expect(SpecHelper.calls(console.warn).length).toBeGreaterThan(2);
+        expect(SpecHelper.calls(console.warn).length).toBeGreaterThan(0);
         expect(SpecHelper.calls(console.warn).length).toBeLessThan(10);
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -280,15 +295,18 @@ describe("CLI", function () {
 
   it("can set the log level to debug", function (done) {
     spyOn(console, "warn");
+    spyOn(console, "debug");
 
     run("a = 123; expose a;", ["--debug"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(JSON.parse(calls[0])).toEqual({ a: 123 });
-        expect(SpecHelper.calls(console.warn).length).toBeGreaterThan(10);
+        expect(SpecHelper.calls(console.warn).length).toBeGreaterThan(0);
+        expect(SpecHelper.calls(console.debug).length).toBeGreaterThan(0);
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -299,11 +317,12 @@ describe("CLI", function () {
 
     run(JSON.stringify(precompiled), ["--source"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
         expect(calls[0]).toEqual("a = 111 + 222; expose a;");
+        clearInterval(interval);
         done();
       }
     }, 10);
@@ -314,7 +333,7 @@ describe("CLI", function () {
 
     run(JSON.stringify(precompiled), ["--exposed"]);
 
-    setInterval(function () {
+    var interval = setInterval(function () {
       var calls = SpecHelper.calls(console.log);
 
       if (calls.length === 1) {
@@ -325,6 +344,7 @@ describe("CLI", function () {
             maximum: 511
           }
         });
+        clearInterval(interval);
         done();
       }
     }, 10);
