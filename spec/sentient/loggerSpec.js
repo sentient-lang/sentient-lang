@@ -5,6 +5,7 @@ var describedClass = require("../../lib/sentient/logger");
 
 describe("Logger", function () {
   beforeEach(function () {
+    spyOn(console, "debug");
     spyOn(console, "warn");
     spyOn(console, "error");
   });
@@ -43,14 +44,9 @@ describe("Logger", function () {
       describedClass.info("info message");
       describedClass.error("error message");
 
-      expect(SpecHelper.calls(console.warn)).toEqual([
-        "debug message",
-        "info message"
-      ]);
-
-      expect(SpecHelper.calls(console.error)).toEqual([
-        "error message"
-      ]);
+      expect(SpecHelper.calls(console.debug)).toEqual(["debug message"]);
+      expect(SpecHelper.calls(console.warn)).toEqual(["info message"]);
+      expect(SpecHelper.calls(console.error)).toEqual(["error message"]);
     });
   });
 
