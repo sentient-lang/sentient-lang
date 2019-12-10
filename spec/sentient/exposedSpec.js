@@ -171,46 +171,46 @@ describe("Exposed", function () {
         maximum: 127
       }
     });
+  });
 
-    it("retrieves information about arrays of arrays", function () {
-      var program = Sentient.compile("a = [[10], [20, 30]]; expose a;");
-      var result = describedClass.retrieve(program);
+  it("retrieves information about arrays of arrays", function () {
+    var program = Sentient.compile("a = [[10], [20, 30]]; expose a;");
+    var result = describedClass.retrieve(program);
 
-      expect(result).toEqual({
-        a: {
-          type: "array",
-          width: 2,
-          elements: [
-            {
-              type: "array",
-              width: 1,
-              elements: [
-                {
-                  type: "integer",
-                  minimum: -16,
-                  maximum: 15
-                }
-              ]
-            },
-            {
-              type: "array",
-              width: 2,
-              elements: [
-                {
-                  type: "integer",
-                  minimum: -32,
-                  maximum: 31
-                },
-                {
-                  type: "integer",
-                  minimum: -32,
-                  maximum: 31
-                }
-              ]
-            }
-          ]
-        }
-      });
+    expect(result).toEqual({
+      a: {
+        type: "array",
+        width: 2,
+        elements: [
+          {
+            type: "array",
+            width: 1,
+            elements: [
+              {
+                type: "integer",
+                minimum: -16,
+                maximum: 15
+              }
+            ]
+          },
+          {
+            type: "array",
+            width: 2,
+            elements: [
+              {
+                type: "integer",
+                minimum: -32,
+                maximum: 31
+              },
+              {
+                type: "integer",
+                minimum: -32,
+                maximum: 31
+              }
+            ]
+          }
+        ]
+      }
     });
   });
 
