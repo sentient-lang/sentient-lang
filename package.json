@@ -19,7 +19,7 @@
     "sentient": "sentient"
   },
   "devDependencies": {
-    "jasmine": "2.4.1",
+    "jasmine": "3.5.0",
     "jshint": "^2.9.2",
     "browserify": "^13.0.1",
     "uglify-js": "^2.6.2",
