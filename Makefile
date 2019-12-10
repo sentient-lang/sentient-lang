@@ -1,4 +1,3 @@
-PATH  := node_modules/.bin:$(PATH)
 SHELL := /bin/bash
 
 GRAMMAR := lib/sentient/compiler/level4Compiler/grammar.pegjs
@@ -10,19 +9,20 @@ TARGET := /usr/local/bin/
 all: test lint build
 
 test: node_modules parser
-	jasmine
+	npx jasmine
 
 lint: node_modules
-	jshint .
+	npx jshint .
 
 build: node_modules parser
 	rm -rf bin && mkdir bin
-	browserify --standalone Sentient lib/sentient.js | uglifyjs --mangle --compress > bin/sentient.js
+	npx browserify --standalone Sentient lib/sentient.js \
+		| npx uglifyjs --mangle --compress > bin/sentient.js
 
 parser: $(PARSER)
 
 $(PARSER): $(GRAMMAR)
-	pegjs --optimize size $(GRAMMAR) $(PARSER)
+	npx pegjs --optimize size $(GRAMMAR) $(PARSER)
 
 node_modules:
 	npm install
